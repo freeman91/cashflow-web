@@ -6,6 +6,7 @@ import formatter from "../helpers/currency_formatter";
 import NavBar from "../components/NavBar";
 import Loader from "../components/Loader";
 import CashFlowTable from "../components/CashFlowTable";
+import CashFlowTableExpense from "../components/CashFlowTableExpense";
 
 const API_HOST = "http://localhost:3001";
 
@@ -48,6 +49,8 @@ class Dashboard extends Component {
           expenses: response.data.expenses,
           incomes: response.data.incomes,
           work_hours: response.data.work_hours,
+          expense_groups: response.data.expense_groups,
+          income_source: response.data.income_sources,
           net_income_year: response.data.net_income_year,
           net_income_month: response.data.net_income_month,
           net_income_week: response.data.net_income_week,
@@ -65,6 +68,24 @@ class Dashboard extends Component {
     }
   }
 
+  createExpense(amount, group, vendor, description, date) {
+    axios
+      .post(API_HOST + "/expenses", {
+        headers: { Authorization: this.props.user.auth_token },
+        params: {
+          amount: amount,
+          group: group,
+          vendor: vendor,
+          date: date,
+          description: description,
+        },
+      })
+      .then((response) => {
+        this.get_dash_data();
+      })
+      .catch((error) => console.log(error));
+  }
+
   render() {
     const {
       isLoaded,
@@ -74,6 +95,8 @@ class Dashboard extends Component {
       net_income_week,
       net_income_month,
       net_income_year,
+      expense_groups,
+      income_sources,
     } = this.state;
     if (!isLoaded) return <Loader />;
 
@@ -81,10 +104,11 @@ class Dashboard extends Component {
     expenses.map((exp) => {
       var date = new Date(exp.date + " 12:00");
       expensesData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(exp.amount),
         exp.group,
         exp.vendor,
+        exp.id,
       ]);
       return null;
     });
@@ -93,9 +117,10 @@ class Dashboard extends Component {
     incomes.map((inc) => {
       var date = new Date(inc.date + " 12:00");
       incomesData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(inc.amount),
         inc.source,
+        inc.id,
       ]);
       return null;
     });
@@ -104,9 +129,10 @@ class Dashboard extends Component {
     work_hours.map((wkhr) => {
       var date = new Date(wkhr.date + " 12:00");
       workHoursData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(wkhr.amount),
         wkhr.source,
+        wkhr.id,
       ]);
       return null;
     });
@@ -133,16 +159,19 @@ class Dashboard extends Component {
                     formatter.format(net_income_week),
                     formatter.format(net_income_month),
                     formatter.format(net_income_year),
+                    "dash-stats-key",
                   ],
                 ]}
               />
             </Grid>
-            <Grid item xs={6} key="last-5-expenses">
-              <CashFlowTable
-                title="Recent Expenses"
+            <Grid item xs={5} key="last-5-expenses">
+              <CashFlowTableExpense
+                title="Expenses"
                 dataTextSize="subtitle1"
                 headers={["date", "amount", "group", "vendor"]}
                 rows={expensesData}
+                groups={expense_groups}
+                createExpense={this.createExpense.bind(this)}
               />
             </Grid>
             <Grid item xs={3} key="last-5-incomes">

@@ -30,7 +30,7 @@ class CashFlowTable extends Component {
     // title = titel of table
     // headers = Array of tables headers
     // rows = Array of Arrays of data displayed in the table
-    const { classes, title, headers, rows, dataTextSize } = this.props;
+    const { classes, title, headers, rows, dataTextSize, create } = this.props;
     return (
       <Card className={classes.card} variant="outlined">
         <TableContainer component={Paper}>
@@ -56,15 +56,19 @@ class CashFlowTable extends Component {
               </TableHead>
             ) : null}
             <TableBody>
-              {rows.map((row) => {
+              {rows.map((row, key1) => {
                 return (
-                  <TableRow key={`${row}-data`}>
-                    {row.map((cell) => {
-                      return (
-                        <TableCell key={`${cell}-cell`}>
-                          <Typography variant={dataTextSize}>{cell}</Typography>
-                        </TableCell>
-                      );
+                  <TableRow key={`${key1}-data`}>
+                    {row.map((cell, key2, arr) => {
+                      if (!Object.is(arr.length - 1, key2)) {
+                        return (
+                          <TableCell key={`${key1}-cell-${key2}`}>
+                            <Typography variant={dataTextSize}>
+                              {cell}
+                            </Typography>
+                          </TableCell>
+                        );
+                      }
                     })}
                   </TableRow>
                 );

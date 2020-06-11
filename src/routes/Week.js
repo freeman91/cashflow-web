@@ -29,7 +29,6 @@ class Week extends Component {
       timeout: 10000,
     })
       .then((response) => {
-        console.log("response", response);
         this.setState({
           cwdate: response.data.cwdate,
           netincome: response.data.netincome,
@@ -71,10 +70,11 @@ class Week extends Component {
     expenses.map((exp) => {
       var date = new Date(exp.date + " 12:00");
       expensesData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(exp.amount),
         exp.group,
         exp.vendor,
+        exp.id,
       ]);
       return null;
     });
@@ -83,9 +83,10 @@ class Week extends Component {
     incomes.map((inc) => {
       var date = new Date(inc.date + " 12:00");
       incomesData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(inc.amount),
         inc.source,
+        inc.id,
       ]);
       return null;
     });
@@ -94,9 +95,10 @@ class Week extends Component {
     work_hours.map((wkhr) => {
       var date = new Date(wkhr.date + " 12:00");
       workHoursData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(wkhr.amount),
         wkhr.source,
+        wkhr.id,
       ]);
       return null;
     });
@@ -134,7 +136,8 @@ class Week extends Component {
                     formatter.format(expTotal),
                     formatter.format(incTotal),
                     wkhrTotal,
-                    formatter.format(incTotal / wkhrTotal),
+                    formatter.format(wkhrTotal ? incTotal / wkhrTotal : 0),
+                    "week-stats-key",
                   ],
                 ]}
               />

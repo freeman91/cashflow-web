@@ -58,15 +58,17 @@ class NetWorth extends Component {
       netWorthData.push(formatter.format(record[2]));
       return null;
     });
+    netWorthLast12.push("net-worth-last-12-key");
     netWorthData = [netWorthData];
 
     const assetsData = [];
     assets.map((asset) => {
       var date = new Date(asset.date + " 12:00");
       assetsData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(asset.amount),
         asset.source,
+        asset.id,
       ]);
       return null;
     });
@@ -75,9 +77,10 @@ class NetWorth extends Component {
     liabilities.map((liability) => {
       var date = new Date(liability.date + " 12:00");
       liabilitiesData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(liability.amount),
         liability.group,
+        liability.id,
       ]);
       return null;
     });

@@ -57,25 +57,25 @@ class Settings extends Component {
 
     const expGroupData = [];
     expense_groups.map((group) => {
-      expGroupData.push([group.name]);
+      expGroupData.push([group.name, group.id]);
       return null;
     });
 
     const incSourceData = [];
     income_sources.map((source) => {
-      incSourceData.push([source.name]);
+      incSourceData.push([source.name, source.id]);
       return null;
     });
 
     const liabGroupData = [];
     liability_groups.map((group) => {
-      liabGroupData.push([group.name]);
+      liabGroupData.push([group.name, group.id]);
       return null;
     });
 
     const propSourceData = [];
     asset_sources.map((source) => {
-      propSourceData.push([source.name]);
+      propSourceData.push([source.name, source.id]);
       return null;
     });
 

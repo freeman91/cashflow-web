@@ -78,6 +78,7 @@ class Year extends Component {
             formatter.format(yearStats[month].income),
             yearStats[month].work_hours,
             formatter.format(yearStats[month].wage),
+            `${month}-stats-key`,
           ]);
         }
       });
@@ -89,6 +90,7 @@ class Year extends Component {
       formatter.format(incTotal),
       wkhrTotal,
       formatter.format(incTotal / wkhrTotal),
+      "year-stats-key",
     ]);
 
     const { user, history, classes } = this.props;

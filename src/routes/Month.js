@@ -74,6 +74,7 @@ class Month extends Component {
           formatter.format(monthStats[week].income),
           monthStats[week].work_hours,
           formatter.format(monthStats[week].wage),
+          `week-${week}-key`,
         ]);
       });
 
@@ -84,16 +85,18 @@ class Month extends Component {
       formatter.format(incTotal),
       wkhrTotal,
       formatter.format(incTotal / wkhrTotal),
+      "month-stats-key",
     ]);
 
     var billsData = [];
     bills.map((bill) => {
       var date = new Date(bill.date + " 12:00");
       billsData.push([
-        date.getMonth() + 1 + "/" + (date.getDay() + 1),
+        date.getMonth() + 1 + "/" + date.getDate(),
         formatter.format(bill.amount),
         bill.group,
         bill.vendor,
+        bill.id,
       ]);
       return null;
     });
