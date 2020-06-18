@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { isEqual } from "lodash";
-import { Grid, withStyles } from "@material-ui/core";
-import formatter from "../helpers/currency_formatter";
-import NavBar from "../components/NavBar";
-import Loader from "../components/Loader";
-import CashFlowTable from "../components/CashFlowTable";
-import CashFlowTableExpense from "../components/CashFlowTableExpense";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { isEqual } from 'lodash';
+import { Grid, withStyles } from '@material-ui/core';
+import formatter from '../helpers/currency_formatter';
+import NavBar from '../components/NavBar';
+import Loader from '../components/Loader';
+import CashFlowTable from '../components/CashFlowTable';
+import CashFlowTableExpense from '../components/CashFlowTableExpense';
 
-const API_HOST = "http://localhost:3001";
+const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    margin: "10px",
+    margin: '10px',
   },
 });
 
@@ -22,13 +22,15 @@ class Dashboard extends Component {
     isLoaded: false,
   };
 
+  get_dash_data = this.get_dash_data.bind(this);
+
   layout = [
-    { i: "net-income-year", x: 3, y: 0, w: 3, h: 3 },
-    { i: "net-income-month", x: 6, y: 0, w: 3, h: 3 },
-    { i: "net-income-week", x: 0, y: 4, w: 3, h: 3 },
-    { i: "last-5-expenses", x: 0, y: 7, w: 4, h: 9 },
-    { i: "last-5-incomes", x: 4, y: 7, w: 4, h: 9 },
-    { i: "last-5-work-hours", x: 8, y: 7, w: 1, h: 9 },
+    { i: 'net-income-year', x: 3, y: 0, w: 3, h: 3 },
+    { i: 'net-income-month', x: 6, y: 0, w: 3, h: 3 },
+    { i: 'net-income-week', x: 0, y: 4, w: 3, h: 3 },
+    { i: 'last-5-expenses', x: 0, y: 7, w: 4, h: 9 },
+    { i: 'last-5-incomes', x: 4, y: 7, w: 4, h: 9 },
+    { i: 'last-5-work-hours', x: 8, y: 7, w: 1, h: 9 },
   ];
 
   layouts = {
@@ -39,9 +41,17 @@ class Dashboard extends Component {
     xxs: this.layout,
   };
 
+  componentDidMount() {
+    if (isEqual(this.props.user, {})) {
+      this.props.history.push('/');
+    } else {
+      this.get_dash_data();
+    }
+  }
+
   async get_dash_data() {
     axios
-      .get(API_HOST + "/dashboard/data", {
+      .get(API_HOST + '/dashboard/data', {
         headers: { Authorization: this.props.user.auth_token },
       })
       .then((response) => {
@@ -49,39 +59,11 @@ class Dashboard extends Component {
           expenses: response.data.expenses,
           incomes: response.data.incomes,
           work_hours: response.data.work_hours,
-          expense_groups: response.data.expense_groups,
-          income_source: response.data.income_sources,
           net_income_year: response.data.net_income_year,
           net_income_month: response.data.net_income_month,
           net_income_week: response.data.net_income_week,
           isLoaded: true,
         });
-      })
-      .catch((error) => console.log(error));
-  }
-
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push("/");
-    } else {
-      this.get_dash_data();
-    }
-  }
-
-  createExpense(amount, group, vendor, description, date) {
-    axios
-      .post(API_HOST + "/expenses", {
-        headers: { Authorization: this.props.user.auth_token },
-        params: {
-          amount: amount,
-          group: group,
-          vendor: vendor,
-          date: date,
-          description: description,
-        },
-      })
-      .then((response) => {
-        this.get_dash_data();
       })
       .catch((error) => console.log(error));
   }
@@ -95,16 +77,14 @@ class Dashboard extends Component {
       net_income_week,
       net_income_month,
       net_income_year,
-      expense_groups,
-      income_sources,
     } = this.state;
     if (!isLoaded) return <Loader />;
 
     var expensesData = [];
     expenses.map((exp) => {
-      var date = new Date(exp.date + " 12:00");
+      var date = new Date(exp.date + ' 12:00');
       expensesData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(exp.amount),
         exp.group,
         exp.vendor,
@@ -115,9 +95,9 @@ class Dashboard extends Component {
 
     var incomesData = [];
     incomes.map((inc) => {
-      var date = new Date(inc.date + " 12:00");
+      var date = new Date(inc.date + ' 12:00');
       incomesData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(inc.amount),
         inc.source,
         inc.id,
@@ -127,9 +107,9 @@ class Dashboard extends Component {
 
     var workHoursData = [];
     work_hours.map((wkhr) => {
-      var date = new Date(wkhr.date + " 12:00");
+      var date = new Date(wkhr.date + ' 12:00');
       workHoursData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(wkhr.amount),
         wkhr.source,
         wkhr.id,
@@ -140,7 +120,12 @@ class Dashboard extends Component {
     const { classes, user, history } = this.props;
     return (
       <>
-        <NavBar title={"Dashboard"} user={user.email} history={history} />
+        <NavBar
+          title={'Dashboard'}
+          user={user}
+          history={history}
+          get_dash_data={this.get_dash_data}
+        />
         <div className={classes.root}>
           <Grid
             container
@@ -153,13 +138,13 @@ class Dashboard extends Component {
               <CashFlowTable
                 title="Net Income"
                 dataTextSize="h5"
-                headers={["week", "month", "year"]}
+                headers={['week', 'month', 'year']}
                 rows={[
                   [
                     formatter.format(net_income_week),
                     formatter.format(net_income_month),
                     formatter.format(net_income_year),
-                    "dash-stats-key",
+                    'dash-stats-key',
                   ],
                 ]}
               />
@@ -168,17 +153,15 @@ class Dashboard extends Component {
               <CashFlowTableExpense
                 title="Expenses"
                 dataTextSize="subtitle1"
-                headers={["date", "amount", "group", "vendor"]}
+                headers={['date', 'amount', 'group', 'vendor']}
                 rows={expensesData}
-                groups={expense_groups}
-                createExpense={this.createExpense.bind(this)}
               />
             </Grid>
             <Grid item xs={3} key="last-5-incomes">
               <CashFlowTable
                 title="Recent Incomes"
                 dataTextSize="subtitle1"
-                headers={["date", "amount", "source"]}
+                headers={['date', 'amount', 'source']}
                 rows={incomesData}
               />
             </Grid>
@@ -186,7 +169,7 @@ class Dashboard extends Component {
               <CashFlowTable
                 title="Recent Work Hours"
                 dataTextSize="subtitle1"
-                headers={["date", "hours", "source"]}
+                headers={['date', 'hours', 'source']}
                 rows={workHoursData}
               />
             </Grid>

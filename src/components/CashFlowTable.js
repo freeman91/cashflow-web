@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Card,
   Paper,
@@ -10,18 +10,18 @@ import {
   TableCell,
   Typography,
   withStyles,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 const styles = (theme) => ({
   card: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   cardTitle: {
-    margin: "10px",
-    fontWeight: "bold",
+    margin: '10px',
+    fontWeight: 'bold',
   },
   th: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 
@@ -30,7 +30,7 @@ class CashFlowTable extends Component {
     // title = titel of table
     // headers = Array of tables headers
     // rows = Array of Arrays of data displayed in the table
-    const { classes, title, headers, rows, dataTextSize, create } = this.props;
+    const { classes, title, headers, rows, dataTextSize } = this.props;
     return (
       <Card className={classes.card} variant="outlined">
         <TableContainer component={Paper}>
@@ -68,7 +68,7 @@ class CashFlowTable extends Component {
                             </Typography>
                           </TableCell>
                         );
-                      }
+                      } else return null;
                     })}
                   </TableRow>
                 );
