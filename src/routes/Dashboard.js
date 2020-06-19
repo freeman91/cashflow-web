@@ -56,7 +56,6 @@ class Dashboard extends Component {
       })
       .then((response) => {
         this.setState({
-          expenses: response.data.expenses,
           incomes: response.data.incomes,
           work_hours: response.data.work_hours,
           net_income_year: response.data.net_income_year,
@@ -71,7 +70,6 @@ class Dashboard extends Component {
   render() {
     const {
       isLoaded,
-      expenses,
       incomes,
       work_hours,
       net_income_week,
@@ -79,19 +77,6 @@ class Dashboard extends Component {
       net_income_year,
     } = this.state;
     if (!isLoaded) return <Loader />;
-
-    var expensesData = [];
-    expenses.map((exp) => {
-      var date = new Date(exp.date + ' 12:00');
-      expensesData.push([
-        date.getMonth() + 1 + '/' + date.getDate(),
-        formatter.format(exp.amount),
-        exp.group,
-        exp.vendor,
-        exp.id,
-      ]);
-      return null;
-    });
 
     var incomesData = [];
     incomes.map((inc) => {
@@ -150,12 +135,7 @@ class Dashboard extends Component {
               />
             </Grid>
             <Grid item xs={5} key="last-5-expenses">
-              <CashFlowTableExpense
-                title="Expenses"
-                dataTextSize="subtitle1"
-                headers={['date', 'amount', 'group', 'vendor']}
-                rows={expensesData}
-              />
+              <CashFlowTableExpense user={user} />
             </Grid>
             <Grid item xs={3} key="last-5-incomes">
               <CashFlowTable

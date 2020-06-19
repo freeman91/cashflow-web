@@ -123,19 +123,13 @@ class NavBar extends Component {
           </ListItemIcon>
           <ListItemText primary={'Year'} />
         </ListItem>
-        <ListItem
-          button
-          onClick={() => this.this.props.history.push('/networth')}
-        >
+        <ListItem button onClick={() => this.props.history.push('/networth')}>
           <ListItemIcon>
             <TrendingUp />
           </ListItemIcon>
           <ListItemText primary={'Net Worth'} />
         </ListItem>
-        <ListItem
-          button
-          onClick={() => this.this.props.history.push('/settings')}
-        >
+        <ListItem button onClick={() => this.props.history.push('/settings')}>
           <ListItemIcon>
             <Settings />
           </ListItemIcon>
@@ -147,7 +141,7 @@ class NavBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { title, user, get_dash_data } = this.props;
+    const { title, user, get_dash_data, reload_expenses } = this.props;
 
     return (
       <>
@@ -194,6 +188,7 @@ class NavBar extends Component {
             open={this.state.open}
             handleClose={this.handleClose}
             get_dash_data={get_dash_data}
+            reload_expenses={reload_expenses}
           />
         </Box>
       </>
