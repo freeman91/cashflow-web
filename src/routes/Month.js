@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { isEqual } from "lodash";
-import { Grid, withStyles } from "@material-ui/core";
-import formatter from "../helpers/currency_formatter";
-import NavBar from "../components/NavBar";
-import Loader from "../components/Loader";
-import CashFlowTable from "../components/CashFlowTable";
-import month from "../helpers/month_name";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { isEqual } from 'lodash';
+import { Grid, withStyles } from '@material-ui/core';
+import formatter from '../helpers/currency_formatter';
+import NavBar from '../components/NavBar';
+import Loader from '../components/Loader';
+import CashFlowTable from '../components/CashFlowTable';
+import month from '../helpers/month_name';
 
-const API_HOST = "http://localhost:3001";
+const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    margin: "10px",
+    margin: '10px',
   },
 });
 
@@ -24,7 +24,7 @@ class Month extends Component {
 
   async get_month_data() {
     axios
-      .get(API_HOST + "/month/data", {
+      .get(API_HOST + '/month/data', {
         headers: { Authorization: this.props.user.auth_token },
       })
       .then((response) => {
@@ -44,7 +44,7 @@ class Month extends Component {
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
-      this.props.history.push("/");
+      this.props.history.push('/');
     } else {
       this.get_month_data();
     }
@@ -85,14 +85,14 @@ class Month extends Component {
       formatter.format(incTotal),
       wkhrTotal,
       formatter.format(incTotal / wkhrTotal),
-      "month-stats-key",
+      'month-stats-key',
     ]);
 
     var billsData = [];
     bills.map((bill) => {
-      var date = new Date(bill.date + " 12:00");
+      var date = new Date(bill.date + ' 12:00');
       billsData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(bill.amount),
         bill.group,
         bill.vendor,
@@ -105,8 +105,8 @@ class Month extends Component {
     return (
       <>
         <NavBar
-          title={month[cwdate.month] + " " + cwdate.year}
-          user={user.email}
+          title={month[cwdate.month] + ' ' + cwdate.year}
+          user={user}
           history={history}
         />
         <div className={classes.root}>
@@ -122,12 +122,12 @@ class Month extends Component {
               <CashFlowTable
                 dataTextSize="subtitle1"
                 headers={[
-                  "week",
-                  "net income",
-                  "expense total",
-                  "income total",
-                  "work hours",
-                  "hourly wage",
+                  'week',
+                  'net income',
+                  'expense total',
+                  'income total',
+                  'work hours',
+                  'hourly wage',
                 ]}
                 rows={monthStatsArr}
               />
@@ -138,7 +138,7 @@ class Month extends Component {
               <CashFlowTable
                 title="Bills"
                 dataTextSize="subtitle2"
-                headers={["date", "amount", "group", "vendor"]}
+                headers={['date', 'amount', 'group', 'vendor']}
                 rows={billsData}
               />
             </Grid>

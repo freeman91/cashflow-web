@@ -3,7 +3,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { isEqual } from 'lodash';
 import {
+  Button,
   Card,
+  Collapse,
   Paper,
   TableContainer,
   Table,
@@ -14,7 +16,10 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import formatter from '../helpers/currency_formatter';
+import ExpenseDialogEdit from './ExpenseDialogEdit';
 
 const API_HOST = 'http://localhost:3001';
 
@@ -46,8 +51,24 @@ class CashFlowTable extends Component {
   state = {
     isLoaded: false,
     open: false,
-    value: { group: '', date: new Date() },
+    collapse: true,
+    value: {
+      amount: 0,
+      id: 0,
+      vendor: '',
+      description: '',
+      group: '',
+      date: new Date(),
+    },
   };
+
+  componentDidMount() {
+    if (isEqual(this.props.user, {})) {
+      this.props.history.push('/');
+    } else {
+      this.get_expenses();
+    }
+  }
 
   async get_expenses() {
     axios
@@ -70,24 +91,28 @@ class CashFlowTable extends Component {
         id: expense[0],
         amount: expense[1],
         group: expense[2],
-        company: expense[3],
+        vendor: expense[3],
         description: expense[4],
         date: expense[5],
       },
     });
   };
 
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.get_expenses();
-    }
-  }
+  handleClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  handleCollapse = () => {
+    this.setState({
+      collapse: !this.state.collapse,
+    });
+  };
 
   render() {
-    const { classes } = this.props;
-    const { expenses, isLoaded } = this.state;
+    const { classes, user } = this.props;
+    const { expenses, isLoaded, open, value, collapse } = this.state;
     if (!isLoaded) return null;
 
     var expensesData = [];
@@ -106,62 +131,77 @@ class CashFlowTable extends Component {
     return (
       <>
         <Card className={classes.card} variant="outlined">
+          <Typography className={classes.cardTitle} variant="h5" gutterBottom>
+            Expenses
+          </Typography>
+          <Button onClick={this.handleCollapse}>
+            {collapse ? <ExpandLess /> : <ExpandMore />}
+          </Button>
           <TableContainer component={Paper}>
-            <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-              Expenses
-            </Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  {['date', 'amount', 'group', 'vendor'].map((header) => {
+            <Collapse in={collapse} timeout="auto" unmountOnExit>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {['date', 'amount', 'group', 'vendor'].map((header) => {
+                      return (
+                        <TableCell key={`${header}-header`}>
+                          <Typography
+                            className={classes.th}
+                            variant="subtitle2"
+                          >
+                            {header}
+                          </Typography>
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {expensesData.map((expense, idx) => {
                     return (
-                      <TableCell key={`${header}-header`}>
-                        <Typography className={classes.th} variant="subtitle2">
-                          {header}
-                        </Typography>
-                      </TableCell>
+                      <TableRow
+                        key={`${expense[0]}-data`}
+                        hover
+                        onClick={() => this.handleClick(expense)}
+                      >
+                        <TableCell key={`date-${idx}`}>
+                          <Typography variant="subtitle1">
+                            {new Date(expense[5] + ' 12:00').getMonth() +
+                              1 +
+                              '/' +
+                              new Date(expense[5] + ' 12:00').getDate()}
+                          </Typography>
+                        </TableCell>
+                        <TableCell key={`amount-${idx}`}>
+                          <Typography variant="subtitle1">
+                            {formatter.format(expense[1])}
+                          </Typography>
+                        </TableCell>
+                        <TableCell key={`group-${idx}`}>
+                          <Typography variant="subtitle1">
+                            {expense[2]}
+                          </Typography>
+                        </TableCell>
+                        <TableCell key={`vendor-${idx}`}>
+                          <Typography variant="subtitle1">
+                            {expense[3]}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {expensesData.map((expense, idx) => {
-                  return (
-                    <TableRow
-                      key={`${expense[0]}-data`}
-                      hover
-                      onClick={() => this.handleClick(expense)}
-                    >
-                      <TableCell key={`date-${idx}`}>
-                        <Typography variant="subtitle1">
-                          {new Date(expense[5] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(expense[5] + ' 12:00').getDate()}
-                        </Typography>
-                      </TableCell>
-                      <TableCell key={`amount-${idx}`}>
-                        <Typography variant="subtitle1">
-                          {formatter.format(expense[1])}
-                        </Typography>
-                      </TableCell>
-                      <TableCell key={`group-${idx}`}>
-                        <Typography variant="subtitle1">
-                          {expense[2]}
-                        </Typography>
-                      </TableCell>
-                      <TableCell key={`vendor-${idx}`}>
-                        <Typography variant="subtitle1">
-                          {expense[3]}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            </Collapse>
           </TableContainer>
         </Card>
+        <ExpenseDialogEdit
+          open={open}
+          handleClose={this.handleClose}
+          user={user}
+          value={value}
+        />
       </>
     );
   }

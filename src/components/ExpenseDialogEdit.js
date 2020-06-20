@@ -14,6 +14,8 @@ import {
   withStyles,
 } from '@material-ui/core';
 
+import getDate from '../helpers/getDate';
+
 const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
@@ -27,14 +29,34 @@ const styles = (theme) => ({
     margin: theme.spacing(2),
     width: '300%',
   },
+  button: {
+    opacity: 0.7,
+  },
 });
 
-class ExpenseDialog extends Component {
+class ExpenseDialogEdit extends Component {
   state = {
     open: false,
     value: { group: '', date: new Date() },
     isLoaded: false,
   };
+
+  componentWillReceiveProps(newProps) {
+    const { open, value, user } = newProps;
+    if (open) {
+      this.setState({
+        value: {
+          id: value.id,
+          amount: value.amount,
+          group: value.group,
+          vendor: value.vendor,
+          description: value.description,
+          date: getDate(value.date),
+        },
+      });
+      this.get_expense_groups();
+    }
+  }
 
   handleChange = (event) => {
     this.setState({
@@ -75,35 +97,40 @@ class ExpenseDialog extends Component {
   }
 
   handleSubmit = () => {
-    if (isNaN(this.state.value.amount) || this.state.value.group === '') {
+    const { value } = this.state;
+    const { user, handleClose } = this.props;
+    if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      this.createExpense(
-        Number(this.state.value.amount),
-        this.state.value.group,
-        this.state.value.company,
-        this.state.value.description,
-        this.state.value.date,
-        this.props.user
-      );
-      this.setState({
-        open: false,
-        value: {
-          amount: null,
-          group: '',
-          description: '',
-          date: new Date(),
-        },
+      this.editExpense(
+        value.id,
+        Number(value.amount),
+        value.group,
+        value.vendor,
+        value.description,
+        value.date,
+        user
+      ).then(() => {
+        this.setState({
+          open: false,
+          value: {
+            amount: null,
+            group: '',
+            description: '',
+            date: new Date(),
+          },
+        });
+        handleClose();
       });
-      this.props.handleClose();
     }
   };
 
-  async createExpense(amount, group, vendor, description, date, user) {
+  async editExpense(id, amount, group, vendor, description, date, user) {
     axios
-      .post(API_HOST + '/expenses', {
+      .put(API_HOST + '/expenses/update', {
         headers: { Authorization: user.auth_token },
         params: {
+          id: id,
           amount: amount,
           group: group,
           vendor: vendor,
@@ -111,31 +138,38 @@ class ExpenseDialog extends Component {
           description: description,
         },
       })
-      .then(() => {
-        this.props.get_dash_data();
-      })
       .catch((error) => console.log(error));
   }
 
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.get_expense_groups();
-    }
+  handleDelete = () => {
+    this.deleteExpense(this.props.user, this.state.value.id).then(() => {
+      this.props.handleClose();
+    });
+  };
+
+  async deleteExpense(user, id) {
+    axios.delete(API_HOST + '/expenses', {
+      headers: { Authorization: user.auth_token },
+      params: {
+        id: id,
+      },
+    });
   }
+
+  componentDidMount() {}
 
   render() {
     const { open, classes, handleClose } = this.props;
-    const { groups, isLoaded } = this.state;
+    const { groups, isLoaded, value } = this.state;
     if (!isLoaded) return null;
+
     return (
       <Dialog
         onClose={handleClose}
         aria-labelledby="expense-dialog"
         open={open}
       >
-        <DialogTitle id="expense-dialog-title">Create New Expense</DialogTitle>
+        <DialogTitle id="expense-dialog-title">Edit Expense</DialogTitle>
         <DialogContent>
           <form className={classes.form}>
             <Input
@@ -145,12 +179,13 @@ class ExpenseDialog extends Component {
               onChange={this.handleChange}
               fullWidth
               className={classes.dialog}
+              defaultValue={value.amount}
             />
             <TextField
               id="group"
               select
               label="group"
-              value={this.state.value.group}
+              value={value.group}
               onChange={this.handleGroupSelect}
               fullWidth
               className={classes.dialog}
@@ -162,12 +197,13 @@ class ExpenseDialog extends Component {
               ))}
             </TextField>
             <Input
-              id="company"
-              placeholder="company"
-              inputProps={{ 'aria-label': 'company' }}
+              id="vendor"
+              placeholder="vendor"
+              inputProps={{ 'aria-label': 'vendor' }}
               onChange={this.handleChange}
               fullWidth
               className={classes.dialog}
+              defaultValue={value.vendor}
             />
             <Input
               id="description"
@@ -176,21 +212,40 @@ class ExpenseDialog extends Component {
               onChange={this.handleChange}
               fullWidth
               className={classes.dialog}
+              defaultValue={value.description}
             />
             <DatePicker
               id="date"
               className={classes.date}
               placeholderText="date"
-              selected={this.state.value.date}
+              selected={value.date}
               onChange={this.handleDateChange}
               showWeekNumbers
             />
           </form>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
+          <DialogActions style={{ justify: 'center' }}>
+            <Button
+              className={classes.button}
+              onClick={handleClose}
+              color="default"
+              variant="contained"
+            >
               Cancel
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button
+              className={classes.button}
+              onClick={this.handleDelete}
+              color="secondary"
+              variant="contained"
+            >
+              Delete
+            </Button>
+            <Button
+              className={classes.button}
+              onClick={this.handleSubmit}
+              color="primary"
+              variant="contained"
+            >
               Submit
             </Button>
           </DialogActions>
@@ -200,4 +255,4 @@ class ExpenseDialog extends Component {
   }
 }
 
-export default withStyles(styles)(ExpenseDialog);
+export default withStyles(styles)(ExpenseDialogEdit);

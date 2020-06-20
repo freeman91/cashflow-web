@@ -25,7 +25,7 @@ import {
   ViewDay,
 } from '@material-ui/icons';
 
-import ExpenseDialog from './ExpenseDialog.js';
+import ExpenseDialogNew from './ExpenseDialogNew.js';
 
 const styles = (theme) => ({
   box: {
@@ -43,6 +43,12 @@ const styles = (theme) => ({
     margin: '10px',
     marginRight: '25px',
     float: 'center',
+    opacity: 0.7,
+  },
+  logoutButton: {
+    opacity: 0.7,
+    marginLeft: '15px',
+    display: 'inline',
   },
 });
 
@@ -111,13 +117,13 @@ class NavBar extends Component {
           </ListItemIcon>
           <ListItemText primary={'Week'} />
         </ListItem>
-        <ListItem button onClick={() => this.this.props.history.push('/month')}>
+        <ListItem button onClick={() => this.props.history.push('/month')}>
           <ListItemIcon>
             <CalendarToday />
           </ListItemIcon>
           <ListItemText primary={'Month'} />
         </ListItem>
-        <ListItem button onClick={() => this.this.props.history.push('/year')}>
+        <ListItem button onClick={() => this.props.history.push('/year')}>
           <ListItemIcon>
             <ViewDay />
           </ListItemIcon>
@@ -169,7 +175,7 @@ class NavBar extends Component {
                 <Button
                   variant="contained"
                   onClick={() => this.handleLogoutClick()}
-                  style={{ marginLeft: '15px', display: 'inline' }}
+                  className={classes.logoutButton}
                 >
                   Logout
                 </Button>
@@ -183,7 +189,7 @@ class NavBar extends Component {
               </MobileLeftMenuSlider>
             </Toolbar>
           </AppBar>
-          <ExpenseDialog
+          <ExpenseDialogNew
             user={user}
             open={this.state.open}
             handleClose={this.handleClose}

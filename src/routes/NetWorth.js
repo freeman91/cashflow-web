@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { isEqual } from "lodash";
-import { Grid, withStyles } from "@material-ui/core";
-import formatter from "../helpers/currency_formatter";
-import NavBar from "../components/NavBar";
-import Loader from "../components/Loader";
-import CashFlowTable from "../components/CashFlowTable";
-import month from "../helpers/month_name";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { isEqual } from 'lodash';
+import { Grid, withStyles } from '@material-ui/core';
+import formatter from '../helpers/currency_formatter';
+import NavBar from '../components/NavBar';
+import Loader from '../components/Loader';
+import CashFlowTable from '../components/CashFlowTable';
+import month from '../helpers/month_name';
 
-const API_HOST = "http://localhost:3001";
+const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    margin: "10px",
+    margin: '10px',
   },
 });
 
@@ -24,7 +24,7 @@ class NetWorth extends Component {
 
   async get_networth_data() {
     axios
-      .get(API_HOST + "/networth/data", {
+      .get(API_HOST + '/networth/data', {
         headers: { Authorization: this.props.user.auth_token },
       })
       .then((response) => {
@@ -41,7 +41,7 @@ class NetWorth extends Component {
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
-      this.props.history.push("/");
+      this.props.history.push('/');
     } else {
       this.get_networth_data();
     }
@@ -58,14 +58,14 @@ class NetWorth extends Component {
       netWorthData.push(formatter.format(record[2]));
       return null;
     });
-    netWorthLast12.push("net-worth-last-12-key");
+    netWorthLast12.push('net-worth-last-12-key');
     netWorthData = [netWorthData];
 
     const assetsData = [];
     assets.map((asset) => {
-      var date = new Date(asset.date + " 12:00");
+      var date = new Date(asset.date + ' 12:00');
       assetsData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(asset.amount),
         asset.source,
         asset.id,
@@ -75,9 +75,9 @@ class NetWorth extends Component {
 
     const liabilitiesData = [];
     liabilities.map((liability) => {
-      var date = new Date(liability.date + " 12:00");
+      var date = new Date(liability.date + ' 12:00');
       liabilitiesData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(liability.amount),
         liability.group,
         liability.id,
@@ -88,7 +88,7 @@ class NetWorth extends Component {
     const { user, history, classes } = this.props;
     return (
       <>
-        <NavBar title={"Net Worth"} user={user.email} history={history} />
+        <NavBar title={'Net Worth'} user={user} history={history} />
         <div className={classes.root}>
           <Grid
             container
@@ -112,7 +112,7 @@ class NetWorth extends Component {
               <CashFlowTable
                 title="Assets"
                 dataTextSize="subtitle1"
-                headers={["date", "amount", "source"]}
+                headers={['date', 'amount', 'source']}
                 rows={assetsData}
               />
             </Grid>
@@ -122,7 +122,7 @@ class NetWorth extends Component {
               <CashFlowTable
                 title="Liabilities"
                 dataTextSize="subtitle1"
-                headers={["date", "amount", "group"]}
+                headers={['date', 'amount', 'group']}
                 rows={liabilitiesData}
               />
             </Grid>

@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { isEqual } from "lodash";
-import { Grid, withStyles } from "@material-ui/core";
-import formatter from "../helpers/currency_formatter";
-import NavBar from "../components/NavBar";
-import Loader from "../components/Loader";
-import CashFlowTable from "../components/CashFlowTable";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { isEqual } from 'lodash';
+import { Grid, withStyles } from '@material-ui/core';
+import formatter from '../helpers/currency_formatter';
+import NavBar from '../components/NavBar';
+import Loader from '../components/Loader';
+import CashFlowTable from '../components/CashFlowTable';
 
-const API_HOST = "http://localhost:3001";
+const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    margin: "10px",
+    margin: '10px',
   },
 });
 
@@ -23,8 +23,8 @@ class Week extends Component {
 
   async get_week_data() {
     axios({
-      method: "get",
-      url: API_HOST + "/week/data",
+      method: 'get',
+      url: API_HOST + '/week/data',
       headers: { Authorization: this.props.user.auth_token },
       timeout: 10000,
     })
@@ -46,7 +46,7 @@ class Week extends Component {
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
-      this.props.history.push("/");
+      this.props.history.push('/');
     } else {
       this.get_week_data();
     }
@@ -68,9 +68,9 @@ class Week extends Component {
 
     var expensesData = [];
     expenses.map((exp) => {
-      var date = new Date(exp.date + " 12:00");
+      var date = new Date(exp.date + ' 12:00');
       expensesData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(exp.amount),
         exp.group,
         exp.vendor,
@@ -81,9 +81,9 @@ class Week extends Component {
 
     var incomesData = [];
     incomes.map((inc) => {
-      var date = new Date(inc.date + " 12:00");
+      var date = new Date(inc.date + ' 12:00');
       incomesData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(inc.amount),
         inc.source,
         inc.id,
@@ -93,9 +93,9 @@ class Week extends Component {
 
     var workHoursData = [];
     work_hours.map((wkhr) => {
-      var date = new Date(wkhr.date + " 12:00");
+      var date = new Date(wkhr.date + ' 12:00');
       workHoursData.push([
-        date.getMonth() + 1 + "/" + date.getDate(),
+        date.getMonth() + 1 + '/' + date.getDate(),
         formatter.format(wkhr.amount),
         wkhr.source,
         wkhr.id,
@@ -107,8 +107,8 @@ class Week extends Component {
     return (
       <>
         <NavBar
-          title={"Week " + cwdate.week + " of " + cwdate.year}
-          user={user.email}
+          title={'Week ' + cwdate.week + ' of ' + cwdate.year}
+          user={user}
           history={history}
         />
         <div className={classes.root}>
@@ -124,11 +124,11 @@ class Week extends Component {
               <CashFlowTable
                 dataTextSize="h5"
                 headers={[
-                  "net income",
-                  "expense total",
-                  "income total",
-                  "work hours",
-                  "hourly wage",
+                  'net income',
+                  'expense total',
+                  'income total',
+                  'work hours',
+                  'hourly wage',
                 ]}
                 rows={[
                   [
@@ -137,7 +137,7 @@ class Week extends Component {
                     formatter.format(incTotal),
                     wkhrTotal,
                     formatter.format(wkhrTotal ? incTotal / wkhrTotal : 0),
-                    "week-stats-key",
+                    'week-stats-key',
                   ],
                 ]}
               />
@@ -148,7 +148,7 @@ class Week extends Component {
               <CashFlowTable
                 title="Expenses"
                 dataTextSize="subtitle1"
-                headers={["date", "amount", "group", "vendor"]}
+                headers={['date', 'amount', 'group', 'vendor']}
                 rows={expensesData}
               />
             </Grid>
@@ -158,7 +158,7 @@ class Week extends Component {
               <CashFlowTable
                 title="Incomes"
                 dataTextSize="subtitle1"
-                headers={["date", "amount", "source"]}
+                headers={['date', 'amount', 'source']}
                 rows={incomesData}
               />
             </Grid>
@@ -168,7 +168,7 @@ class Week extends Component {
               <CashFlowTable
                 title="Recent Work Hours"
                 dataTextSize="subtitle1"
-                headers={["date", "hours", "source"]}
+                headers={['date', 'hours', 'source']}
                 rows={workHoursData}
               />
             </Grid>

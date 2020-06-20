@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { isEqual } from "lodash";
-import { Grid, withStyles } from "@material-ui/core";
-import NavBar from "../components/NavBar";
-import Loader from "../components/Loader";
-import CashFlowTable from "../components/CashFlowTable";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { isEqual } from 'lodash';
+import { Grid, withStyles } from '@material-ui/core';
+import NavBar from '../components/NavBar';
+import Loader from '../components/Loader';
+import CashFlowTable from '../components/CashFlowTable';
 
-const API_HOST = "http://localhost:3001";
+const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    margin: "10px",
+    margin: '10px',
   },
 });
 
@@ -22,7 +22,7 @@ class Settings extends Component {
 
   async get_settings_data() {
     axios
-      .get(API_HOST + "/settings/data", {
+      .get(API_HOST + '/settings/data', {
         headers: { Authorization: this.props.user.auth_token },
       })
       .then((response) => {
@@ -39,7 +39,7 @@ class Settings extends Component {
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
-      this.props.history.push("/");
+      this.props.history.push('/');
     } else {
       this.get_settings_data();
     }
@@ -82,7 +82,7 @@ class Settings extends Component {
     const { user, history, classes } = this.props;
     return (
       <>
-        <NavBar title={"Settings"} user={user.email} history={history} />
+        <NavBar title={'Settings'} user={user} history={history} />
         <div className={classes.root}>
           <Grid
             container
