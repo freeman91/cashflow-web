@@ -47,7 +47,7 @@ const styles = (theme) => ({
   },
 });
 
-class CashFlowTable extends Component {
+class CashFlowTableExpense extends Component {
   state = {
     isLoaded: false,
     open: false,
@@ -62,11 +62,21 @@ class CashFlowTable extends Component {
     },
   };
 
+  get_expenses = this.get_expenses.bind(this);
+
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
       this.get_expenses();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.reload) {
+      this.get_expenses().then(() => {
+        this.props.stop_reload();
+      });
     }
   }
 
@@ -111,7 +121,7 @@ class CashFlowTable extends Component {
   };
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, get_dash_data } = this.props;
     const { expenses, isLoaded, open, value, collapse } = this.state;
     if (!isLoaded) return null;
 
@@ -132,7 +142,7 @@ class CashFlowTable extends Component {
       <>
         <Card className={classes.card} variant="outlined">
           <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            Expenses
+            Recent Expenses
           </Typography>
           <Button onClick={this.handleCollapse}>
             {collapse ? <ExpandLess /> : <ExpandMore />}
@@ -201,10 +211,12 @@ class CashFlowTable extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
+          get_expenses={this.get_expenses}
+          get_dash_data={get_dash_data}
         />
       </>
     );
   }
 }
 
-export default withStyles(styles)(CashFlowTable);
+export default withStyles(styles)(CashFlowTableExpense);

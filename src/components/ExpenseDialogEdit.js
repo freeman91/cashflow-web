@@ -100,7 +100,7 @@ class ExpenseDialogEdit extends Component {
 
   handleSubmit = () => {
     const { value } = this.state;
-    const { user, handleClose } = this.props;
+    const { user, handleClose, get_expenses, get_dash_data } = this.props;
     if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -122,6 +122,8 @@ class ExpenseDialogEdit extends Component {
             date: new Date(),
           },
         });
+        get_dash_data();
+        get_expenses();
         handleClose();
       });
     }
@@ -140,11 +142,17 @@ class ExpenseDialogEdit extends Component {
           description: description,
         },
       })
+      .then(() => {
+        this.props.get_dash_data();
+        this.props.get_expenses();
+      })
       .catch((error) => console.log(error));
   }
 
   handleDelete = () => {
     this.deleteExpense(this.props.user, this.state.value.id).then(() => {
+      this.props.get_expenses();
+      this.props.get_dash_data();
       this.props.handleClose();
     });
   };
@@ -182,6 +190,7 @@ class ExpenseDialogEdit extends Component {
               fullWidth
               className={classes.dialog}
               defaultValue={formatter_no$.format(value.amount)}
+              required={true}
               startAdornment={
                 <InputAdornment position="start">
                   <AttachMoneyIcon />
@@ -196,6 +205,7 @@ class ExpenseDialogEdit extends Component {
               onChange={this.handleGroupSelect}
               fullWidth
               className={classes.dialog}
+              required={true}
             >
               {groups.sort().map((group) => (
                 <MenuItem key={group} value={group}>

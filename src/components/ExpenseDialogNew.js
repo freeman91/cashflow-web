@@ -111,6 +111,8 @@ class ExpenseDialogNew extends Component {
           date: new Date(),
         },
       });
+      this.props.reload_expenses();
+      this.props.get_dash_data();
       this.props.handleClose();
     }
   };
@@ -126,9 +128,6 @@ class ExpenseDialogNew extends Component {
           date: date,
           description: description,
         },
-      })
-      .then(() => {
-        this.props.get_dash_data();
       })
       .catch((error) => console.log(error));
   }
@@ -153,6 +152,7 @@ class ExpenseDialogNew extends Component {
               onChange={this.handleChange}
               fullWidth
               className={classes.dialog}
+              required={true}
               startAdornment={
                 <InputAdornment position="start">
                   <AttachMoneyIcon />
@@ -166,6 +166,7 @@ class ExpenseDialogNew extends Component {
               value={value.group}
               onChange={this.handleGroupSelect}
               fullWidth
+              required={true}
               className={classes.dialog}
             >
               {groups.sort().map((group) => (

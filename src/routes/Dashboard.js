@@ -20,9 +20,12 @@ const styles = (theme) => ({
 class Dashboard extends Component {
   state = {
     isLoaded: false,
+    reload_expense_state: false,
   };
 
   get_dash_data = this.get_dash_data.bind(this);
+  reload_expenses = this.reload_expenses.bind(this);
+  stop_reload_expenses = this.stop_reload_expenses.bind(this);
 
   layout = [
     { i: 'net-income-year', x: 3, y: 0, w: 3, h: 3 },
@@ -67,6 +70,18 @@ class Dashboard extends Component {
       .catch((error) => console.log(error));
   }
 
+  reload_expenses() {
+    this.setState({
+      reload_expense_state: true,
+    });
+  }
+
+  stop_reload_expenses() {
+    this.setState({
+      reload_expense_state: false,
+    });
+  }
+
   render() {
     const {
       isLoaded,
@@ -75,6 +90,7 @@ class Dashboard extends Component {
       net_income_week,
       net_income_month,
       net_income_year,
+      reload_expense_state,
     } = this.state;
     if (!isLoaded) return <Loader />;
 
@@ -110,6 +126,7 @@ class Dashboard extends Component {
           user={user}
           history={history}
           get_dash_data={this.get_dash_data}
+          reload_expenses={this.reload_expenses}
         />
         <div className={classes.root}>
           <Grid
@@ -135,7 +152,12 @@ class Dashboard extends Component {
               />
             </Grid>
             <Grid item xs={5} key="last-5-expenses">
-              <CashFlowTableExpense user={user} />
+              <CashFlowTableExpense
+                user={user}
+                reload={reload_expense_state}
+                stop_reload={this.stop_reload_expenses}
+                get_dash_data={this.get_dash_data}
+              />
             </Grid>
             <Grid item xs={3} key="last-5-incomes">
               <CashFlowTable
