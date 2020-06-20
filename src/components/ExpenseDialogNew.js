@@ -9,10 +9,12 @@ import {
   DialogTitle,
   DialogContent,
   Input,
+  InputAdornment,
   TextField,
   MenuItem,
   withStyles,
 } from '@material-ui/core';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 const API_HOST = 'http://localhost:3001';
 
@@ -133,7 +135,7 @@ class ExpenseDialogNew extends Component {
 
   render() {
     const { open, classes, handleClose } = this.props;
-    const { groups, isLoaded } = this.state;
+    const { groups, isLoaded, value } = this.state;
     if (!isLoaded) return null;
     return (
       <Dialog
@@ -151,12 +153,17 @@ class ExpenseDialogNew extends Component {
               onChange={this.handleChange}
               fullWidth
               className={classes.dialog}
+              startAdornment={
+                <InputAdornment position="start">
+                  <AttachMoneyIcon />
+                </InputAdornment>
+              }
             />
             <TextField
               id="group"
               select
               label="group"
-              value={this.state.value.group}
+              value={value.group}
               onChange={this.handleGroupSelect}
               fullWidth
               className={classes.dialog}
@@ -187,7 +194,7 @@ class ExpenseDialogNew extends Component {
               id="date"
               className={classes.date}
               placeholderText="date"
-              selected={this.state.value.date}
+              selected={value.date}
               onChange={this.handleDateChange}
               showWeekNumbers
             />

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { isEqual } from 'lodash';
 import { Grid, withStyles } from '@material-ui/core';
-import formatter from '../helpers/currency_formatter';
+import formatter from '../helpers/currency';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';

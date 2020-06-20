@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import formatter from '../helpers/currency_formatter';
+import formatter from '../helpers/currency';
 import ExpenseDialogEdit from './ExpenseDialogEdit';
 
 const API_HOST = 'http://localhost:3001';

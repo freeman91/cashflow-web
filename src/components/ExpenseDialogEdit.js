@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import axios from 'axios';
-import { isEqual } from 'lodash';
+import formatter_no$ from '../helpers/currency_no$';
 import {
   Button,
   Dialog,
@@ -9,10 +9,12 @@ import {
   DialogTitle,
   DialogContent,
   Input,
+  InputAdornment,
   TextField,
   MenuItem,
   withStyles,
 } from '@material-ui/core';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 import getDate from '../helpers/getDate';
 
@@ -42,7 +44,7 @@ class ExpenseDialogEdit extends Component {
   };
 
   componentWillReceiveProps(newProps) {
-    const { open, value, user } = newProps;
+    const { open, value } = newProps;
     if (open) {
       this.setState({
         value: {
@@ -179,7 +181,12 @@ class ExpenseDialogEdit extends Component {
               onChange={this.handleChange}
               fullWidth
               className={classes.dialog}
-              defaultValue={value.amount}
+              defaultValue={formatter_no$.format(value.amount)}
+              startAdornment={
+                <InputAdornment position="start">
+                  <AttachMoneyIcon />
+                </InputAdornment>
+              }
             />
             <TextField
               id="group"
