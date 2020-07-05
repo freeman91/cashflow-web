@@ -25,6 +25,7 @@ import {
 } from '@material-ui/icons';
 
 import ExpenseDialogNew from './ExpenseDialogNew.js';
+import IncomeDialogNew from './IncomeDialogNew.js';
 import Session from '../service/SessionService';
 
 const styles = (theme) => ({
@@ -55,7 +56,9 @@ const styles = (theme) => ({
 class NavBar extends Component {
   state = {
     left: false,
-    open: false,
+    expenseDialogOpen: false,
+    incomeDialogOpen: false,
+    workHourDialogOpen: false,
   };
 
   toggleSlider = (slider, open) => () => {
@@ -65,9 +68,21 @@ class NavBar extends Component {
     });
   };
 
-  handleCreateClick = () => {
+  handleCreateClickExpense = () => {
     this.setState({
-      open: true,
+      expenseDialogOpen: true,
+    });
+  };
+
+  handleCreateClickIncome = () => {
+    this.setState({
+      incomeDialogOpen: true,
+    });
+  };
+
+  handleCreateClickWorkHour = () => {
+    this.setState({
+      workHourDialogOpen: true,
     });
   };
 
@@ -80,7 +95,9 @@ class NavBar extends Component {
 
   handleClose = () => {
     this.setState({
-      open: false,
+      expenseDialogOpen: false,
+      incomeDialogOpen: false,
+      workHourDialogOpen: false,
     });
   };
 
@@ -138,7 +155,13 @@ class NavBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { title, user, get_dash_data, reload_expenses } = this.props;
+    const {
+      title,
+      user,
+      get_dash_data,
+      reload_expenses,
+      reload_incomes,
+    } = this.props;
 
     return (
       <>
@@ -155,9 +178,25 @@ class NavBar extends Component {
                 className={classes.createButton}
                 variant="contained"
                 color="primary"
-                onClick={this.handleCreateClick}
+                onClick={this.handleCreateClickExpense}
               >
                 New Expense
+              </Button>
+              <Button
+                className={classes.createButton}
+                variant="contained"
+                color="primary"
+                onClick={this.handleCreateClickIncome}
+              >
+                New Income
+              </Button>
+              <Button
+                className={classes.createButton}
+                variant="contained"
+                color="primary"
+                onClick={this.handleCreateClickWorkHour}
+              >
+                New Work Hours
               </Button>
               <div className={classes.divLeft}>
                 <Typography className={classes.username} variant="h6">
@@ -182,10 +221,17 @@ class NavBar extends Component {
           </AppBar>
           <ExpenseDialogNew
             user={user}
-            open={this.state.open}
+            open={this.state.expenseDialogOpen}
             handleClose={this.handleClose}
             get_dash_data={get_dash_data}
             reload_expenses={reload_expenses}
+          />
+          <IncomeDialogNew
+            user={user}
+            open={this.state.incomeDialogOpen}
+            handleClose={this.handleClose}
+            get_dash_data={get_dash_data}
+            reload_incomes={reload_incomes}
           />
         </Box>
       </>

@@ -9,7 +9,6 @@ const create = async function (email, password) {
       timeout: 10000,
     })
     .then((response) => {
-      console.log(response);
       return response;
     })
     .catch((error) => console.error(error));
@@ -21,7 +20,7 @@ const _delete = async function (auth_token) {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
-      console.log(response);
+      console.log('Session ended');
     })
     .catch((error) => console.error(error));
 };
