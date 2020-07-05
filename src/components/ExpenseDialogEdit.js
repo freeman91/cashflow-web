@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import axios from 'axios';
 import formatter_no$ from '../helpers/currency_no$';
 import {
   Button,
@@ -16,9 +15,8 @@ import {
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
+import Expense from '../service/ExpenseService';
 import getDate from '../helpers/getDate';
-
-const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   dialog: {
@@ -85,17 +83,12 @@ class ExpenseDialogEdit extends Component {
   };
 
   async get_expense_groups() {
-    axios
-      .get(API_HOST + '/expense_groups', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
-      .then((response) => {
-        this.setState({
-          groups: response.data.expense_groups,
-          isLoaded: true,
-        });
-      })
-      .catch((error) => console.log(error));
+    Expense.getGroups(this.props.user.auth_token).then((result) => {
+      this.setState({
+        groups: result.expense_groups,
+        isLoaded: true,
+      });
+    });
   }
 
   handleSubmit = () => {
@@ -104,14 +97,16 @@ class ExpenseDialogEdit extends Component {
     if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      this.editExpense(
-        value.id,
-        Number(value.amount),
-        value.group,
-        value.vendor,
-        value.description,
-        value.date,
-        user
+      Expense.edit(
+        {
+          id: value.id,
+          amount: Number(value.amount),
+          group: value.group,
+          vendor: value.vendor,
+          description: value.description,
+          date: value.date,
+        },
+        user.auth_token
       ).then(() => {
         this.setState({
           open: false,
@@ -129,44 +124,15 @@ class ExpenseDialogEdit extends Component {
     }
   };
 
-  async editExpense(id, amount, group, vendor, description, date, user) {
-    axios
-      .put(API_HOST + '/expenses/update', {
-        headers: { Authorization: user.auth_token },
-        params: {
-          id: id,
-          amount: amount,
-          group: group,
-          vendor: vendor,
-          date: date,
-          description: description,
-        },
-      })
-      .then(() => {
-        this.props.get_dash_data();
-        this.props.get_expenses();
-      })
-      .catch((error) => console.log(error));
-  }
-
   handleDelete = () => {
-    this.deleteExpense(this.props.user, this.state.value.id).then(() => {
-      this.props.get_expenses();
-      this.props.get_dash_data();
-      this.props.handleClose();
-    });
+    Expense._delete(this.state.value.id, this.props.user.auth_token).then(
+      () => {
+        this.props.get_expenses();
+        this.props.get_dash_data();
+        this.props.handleClose();
+      }
+    );
   };
-
-  async deleteExpense(user, id) {
-    axios.delete(API_HOST + '/expenses', {
-      headers: { Authorization: user.auth_token },
-      params: {
-        id: id,
-      },
-    });
-  }
-
-  componentDidMount() {}
 
   render() {
     const { open, classes, handleClose } = this.props;

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import {
   Button,
@@ -16,7 +15,7 @@ import {
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
-const API_HOST = 'http://localhost:3001';
+import Expense from '../service/ExpenseService';
 
 const styles = (theme) => ({
   dialog: {
@@ -77,60 +76,45 @@ class ExpenseDialogNew extends Component {
   };
 
   async get_expense_groups() {
-    axios
-      .get(API_HOST + '/expense_groups', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
-      .then((response) => {
-        this.setState({
-          groups: response.data.expense_groups,
-          isLoaded: true,
-        });
-      })
-      .catch((error) => console.log(error));
+    Expense.getGroups(this.props.user.auth_token).then((result) => {
+      this.setState({
+        groups: result.expense_groups,
+        isLoaded: true,
+      });
+    });
   }
 
   handleSubmit = () => {
     if (isNaN(this.state.value.amount) || this.state.value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      this.createExpense(
-        Number(this.state.value.amount),
-        this.state.value.group,
-        this.state.value.vendor,
-        this.state.value.description,
-        this.state.value.date,
-        this.props.user
-      );
-      this.setState({
-        open: false,
-        value: {
-          amount: null,
-          group: '',
-          description: '',
-          date: new Date(),
+      Expense.create(
+        {
+          amount: Number(this.state.value.amount),
+          group: this.state.value.group,
+          vendor: this.state.value.vendor,
+          description: this.state.value.description,
+          date: this.state.value.date,
         },
+        this.props.user.auth_token
+      ).then((result) => {
+        if (result.status === 201) {
+          this.setState({
+            open: false,
+            value: {
+              amount: null,
+              group: '',
+              description: '',
+              date: new Date(),
+            },
+          });
+          this.props.reload_expenses();
+          this.props.get_dash_data();
+          this.props.handleClose();
+        }
       });
-      this.props.reload_expenses();
-      this.props.get_dash_data();
-      this.props.handleClose();
     }
   };
-
-  async createExpense(amount, group, vendor, description, date, user) {
-    axios
-      .post(API_HOST + '/expenses', {
-        headers: { Authorization: user.auth_token },
-        params: {
-          amount: amount,
-          group: group,
-          vendor: vendor,
-          date: date,
-          description: description,
-        },
-      })
-      .catch((error) => console.log(error));
-  }
 
   render() {
     const { open, classes, handleClose } = this.props;

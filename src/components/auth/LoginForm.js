@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React, { Component } from 'react';
 import {
   Box,
   Paper,
@@ -9,7 +8,9 @@ import {
   FormControl,
   InputLabel,
   Input,
-} from "@material-ui/core";
+} from '@material-ui/core';
+
+import Session from '../../service/SessionService';
 
 const styles = (theme) => ({
   margin: {
@@ -19,26 +20,26 @@ const styles = (theme) => ({
     padding: theme.spacing(1),
   },
   loginBox: {
-    position: "absolute",
-    width: "50%",
-    top: "40%",
-    left: "25%",
-    align: "center",
+    position: 'absolute',
+    width: '50%',
+    top: '40%',
+    left: '25%',
+    align: 'center',
     opacity: 0.7,
   },
   form: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   formControl: {
     margin: theme.spacing(1),
-    flex: "0 0 100%",
+    flex: '0 0 100%',
   },
   formComponent: {
     marginRight: theme.spacing(2),
   },
   button: {
-    marginTop: "15px",
+    marginTop: '15px',
     marginRight: theme.spacing(2),
   },
   subButton: {
@@ -49,9 +50,9 @@ const styles = (theme) => ({
 
 class LoginForm extends Component {
   state = {
-    email: "",
-    password: "",
-    loginErrors: "",
+    email: '',
+    password: '',
+    loginErrors: '',
   };
 
   handleSubmit = this.handleSubmit.bind(this);
@@ -65,20 +66,14 @@ class LoginForm extends Component {
 
   async handleSubmit(event) {
     const { email, password } = this.state;
-
-    axios({
-      method: "post",
-      url: "http://localhost:3001/sessions",
-      data: { email: email, password: password },
-      timeout: 10000,
-    })
+    Session.create(email, password)
       .then((response) => {
         if (response.data.email) {
           this.props.handleSuccessfulAuth(response.data);
         }
       })
       .catch((error) => {
-        console.log("login error", error);
+        console.error('login error', error);
       });
     event.preventDefault();
   }
@@ -93,10 +88,10 @@ class LoginForm extends Component {
               variant="h3"
               gutterBottom
               style={{
-                wordWrap: "break-word",
-                fontSize: "18px",
-                textAlign: "center",
-                width: "100%",
+                wordWrap: 'break-word',
+                fontSize: '18px',
+                textAlign: 'center',
+                width: '100%',
               }}
             >
               LOGIN

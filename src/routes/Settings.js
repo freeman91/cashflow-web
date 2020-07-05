@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import { Grid, withStyles } from '@material-ui/core';
+
+import SettingsService from '../service/SettingsService';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';
-
-const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
@@ -21,16 +20,13 @@ class Settings extends Component {
   };
 
   async get_settings_data() {
-    axios
-      .get(API_HOST + '/settings/data', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
+    SettingsService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
-          expense_groups: response.data.expense_groups,
-          income_sources: response.data.income_sources,
-          asset_sources: response.data.property_sources,
-          liability_groups: response.data.debt_groups,
+          expense_groups: response.expense_groups,
+          income_sources: response.income_sources,
+          asset_sources: response.property_sources,
+          liability_groups: response.debt_groups,
           isLoaded: true,
         });
       })

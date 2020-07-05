@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import MobileLeftMenuSlider from '@material-ui/core/Drawer';
-import axios from 'axios';
 import {
   Button,
   AppBar,
@@ -26,6 +25,7 @@ import {
 } from '@material-ui/icons';
 
 import ExpenseDialogNew from './ExpenseDialogNew.js';
+import Session from '../service/SessionService';
 
 const styles = (theme) => ({
   box: {
@@ -73,16 +73,7 @@ class NavBar extends Component {
 
   async handleLogoutClick() {
     if (this.props.user.email) {
-      axios
-        .delete('http://localhost:3001/sessions', {
-          headers: { Authorization: this.props.user.email.auth_token },
-        })
-        .then((response) => {
-          this.props.handleLogout();
-        })
-        .catch((error) => {
-          console.log('logout error', error);
-        });
+      Session._delete(this.props.user.auth_token);
     }
     this.props.history.push('/');
   }

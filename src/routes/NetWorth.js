@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import { Grid, withStyles } from '@material-ui/core';
+
+import NetWorthService from '../service/NetWorthService';
 import formatter from '../helpers/currency';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';
 import month from '../helpers/month_name';
-
-const API_HOST = 'http://localhost:3001';
 
 const styles = (theme) => ({
   root: {
@@ -23,16 +22,13 @@ class NetWorth extends Component {
   };
 
   async get_networth_data() {
-    axios
-      .get(API_HOST + '/networth/data', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
+    NetWorthService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
-          cwdate: response.data.cwdate,
-          assets: response.data.properties,
-          liabilities: response.data.debts,
-          netWorthLast12: response.data.netWorthLast12,
+          cwdate: response.cwdate,
+          assets: response.properties,
+          liabilities: response.debts,
+          netWorthLast12: response.netWorthLast12,
           isLoaded: true,
         });
       })

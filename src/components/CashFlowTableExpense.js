@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import {
   Button,
@@ -20,8 +19,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import formatter from '../helpers/currency';
 import ExpenseDialogEdit from './ExpenseDialogEdit';
-
-const API_HOST = 'http://localhost:3001';
+import Dashboard from '../service/DashboardService';
 
 const styles = (theme) => ({
   card: {
@@ -81,17 +79,14 @@ class CashFlowTableExpense extends Component {
   }
 
   async get_expenses() {
-    axios
-      .get(API_HOST + '/dashboard/expenses', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
-      .then((response) => {
+    Dashboard.getExpenses(this.props.user.auth_token).then((result) => {
+      if (result) {
         this.setState({
-          expenses: response.data.expenses,
+          expenses: result.expenses,
           isLoaded: true,
         });
-      })
-      .catch((error) => console.log(error));
+      }
+    });
   }
 
   handleClick = (expense) => {

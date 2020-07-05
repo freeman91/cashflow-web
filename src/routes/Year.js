@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import { Grid, withStyles } from '@material-ui/core';
+
 import formatter from '../helpers/currency';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';
-
-const API_HOST = 'http://localhost:3001';
+import YearService from '../service/YearService';
 
 const styles = (theme) => ({
   root: {
@@ -22,18 +21,15 @@ class Year extends Component {
   };
 
   async get_year_data() {
-    axios
-      .get(API_HOST + '/year/data', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
+    YearService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
-          cwdate: response.data.cwdate,
-          yearStats: response.data.yearStats,
-          netincome: response.data.netincome,
-          expTotal: response.data.expTotal,
-          incTotal: response.data.incTotal,
-          wkhrTotal: response.data.wkhrTotal,
+          cwdate: response.cwdate,
+          yearStats: response.yearStats,
+          netincome: response.netincome,
+          expTotal: response.expTotal,
+          incTotal: response.incTotal,
+          wkhrTotal: response.wkhrTotal,
           isLoaded: true,
         });
       })

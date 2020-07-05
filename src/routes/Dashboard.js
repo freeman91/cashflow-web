@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import { Grid, withStyles } from '@material-ui/core';
+
 import formatter from '../helpers/currency';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';
 import CashFlowTableExpense from '../components/CashFlowTableExpense';
-
-const API_HOST = 'http://localhost:3001';
+import DashboardService from '../service/DashboardService';
 
 const styles = (theme) => ({
   root: {
@@ -52,22 +51,17 @@ class Dashboard extends Component {
     }
   }
 
-  async get_dash_data() {
-    axios
-      .get(API_HOST + '/dashboard/data', {
-        headers: { Authorization: this.props.user.auth_token },
-      })
-      .then((response) => {
-        this.setState({
-          incomes: response.data.incomes,
-          work_hours: response.data.work_hours,
-          net_income_year: response.data.net_income_year,
-          net_income_month: response.data.net_income_month,
-          net_income_week: response.data.net_income_week,
-          isLoaded: true,
-        });
-      })
-      .catch((error) => console.log(error));
+  get_dash_data() {
+    DashboardService.getData(this.props.user.auth_token).then((result) => {
+      this.setState({
+        incomes: result.incomes,
+        work_hours: result.work_hours,
+        net_income_year: result.net_income_year,
+        net_income_month: result.net_income_month,
+        net_income_week: result.net_income_week,
+        isLoaded: true,
+      });
+    });
   }
 
   reload_expenses() {

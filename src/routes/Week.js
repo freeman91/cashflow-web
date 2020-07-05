@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { isEqual } from 'lodash';
 import { Grid, withStyles } from '@material-ui/core';
+
 import formatter from '../helpers/currency';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';
-
-const API_HOST = 'http://localhost:3001';
+import WeekService from '../service/WeekService';
 
 const styles = (theme) => ({
   root: {
@@ -22,22 +21,17 @@ class Week extends Component {
   };
 
   async get_week_data() {
-    axios({
-      method: 'get',
-      url: API_HOST + '/week/data',
-      headers: { Authorization: this.props.user.auth_token },
-      timeout: 10000,
-    })
+    WeekService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
-          cwdate: response.data.cwdate,
-          netincome: response.data.netincome,
-          expTotal: response.data.expTotal,
-          incTotal: response.data.incTotal,
-          wkhrTotal: response.data.wkhrTotal,
-          expenses: response.data.expenses,
-          incomes: response.data.incomes,
-          work_hours: response.data.work_hours,
+          cwdate: response.cwdate,
+          netincome: response.netincome,
+          expTotal: response.expTotal,
+          incTotal: response.incTotal,
+          wkhrTotal: response.wkhrTotal,
+          expenses: response.expenses,
+          incomes: response.incomes,
+          work_hours: response.work_hours,
           isLoaded: true,
         });
       })
