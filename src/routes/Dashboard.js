@@ -7,6 +7,7 @@ import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
 import CashFlowTable from '../components/CashFlowTable';
 import ExpenseTable from '../components/ExpenseTable';
+import WorkHourTable from '../components/WorkHourTable';
 import IncomeTable from '../components/IncomeTable';
 import DashboardService from '../service/DashboardService';
 
@@ -21,6 +22,8 @@ class Dashboard extends Component {
   state = {
     isLoaded: false,
     reload_expense_state: false,
+    reload_income_state: false,
+    reload_workHour_state: false,
   };
 
   get_dash_data = this.get_dash_data.bind(this);
@@ -28,23 +31,8 @@ class Dashboard extends Component {
   stop_reload_expenses = this.stop_reload_expenses.bind(this);
   reload_incomes = this.reload_incomes.bind(this);
   stop_reload_incomes = this.stop_reload_incomes.bind(this);
-
-  layout = [
-    { i: 'net-income-year', x: 3, y: 0, w: 3, h: 3 },
-    { i: 'net-income-month', x: 6, y: 0, w: 3, h: 3 },
-    { i: 'net-income-week', x: 0, y: 4, w: 3, h: 3 },
-    { i: 'last-5-expenses', x: 0, y: 7, w: 4, h: 9 },
-    { i: 'last-5-incomes', x: 4, y: 7, w: 4, h: 9 },
-    { i: 'last-5-work-hours', x: 8, y: 7, w: 1, h: 9 },
-  ];
-
-  layouts = {
-    lg: this.layout,
-    md: this.layout,
-    sm: this.layout,
-    xs: this.layout,
-    xxs: this.layout,
-  };
+  reload_workHours = this.reload_workHours.bind(this);
+  stop_reload_workHours = this.stop_reload_workHours.bind(this);
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
@@ -90,41 +78,29 @@ class Dashboard extends Component {
       reload_income_state: false,
     });
   }
-  reload_work_hours() {
+  reload_workHours() {
     this.setState({
-      reload_work_hour_state: true,
+      reload_workHour_state: true,
     });
   }
 
-  stop_reload_work_hours() {
+  stop_reload_workHours() {
     this.setState({
-      reload_work_hour_state: false,
+      reload_workHour_state: false,
     });
   }
 
   render() {
     const {
       isLoaded,
-      work_hours,
       net_income_week,
       net_income_month,
       net_income_year,
       reload_expense_state,
       reload_income_state,
+      reload_workHour_state,
     } = this.state;
     if (!isLoaded) return <Loader />;
-
-    var workHoursData = [];
-    work_hours.map((wkhr) => {
-      var date = new Date(wkhr.date + ' 12:00');
-      workHoursData.push([
-        date.getMonth() + 1 + '/' + date.getDate(),
-        formatter.format(wkhr.amount),
-        wkhr.source,
-        wkhr.id,
-      ]);
-      return null;
-    });
 
     const { classes, user, history } = this.props;
     return (
@@ -136,7 +112,7 @@ class Dashboard extends Component {
           get_dash_data={this.get_dash_data}
           reload_expenses={this.reload_expenses}
           reload_incomes={this.reload_incomes}
-          reload_work_hours={this.reload_work_hours}
+          reload_workHours={this.reload_workHours}
         />
         <div className={classes.root}>
           <Grid
@@ -178,11 +154,11 @@ class Dashboard extends Component {
               />
             </Grid>
             <Grid item xs={3} key="last-5-work-hours">
-              <CashFlowTable
-                title="Recent Work Hours"
-                dataTextSize="subtitle1"
-                headers={['date', 'hours', 'source']}
-                rows={workHoursData}
+              <WorkHourTable
+                user={user}
+                reload={reload_workHour_state}
+                stop_reload={this.stop_reload_workHours}
+                get_dash_data={this.get_dash_data}
               />
             </Grid>
           </Grid>

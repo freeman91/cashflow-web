@@ -15,7 +15,8 @@ import {
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
-import Expense from '../service/ExpenseService';
+import WorkHour from '../service/WorkHourService';
+import Income from '../service/IncomeService';
 import getDate from '../helpers/getDate';
 
 const styles = (theme) => ({
@@ -34,12 +35,17 @@ const styles = (theme) => ({
   },
 });
 
-class ExpenseDialogEdit extends Component {
-  state = {
-    open: false,
-    value: { group: '', date: new Date() },
-    isLoaded: false,
-  };
+const defaultState = {
+  open: false,
+  value: {
+    amount: null,
+    source: '',
+    date: new Date(),
+  },
+};
+
+class WorkHourDialogEdit extends Component {
+  state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
     const { open, value } = newProps;
@@ -48,13 +54,11 @@ class ExpenseDialogEdit extends Component {
         value: {
           id: value.id,
           amount: value.amount,
-          group: value.group,
-          vendor: value.vendor,
-          description: value.description,
+          source: value.source,
           date: getDate(value.date),
         },
       });
-      this.get_expense_groups();
+      this.get_income_sources();
     }
   }
 
@@ -71,7 +75,7 @@ class ExpenseDialogEdit extends Component {
     this.setState({
       value: {
         ...this.state.value,
-        group: event.target.value,
+        source: event.target.value,
       },
     });
   };
@@ -82,10 +86,10 @@ class ExpenseDialogEdit extends Component {
     });
   };
 
-  async get_expense_groups() {
-    Expense.getGroups(this.props.user.auth_token).then((result) => {
+  async get_income_sources() {
+    Income.getSources(this.props.user.auth_token).then((result) => {
       this.setState({
-        groups: result.expense_groups,
+        sources: result.income_sources,
         isLoaded: true,
       });
     });
@@ -93,41 +97,34 @@ class ExpenseDialogEdit extends Component {
 
   handleSubmit = () => {
     const { value } = this.state;
-    const { user, handleClose, get_expenses, get_dash_data } = this.props;
-    if (isNaN(value.amount) || value.group === '') {
+    const { user, handleClose, get_workHours, get_dash_data } = this.props;
+    if (isNaN(value.amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      Expense.edit(
+      WorkHour.edit(
         {
           id: value.id,
           amount: Number(value.amount),
-          group: value.group,
-          vendor: value.vendor,
-          description: value.description,
+          source: value.source,
           date: value.date,
         },
         user.auth_token
       ).then(() => {
         this.setState({
           open: false,
-          value: {
-            amount: null,
-            group: '',
-            description: '',
-            date: new Date(),
-          },
+          value: { ...defaultState },
         });
         get_dash_data();
-        get_expenses();
+        get_workHours();
         handleClose();
       });
     }
   };
 
   handleDelete = () => {
-    Expense._delete(this.state.value.id, this.props.user.auth_token).then(
+    WorkHour._delete(this.state.value.id, this.props.user.auth_token).then(
       () => {
-        this.props.get_expenses();
+        this.props.get_workHours();
         this.props.get_dash_data();
         this.props.handleClose();
       }
@@ -136,16 +133,16 @@ class ExpenseDialogEdit extends Component {
 
   render() {
     const { open, classes, handleClose } = this.props;
-    const { groups, isLoaded, value } = this.state;
+    const { sources, isLoaded, value } = this.state;
     if (!isLoaded) return null;
 
     return (
       <Dialog
         onClose={handleClose}
-        aria-labelledby="expense-dialog"
+        aria-labelledby="work-hour-dialog"
         open={open}
       >
-        <DialogTitle id="expense-dialog-title">Edit Expense</DialogTitle>
+        <DialogTitle id="work-hour-dialog-title">Edit Work Hour</DialogTitle>
         <DialogContent>
           <form className={classes.form}>
             <Input
@@ -164,39 +161,21 @@ class ExpenseDialogEdit extends Component {
               }
             />
             <TextField
-              id="group"
+              id="source"
               select
-              label="group"
-              value={value.group}
+              label="source"
+              value={value.source}
               onChange={this.handleGroupSelect}
               fullWidth
               className={classes.dialog}
               required={true}
             >
-              {groups.sort().map((group) => (
-                <MenuItem key={group} value={group}>
-                  {group}
+              {sources.sort().map((source) => (
+                <MenuItem key={source} value={source}>
+                  {source}
                 </MenuItem>
               ))}
             </TextField>
-            <Input
-              id="vendor"
-              placeholder="vendor"
-              inputProps={{ 'aria-label': 'vendor' }}
-              onChange={this.handleChange}
-              fullWidth
-              className={classes.dialog}
-              defaultValue={value.vendor}
-            />
-            <Input
-              id="description"
-              placeholder="description"
-              inputProps={{ 'aria-label': 'description' }}
-              onChange={this.handleChange}
-              fullWidth
-              className={classes.dialog}
-              defaultValue={value.description}
-            />
             <DatePicker
               id="date"
               className={classes.date}
@@ -238,4 +217,4 @@ class ExpenseDialogEdit extends Component {
   }
 }
 
-export default withStyles(styles)(ExpenseDialogEdit);
+export default withStyles(styles)(WorkHourDialogEdit);

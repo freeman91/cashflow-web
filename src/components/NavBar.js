@@ -26,6 +26,7 @@ import {
 
 import ExpenseDialogNew from './ExpenseDialogNew.js';
 import IncomeDialogNew from './IncomeDialogNew.js';
+import WorkHourDialogNew from './WorkHourDialogNew.js';
 import Session from '../service/SessionService';
 
 const styles = (theme) => ({
@@ -53,13 +54,17 @@ const styles = (theme) => ({
   },
 });
 
+const defaultState = {
+  left: false,
+  dialogs: {
+    expOpen: false,
+    incOpen: false,
+    whOpen: false,
+  },
+};
+
 class NavBar extends Component {
-  state = {
-    left: false,
-    expenseDialogOpen: false,
-    incomeDialogOpen: false,
-    workHourDialogOpen: false,
-  };
+  state = { ...defaultState };
 
   toggleSlider = (slider, open) => () => {
     this.setState({
@@ -69,21 +74,15 @@ class NavBar extends Component {
   };
 
   handleCreateClickExpense = () => {
-    this.setState({
-      expenseDialogOpen: true,
-    });
+    this.setState({ dialogs: { ...defaultState.dialogs, expOpen: true } });
   };
 
   handleCreateClickIncome = () => {
-    this.setState({
-      incomeDialogOpen: true,
-    });
+    this.setState({ dialogs: { ...defaultState.dialogs, incOpen: true } });
   };
 
   handleCreateClickWorkHour = () => {
-    this.setState({
-      workHourDialogOpen: true,
-    });
+    this.setState({ dialogs: { ...defaultState.dialogs, whOpen: true } });
   };
 
   async handleLogoutClick() {
@@ -95,9 +94,7 @@ class NavBar extends Component {
 
   handleClose = () => {
     this.setState({
-      expenseDialogOpen: false,
-      incomeDialogOpen: false,
-      workHourDialogOpen: false,
+      ...defaultState,
     });
   };
 
@@ -161,6 +158,7 @@ class NavBar extends Component {
       get_dash_data,
       reload_expenses,
       reload_incomes,
+      reload_workHours,
     } = this.props;
 
     return (
@@ -221,17 +219,24 @@ class NavBar extends Component {
           </AppBar>
           <ExpenseDialogNew
             user={user}
-            open={this.state.expenseDialogOpen}
+            open={this.state.dialogs.expOpen}
             handleClose={this.handleClose}
             get_dash_data={get_dash_data}
             reload_expenses={reload_expenses}
           />
           <IncomeDialogNew
             user={user}
-            open={this.state.incomeDialogOpen}
+            open={this.state.dialogs.incOpen}
             handleClose={this.handleClose}
             get_dash_data={get_dash_data}
             reload_incomes={reload_incomes}
+          />
+          <WorkHourDialogNew
+            user={user}
+            open={this.state.dialogs.whOpen}
+            handleClose={this.handleClose}
+            get_dash_data={get_dash_data}
+            reload_workHours={reload_workHours}
           />
         </Box>
       </>

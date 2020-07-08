@@ -18,7 +18,7 @@ import {
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import formatter from '../helpers/currency';
-import ExpenseDialogEdit from './ExpenseDialogEdit';
+import WorkHourDialogEdit from './WorkHourDialogEdit';
 import Dashboard from '../service/DashboardService';
 
 const styles = (theme) => ({
@@ -45,68 +45,64 @@ const styles = (theme) => ({
   },
 });
 
-class CashFlowTableExpense extends Component {
-  state = {
-    isLoaded: false,
-    open: false,
-    collapse: true,
-    value: {
-      amount: 0,
-      id: 0,
-      vendor: '',
-      description: '',
-      group: '',
-      date: new Date(),
-    },
-  };
+const defaultState = {
+  isLoaded: false,
+  open: false,
+  collapse: true,
+  value: {
+    amount: 0,
+    id: 0,
+    source: '',
+    date: new Date(),
+  },
+};
 
-  get_expenses = this.get_expenses.bind(this);
+class WorkHourTable extends Component {
+  state = { ...defaultState };
+
+  get_workHours = this.get_workHours.bind(this);
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_expenses();
+      this.get_workHours();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.get_expenses().then(() => {
+      this.get_workHours().then(() => {
         this.props.stop_reload();
       });
     }
   }
 
-  async get_expenses() {
-    Dashboard.getExpenses(this.props.user.auth_token).then((result) => {
+  async get_workHours() {
+    Dashboard.getWorkHours(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
-          expenses: result.expenses,
+          workHours: result.workHours,
           isLoaded: true,
         });
       }
     });
   }
 
-  handleClick = (expense) => {
+  handleClick = (workHour) => {
     this.setState({
       open: true,
       value: {
-        id: expense[0],
-        amount: expense[1],
-        group: expense[2],
-        vendor: expense[3],
-        description: expense[4],
-        date: expense[5],
+        id: workHour[0],
+        amount: workHour[1],
+        source: workHour[2],
+        date: workHour[3],
       },
     });
   };
 
   handleClose = () => {
-    this.setState({
-      open: false,
-    });
+    this.setState({ ...defaultState });
   };
 
   handleCollapse = () => {
@@ -117,19 +113,12 @@ class CashFlowTableExpense extends Component {
 
   render() {
     const { classes, user, get_dash_data } = this.props;
-    const { expenses, isLoaded, open, value, collapse } = this.state;
+    const { workHours, isLoaded, open, value, collapse } = this.state;
     if (!isLoaded) return null;
 
-    var expensesData = [];
-    expenses.map((exp) => {
-      expensesData.push([
-        exp.id,
-        exp.amount,
-        exp.group,
-        exp.vendor,
-        exp.description,
-        exp.date,
-      ]);
+    var workHoursData = [];
+    workHours.map((exp) => {
+      workHoursData.push([exp.id, exp.amount, exp.source, exp.date]);
       return null;
     });
 
@@ -137,7 +126,7 @@ class CashFlowTableExpense extends Component {
       <>
         <Card className={classes.card} variant="outlined">
           <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            Recent Expenses
+            Recent Work Hours
           </Typography>
           <Button onClick={this.handleCollapse}>
             {collapse ? <ExpandLess /> : <ExpandMore />}
@@ -147,7 +136,7 @@ class CashFlowTableExpense extends Component {
               <Table>
                 <TableHead>
                   <TableRow>
-                    {['date', 'amount', 'group', 'vendor'].map((header) => {
+                    {['date', 'amount', 'source'].map((header) => {
                       return (
                         <TableCell key={`${header}-header`}>
                           <Typography
@@ -163,34 +152,29 @@ class CashFlowTableExpense extends Component {
                 </TableHead>
 
                 <TableBody>
-                  {expensesData.map((expense, idx) => {
+                  {workHoursData.map((workHour, idx) => {
                     return (
                       <TableRow
-                        key={`${expense[0]}-data`}
+                        key={`${workHour[0]}-data`}
                         hover
-                        onClick={() => this.handleClick(expense)}
+                        onClick={() => this.handleClick(workHour)}
                       >
                         <TableCell key={`date-${idx}`}>
                           <Typography variant="subtitle1">
-                            {new Date(expense[5] + ' 12:00').getMonth() +
+                            {new Date(workHour[3] + ' 12:00').getMonth() +
                               1 +
                               '/' +
-                              new Date(expense[5] + ' 12:00').getDate()}
+                              new Date(workHour[3] + ' 12:00').getDate()}
                           </Typography>
                         </TableCell>
                         <TableCell key={`amount-${idx}`}>
                           <Typography variant="subtitle1">
-                            {formatter.format(expense[1])}
+                            {formatter.format(workHour[1])}
                           </Typography>
                         </TableCell>
-                        <TableCell key={`group-${idx}`}>
+                        <TableCell key={`source-${idx}`}>
                           <Typography variant="subtitle1">
-                            {expense[2]}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`vendor-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {expense[3]}
+                            {workHour[2]}
                           </Typography>
                         </TableCell>
                       </TableRow>
@@ -201,12 +185,12 @@ class CashFlowTableExpense extends Component {
             </Collapse>
           </TableContainer>
         </Card>
-        <ExpenseDialogEdit
+        <WorkHourDialogEdit
           open={open}
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_expenses={this.get_expenses}
+          get_workHours={this.get_workHours}
           get_dash_data={get_dash_data}
         />
       </>
@@ -214,4 +198,4 @@ class CashFlowTableExpense extends Component {
   }
 }
 
-export default withStyles(styles)(CashFlowTableExpense);
+export default withStyles(styles)(WorkHourTable);

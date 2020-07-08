@@ -33,12 +33,18 @@ const styles = (theme) => ({
   },
 });
 
+const defaultState = {
+  open: false,
+  value: {
+    amount: null,
+    source: '',
+    description: '',
+    date: new Date(),
+  },
+};
+
 class IncomeDialogNew extends Component {
-  state = {
-    open: false,
-    value: { source: '', date: new Date() },
-    isLoaded: false,
-  };
+  state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
     const { user, history } = newProps;
@@ -98,15 +104,7 @@ class IncomeDialogNew extends Component {
         this.props.user.auth_token
       ).then((result) => {
         if (result.status === 201) {
-          this.setState({
-            open: false,
-            value: {
-              amount: null,
-              source: '',
-              description: '',
-              date: new Date(),
-            },
-          });
+          this.setState({ ...defaultState });
           this.props.reload_incomes();
           this.props.get_dash_data();
           this.props.handleClose();
