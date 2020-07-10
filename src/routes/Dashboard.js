@@ -34,7 +34,7 @@ class Dashboard extends Component {
     }
   }
 
-  get_dash_data = () => {
+  get_dash_data = async () => {
     DashboardService.getData(this.props.user.auth_token).then((result) => {
       this.setState({
         incomes: result.incomes,
@@ -101,7 +101,7 @@ class Dashboard extends Component {
           title={'Dashboard'}
           user={user}
           history={history}
-          get_dash_data={this.get_dash_data}
+          get_data={this.get_dash_data}
           reload_expenses={this.reload_expenses}
           reload_incomes={this.reload_incomes}
           reload_workHours={this.reload_workHours}
@@ -134,7 +134,7 @@ class Dashboard extends Component {
                 user={user}
                 reload={reload_expense_state}
                 stop_reload={this.stop_reload_expenses}
-                get_dash_data={this.get_dash_data}
+                get_data={this.get_dash_data}
               />
             </Grid>
             <Grid item xs={4} key="last-5-incomes">
@@ -142,7 +142,7 @@ class Dashboard extends Component {
                 user={user}
                 reload={reload_income_state}
                 stop_reload={this.stop_reload_incomes}
-                get_dash_data={this.get_dash_data}
+                get_data={this.get_dash_data}
               />
             </Grid>
             <Grid item xs={3} key="last-5-work-hours">
@@ -150,7 +150,6 @@ class Dashboard extends Component {
                 user={user}
                 reload={reload_workHour_state}
                 stop_reload={this.stop_reload_workHours}
-                get_dash_data={this.get_dash_data}
               />
             </Grid>
           </Grid>

@@ -92,7 +92,7 @@ class IncomeDialogEdit extends Component {
 
   handleSubmit = () => {
     const { value } = this.state;
-    const { user, handleClose, get_incomes, get_dash_data } = this.props;
+    const { user, handleClose, get_incomes, get_data } = this.props;
     if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -115,7 +115,7 @@ class IncomeDialogEdit extends Component {
             date: new Date(),
           },
         });
-        get_dash_data();
+        get_data();
         get_incomes();
         handleClose();
       });
@@ -125,7 +125,7 @@ class IncomeDialogEdit extends Component {
   handleDelete = () => {
     Income._delete(this.state.value.id, this.props.user.auth_token).then(() => {
       this.props.get_incomes();
-      this.props.get_dash_data();
+      this.props.get_data();
       this.props.handleClose();
     });
   };

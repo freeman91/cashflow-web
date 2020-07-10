@@ -9,9 +9,20 @@ const getData = async function (auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
+const getBills = async function (auth_token) {
+  return axios
+    .get(API_HOST + '/month/bills', {
+      headers: { Authorization: auth_token },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => console.error(error));
+};
 export default {
   getData,
+  getBills,
 };

@@ -91,6 +91,7 @@ class IncomeDialogNew extends Component {
   }
 
   handleSubmit = () => {
+    const { user, get_data, reload_incomes, handleClose } = this.props;
     if (isNaN(this.state.value.amount) || this.state.value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -101,13 +102,13 @@ class IncomeDialogNew extends Component {
           description: this.state.value.description,
           date: this.state.value.date,
         },
-        this.props.user.auth_token
+        user.auth_token
       ).then((result) => {
         if (result.status === 201) {
           this.setState({ ...defaultState });
-          this.props.reload_incomes();
-          this.props.get_dash_data();
-          this.props.handleClose();
+          if (reload_incomes) reload_incomes();
+          if (get_data) get_data();
+          handleClose();
         }
       });
     }

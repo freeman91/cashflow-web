@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import formatter from '../helpers/currency';
+import formatter_no$ from '../helpers/currency_no$';
 import WorkHourDialogEdit from './WorkHourDialogEdit';
 import Dashboard from '../service/DashboardService';
 
@@ -60,8 +60,6 @@ const defaultState = {
 class WorkHourTable extends Component {
   state = { ...defaultState };
 
-  get_workHours = this.get_workHours.bind(this);
-
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
@@ -78,7 +76,7 @@ class WorkHourTable extends Component {
     }
   }
 
-  async get_workHours() {
+  get_workHours = async () => {
     Dashboard.getWorkHours(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
@@ -87,7 +85,7 @@ class WorkHourTable extends Component {
         });
       }
     });
-  }
+  };
 
   handleClick = (workHour) => {
     this.setState({
@@ -112,7 +110,7 @@ class WorkHourTable extends Component {
   };
 
   render() {
-    const { classes, user, get_dash_data } = this.props;
+    const { classes, user } = this.props;
     const { workHours, isLoaded, open, value, collapse } = this.state;
     if (!isLoaded) return null;
 
@@ -169,7 +167,7 @@ class WorkHourTable extends Component {
                         </TableCell>
                         <TableCell key={`amount-${idx}`}>
                           <Typography variant="subtitle1">
-                            {formatter.format(workHour[1])}
+                            {formatter_no$.format(workHour[1])}
                           </Typography>
                         </TableCell>
                         <TableCell key={`source-${idx}`}>
@@ -191,7 +189,6 @@ class WorkHourTable extends Component {
           user={user}
           value={value}
           get_workHours={this.get_workHours}
-          get_dash_data={get_dash_data}
         />
       </>
     );

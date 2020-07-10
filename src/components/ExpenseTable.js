@@ -60,8 +60,6 @@ class ExpenseTable extends Component {
     },
   };
 
-  get_expenses = this.get_expenses.bind(this);
-
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
@@ -78,7 +76,7 @@ class ExpenseTable extends Component {
     }
   }
 
-  async get_expenses() {
+  get_expenses = async () => {
     Dashboard.getExpenses(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
@@ -87,7 +85,7 @@ class ExpenseTable extends Component {
         });
       }
     });
-  }
+  };
 
   handleClick = (expense) => {
     this.setState({
@@ -98,7 +96,8 @@ class ExpenseTable extends Component {
         group: expense[2],
         vendor: expense[3],
         description: expense[4],
-        date: expense[5],
+        bill: expense[5],
+        date: expense[6],
       },
     });
   };
@@ -116,7 +115,7 @@ class ExpenseTable extends Component {
   };
 
   render() {
-    const { classes, user, get_dash_data } = this.props;
+    const { classes, user, get_data } = this.props;
     const { expenses, isLoaded, open, value, collapse } = this.state;
     if (!isLoaded) return null;
 
@@ -128,6 +127,7 @@ class ExpenseTable extends Component {
         exp.group,
         exp.vendor,
         exp.description,
+        exp.bill,
         exp.date,
       ]);
       return null;
@@ -172,10 +172,10 @@ class ExpenseTable extends Component {
                       >
                         <TableCell key={`date-${idx}`}>
                           <Typography variant="subtitle1">
-                            {new Date(expense[5] + ' 12:00').getMonth() +
+                            {new Date(expense[6] + ' 12:00').getMonth() +
                               1 +
                               '/' +
-                              new Date(expense[5] + ' 12:00').getDate()}
+                              new Date(expense[6] + ' 12:00').getDate()}
                           </Typography>
                         </TableCell>
                         <TableCell key={`amount-${idx}`}>
@@ -207,7 +207,7 @@ class ExpenseTable extends Component {
           user={user}
           value={value}
           get_expenses={this.get_expenses}
-          get_dash_data={get_dash_data}
+          get_data={get_data}
         />
       </>
     );

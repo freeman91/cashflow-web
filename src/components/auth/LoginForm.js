@@ -55,16 +55,13 @@ class LoginForm extends Component {
     loginErrors: '',
   };
 
-  handleSubmit = this.handleSubmit.bind(this);
-  handleChange = this.handleChange.bind(this);
-
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
-  }
+  };
 
-  async handleSubmit(event) {
+  handleSubmit = async (event) => {
     const { email, password } = this.state;
     Session.create(email, password)
       .then((response) => {
@@ -76,7 +73,7 @@ class LoginForm extends Component {
         console.error('login error', error);
       });
     event.preventDefault();
-  }
+  };
 
   render() {
     const { classes } = this.props;

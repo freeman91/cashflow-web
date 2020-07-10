@@ -89,6 +89,7 @@ class WorkHourDialogNew extends Component {
   }
 
   handleSubmit = () => {
+    const { user, reload_workHours, handleClose } = this.props;
     if (isNaN(this.state.value.amount) || this.state.value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -98,7 +99,7 @@ class WorkHourDialogNew extends Component {
           source: this.state.value.source,
           date: this.state.value.date,
         },
-        this.props.user.auth_token
+        user.auth_token
       ).then((result) => {
         if (result.status === 201) {
           this.setState({
@@ -109,9 +110,8 @@ class WorkHourDialogNew extends Component {
               date: new Date(),
             },
           });
-          this.props.reload_workHours();
-          this.props.get_dash_data();
-          this.props.handleClose();
+          if (reload_workHours) reload_workHours();
+          handleClose();
         }
       });
     }

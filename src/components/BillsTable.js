@@ -18,8 +18,8 @@ import {
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import formatter from '../helpers/currency';
-import IncomeDialogEdit from './IncomeDialogEdit';
-import Dashboard from '../service/DashboardService';
+import ExpenseDialogEdit from './ExpenseDialogEdit';
+import Month from '../service/MonthService';
 
 const styles = (theme) => ({
   card: {
@@ -45,7 +45,7 @@ const styles = (theme) => ({
   },
 });
 
-class IncomeTable extends Component {
+class BillTable extends Component {
   state = {
     isLoaded: false,
     open: false,
@@ -53,8 +53,10 @@ class IncomeTable extends Component {
     value: {
       amount: 0,
       id: 0,
-      source: '',
+      vendor: '',
       description: '',
+      group: '',
+      bill: true,
       date: new Date(),
     },
   };
@@ -63,38 +65,40 @@ class IncomeTable extends Component {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_incomes();
+      this.getBills();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.get_incomes().then(() => {
+      this.getBills().then(() => {
         this.props.stop_reload();
       });
     }
   }
 
-  get_incomes = async () => {
-    Dashboard.getIncomes(this.props.user.auth_token).then((result) => {
+  getBills = async () => {
+    Month.getBills(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
-          incomes: result.incomes,
+          bills: result.bills,
           isLoaded: true,
         });
       }
     });
   };
 
-  handleClick = (income) => {
+  handleClick = (bill) => {
     this.setState({
       open: true,
       value: {
-        id: income[0],
-        amount: income[1],
-        source: income[2],
-        description: income[3],
-        date: income[4],
+        id: bill[0],
+        amount: bill[1],
+        group: bill[2],
+        vendor: bill[3],
+        description: bill[4],
+        bill: bill[5],
+        date: bill[6],
       },
     });
   };
@@ -112,18 +116,20 @@ class IncomeTable extends Component {
   };
 
   render() {
-    const { classes, user, get_data } = this.props;
-    const { incomes, isLoaded, open, value, collapse } = this.state;
+    const { classes, user, month, get_data } = this.props;
+    const { bills, isLoaded, open, value, collapse } = this.state;
     if (!isLoaded) return null;
 
-    var incomesData = [];
-    incomes.map((income) => {
-      incomesData.push([
-        income.id,
-        income.amount,
-        income.source,
-        income.description,
-        income.date,
+    var billsData = [];
+    bills.map((bill) => {
+      billsData.push([
+        bill.id,
+        bill.amount,
+        bill.group,
+        bill.vendor,
+        bill.description,
+        bill.bill,
+        bill.date,
       ]);
       return null;
     });
@@ -132,7 +138,7 @@ class IncomeTable extends Component {
       <>
         <Card className={classes.card} variant="outlined">
           <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            Recent Incomes
+            {month + ' Bills'}
           </Typography>
           <Button onClick={this.handleCollapse}>
             {collapse ? <ExpandLess /> : <ExpandMore />}
@@ -142,7 +148,7 @@ class IncomeTable extends Component {
               <Table>
                 <TableHead>
                   <TableRow>
-                    {['date', 'amount', 'source'].map((header) => {
+                    {['date', 'amount', 'group', 'vendor'].map((header) => {
                       return (
                         <TableCell key={`${header}-header`}>
                           <Typography
@@ -158,29 +164,32 @@ class IncomeTable extends Component {
                 </TableHead>
 
                 <TableBody>
-                  {incomesData.map((income, idx) => {
+                  {billsData.map((bill, idx) => {
                     return (
                       <TableRow
-                        key={`${income[0]}-data`}
+                        key={`${bill[0]}-data`}
                         hover
-                        onClick={() => this.handleClick(income)}
+                        onClick={() => this.handleClick(bill)}
                       >
                         <TableCell key={`date-${idx}`}>
                           <Typography variant="subtitle1">
-                            {new Date(income[4] + ' 12:00').getMonth() +
+                            {new Date(bill[6] + ' 12:00').getMonth() +
                               1 +
                               '/' +
-                              new Date(income[4] + ' 12:00').getDate()}
+                              new Date(bill[6] + ' 12:00').getDate()}
                           </Typography>
                         </TableCell>
                         <TableCell key={`amount-${idx}`}>
                           <Typography variant="subtitle1">
-                            {formatter.format(income[1])}
+                            {formatter.format(bill[1])}
                           </Typography>
                         </TableCell>
-                        <TableCell key={`source-${idx}`}>
+                        <TableCell key={`group-${idx}`}>
+                          <Typography variant="subtitle1">{bill[2]}</Typography>
+                        </TableCell>
+                        <TableCell key={`vendor-${idx}`}>
                           <Typography variant="subtitle1">
-                            {income[2]}
+                            {bill[3].substring(0, 10)}
                           </Typography>
                         </TableCell>
                       </TableRow>
@@ -191,12 +200,12 @@ class IncomeTable extends Component {
             </Collapse>
           </TableContainer>
         </Card>
-        <IncomeDialogEdit
+        <ExpenseDialogEdit
           open={open}
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_incomes={this.get_incomes}
+          get_expenses={this.getBills}
           get_data={get_data}
         />
       </>
@@ -204,4 +213,4 @@ class IncomeTable extends Component {
   }
 }
 
-export default withStyles(styles)(IncomeTable);
+export default withStyles(styles)(BillTable);

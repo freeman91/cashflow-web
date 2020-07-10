@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import { isEqual } from 'lodash';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -10,6 +11,7 @@ import {
   Input,
   InputAdornment,
   TextField,
+  Typography,
   MenuItem,
   withStyles,
 } from '@material-ui/core';
@@ -26,7 +28,7 @@ const styles = (theme) => ({
   },
   date: {
     margin: theme.spacing(2),
-    width: '300%',
+    width: '150%',
   },
   button: {
     opacity: 0.7,
@@ -39,6 +41,7 @@ const defaultState = {
     amount: null,
     group: '',
     vendor: '',
+    bill: false,
     description: '',
     date: new Date(),
   },
@@ -76,6 +79,15 @@ class ExpenseDialogNew extends Component {
     });
   };
 
+  handleCheckbox = () => {
+    this.setState({
+      value: {
+        ...this.state.value,
+        bill: !this.state.value.bill,
+      },
+    });
+  };
+
   handleDateChange = (date) => {
     this.setState({
       value: { ...this.state.value, date: date },
@@ -92,24 +104,27 @@ class ExpenseDialogNew extends Component {
   }
 
   handleSubmit = () => {
-    if (isNaN(this.state.value.amount) || this.state.value.group === '') {
+    const { value } = this.state;
+    const { user, reload_expenses, get_data, handleClose } = this.props;
+    if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
       Expense.create(
         {
-          amount: Number(this.state.value.amount),
-          group: this.state.value.group,
-          vendor: this.state.value.vendor,
-          description: this.state.value.description,
-          date: this.state.value.date,
+          amount: Number(value.amount),
+          group: value.group,
+          vendor: value.vendor,
+          description: value.description,
+          bill: value.bill,
+          date: value.date,
         },
-        this.props.user.auth_token
+        user.auth_token
       ).then((result) => {
         if (result.status === 201) {
           this.setState({ ...defaultState });
-          this.props.reload_expenses();
-          this.props.get_dash_data();
-          this.props.handleClose();
+          if (reload_expenses) reload_expenses();
+          if (get_data) get_data();
+          handleClose();
         }
       });
     }
@@ -174,6 +189,13 @@ class ExpenseDialogNew extends Component {
               fullWidth
               className={classes.dialog}
             />
+            <Checkbox
+              id="bill"
+              onChange={this.handleCheckbox}
+              checked={value.bill}
+              className={classes.dialog}
+            />
+            <Typography variant="body1">bill?</Typography>
             <DatePicker
               id="date"
               className={classes.date}

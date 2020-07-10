@@ -155,7 +155,7 @@ class NavBar extends Component {
     const {
       title,
       user,
-      get_dash_data,
+      get_data,
       reload_expenses,
       reload_incomes,
       reload_workHours,
@@ -221,22 +221,22 @@ class NavBar extends Component {
             user={user}
             open={this.state.dialogs.expOpen}
             handleClose={this.handleClose}
-            get_dash_data={get_dash_data}
+            get_data={get_data}
             reload_expenses={reload_expenses}
           />
           <IncomeDialogNew
             user={user}
             open={this.state.dialogs.incOpen}
             handleClose={this.handleClose}
-            get_dash_data={get_dash_data}
+            get_data={get_data}
             reload_incomes={reload_incomes}
           />
           <WorkHourDialogNew
             user={user}
             open={this.state.dialogs.whOpen}
             handleClose={this.handleClose}
-            get_dash_data={get_dash_data}
             reload_workHours={reload_workHours}
+            get_data={get_data}
           />
         </Box>
       </>

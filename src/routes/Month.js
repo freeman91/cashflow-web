@@ -6,6 +6,7 @@ import MonthService from '../service/MonthService';
 import formatter from '../helpers/currency';
 import NavBar from '../components/NavBar';
 import Loader from '../components/Loader';
+import BillsTable from '../components/BillsTable';
 import CashFlowTable from '../components/CashFlowTable';
 import month from '../helpers/month_name';
 
@@ -19,9 +20,10 @@ const styles = (theme) => ({
 class Month extends Component {
   state = {
     isLoaded: false,
+    reloadBillState: false,
   };
 
-  async get_month_data() {
+  get_month_data = async () => {
     MonthService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
@@ -31,12 +33,11 @@ class Month extends Component {
           expTotal: response.expTotal,
           incTotal: response.incTotal,
           wkhrTotal: response.wkhrTotal,
-          bills: response.bills,
           isLoaded: true,
         });
       })
       .catch((error) => console.log(error));
-  }
+  };
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
@@ -46,6 +47,18 @@ class Month extends Component {
     }
   }
 
+  reload_bills = () => {
+    this.setState({
+      reloadBillState: true,
+    });
+  };
+
+  stop_reload_bills = () => {
+    this.setState({
+      reloadBillState: false,
+    });
+  };
+
   render() {
     const {
       isLoaded,
@@ -54,7 +67,7 @@ class Month extends Component {
       expTotal,
       incTotal,
       wkhrTotal,
-      bills,
+      reloadBillState,
     } = this.state;
     if (!isLoaded) return <Loader />;
 
@@ -84,26 +97,15 @@ class Month extends Component {
       'month-stats-key',
     ]);
 
-    var billsData = [];
-    bills.map((bill) => {
-      var date = new Date(bill.date + ' 12:00');
-      billsData.push([
-        date.getMonth() + 1 + '/' + date.getDate(),
-        formatter.format(bill.amount),
-        bill.group,
-        bill.vendor,
-        bill.id,
-      ]);
-      return null;
-    });
-
     const { user, history, classes } = this.props;
     return (
       <>
         <NavBar
-          title={month[cwdate.month] + ' ' + cwdate.year}
+          title={month[cwdate.month - 1] + ' ' + cwdate.year}
           user={user}
           history={history}
+          reload_expenses={this.reload_bills}
+          get_data={this.get_month_data}
         />
         <div className={classes.root}>
           <Grid
@@ -131,11 +133,12 @@ class Month extends Component {
 
             {/* BILLS */}
             <Grid item xs={6} key="bills">
-              <CashFlowTable
-                title="Bills"
-                dataTextSize="subtitle2"
-                headers={['date', 'amount', 'group', 'vendor']}
-                rows={billsData}
+              <BillsTable
+                user={user}
+                reload={reloadBillState}
+                stop_reload={this.stop_reload_bills}
+                month={month[cwdate.month - 1]}
+                get_data={this.get_month_data}
               />
             </Grid>
           </Grid>

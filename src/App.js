@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Home from "./routes/Home";
-import Dashboard from "./routes/Dashboard";
-import Week from "./routes/Week";
-import Month from "./routes/Month";
-import Year from "./routes/Year";
-import NetWorth from "./routes/NetWorth";
-import Settings from "./routes/Settings";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import "./App.css";
+import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Home from './routes/Home';
+import Dashboard from './routes/Dashboard';
+import Week from './routes/Week';
+import Month from './routes/Month';
+import Year from './routes/Year';
+import NetWorth from './routes/NetWorth';
+import Settings from './routes/Settings';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import './App.css';
 
 const DARK = createMuiTheme({
   palette: {
-    type: "dark",
+    type: 'dark',
   },
 });
 
@@ -22,16 +22,12 @@ class App extends Component {
     user: {},
   };
 
-  handleLogin = this.handleLogin.bind(this);
-
-  componentDidMount() {}
-
-  handleLogin(data) {
+  handleLogin = (data) => {
     this.setState({
       loggedIn: true,
       user: data,
     });
-  }
+  };
 
   render() {
     return (
@@ -43,45 +39,45 @@ class App extends Component {
               <Switch>
                 <Route
                   exact
-                  path={"/"}
+                  path={'/'}
                   render={(props) => (
                     <Home {...props} handleLogin={this.handleLogin} />
                   )}
                 />
                 <Route
                   exact
-                  path={"/dashboard"}
+                  path={'/dashboard'}
                   render={(props) => (
                     <Dashboard {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   exact
-                  path={"/week"}
+                  path={'/week'}
                   render={(props) => <Week {...props} user={this.state.user} />}
                 />
                 <Route
                   exact
-                  path={"/month"}
+                  path={'/month'}
                   render={(props) => (
                     <Month {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   exact
-                  path={"/year"}
+                  path={'/year'}
                   render={(props) => <Year {...props} user={this.state.user} />}
                 />
                 <Route
                   exact
-                  path={"/networth"}
+                  path={'/networth'}
                   render={(props) => (
                     <NetWorth {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   exact
-                  path={"/settings"}
+                  path={'/settings'}
                   render={(props) => (
                     <Settings {...props} user={this.state.user} />
                   )}

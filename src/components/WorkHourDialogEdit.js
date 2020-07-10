@@ -97,7 +97,7 @@ class WorkHourDialogEdit extends Component {
 
   handleSubmit = () => {
     const { value } = this.state;
-    const { user, handleClose, get_workHours, get_dash_data } = this.props;
+    const { user, handleClose, get_workHours } = this.props;
     if (isNaN(value.amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -114,7 +114,6 @@ class WorkHourDialogEdit extends Component {
           open: false,
           value: { ...defaultState },
         });
-        get_dash_data();
         get_workHours();
         handleClose();
       });
@@ -125,7 +124,6 @@ class WorkHourDialogEdit extends Component {
     WorkHour._delete(this.state.value.id, this.props.user.auth_token).then(
       () => {
         this.props.get_workHours();
-        this.props.get_dash_data();
         this.props.handleClose();
       }
     );

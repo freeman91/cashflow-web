@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import formatter_no$ from '../helpers/currency_no$';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -34,12 +35,20 @@ const styles = (theme) => ({
   },
 });
 
+const defaultValue = {
+  open: false,
+  value: {
+    amount: null,
+    group: '',
+    description: '',
+    bill: false,
+    date: new Date(),
+  },
+  isLoaded: false,
+};
+
 class ExpenseDialogEdit extends Component {
-  state = {
-    open: false,
-    value: { group: '', date: new Date() },
-    isLoaded: false,
-  };
+  state = { ...defaultValue };
 
   componentWillReceiveProps(newProps) {
     const { open, value } = newProps;
@@ -51,6 +60,7 @@ class ExpenseDialogEdit extends Component {
           group: value.group,
           vendor: value.vendor,
           description: value.description,
+          bill: value.bill,
           date: getDate(value.date),
         },
       });
@@ -82,6 +92,15 @@ class ExpenseDialogEdit extends Component {
     });
   };
 
+  handleCheckbox = () => {
+    this.setState({
+      value: {
+        ...this.state.value,
+        bill: !this.state.value.bill,
+      },
+    });
+  };
+
   async get_expense_groups() {
     Expense.getGroups(this.props.user.auth_token).then((result) => {
       this.setState({
@@ -93,7 +112,7 @@ class ExpenseDialogEdit extends Component {
 
   handleSubmit = () => {
     const { value } = this.state;
-    const { user, handleClose, get_expenses, get_dash_data } = this.props;
+    const { user, handleClose, get_expenses, get_data } = this.props;
     if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -104,20 +123,13 @@ class ExpenseDialogEdit extends Component {
           group: value.group,
           vendor: value.vendor,
           description: value.description,
+          bill: value.bill,
           date: value.date,
         },
         user.auth_token
       ).then(() => {
-        this.setState({
-          open: false,
-          value: {
-            amount: null,
-            group: '',
-            description: '',
-            date: new Date(),
-          },
-        });
-        get_dash_data();
+        this.setState({ ...defaultValue });
+        get_data();
         get_expenses();
         handleClose();
       });
@@ -128,7 +140,7 @@ class ExpenseDialogEdit extends Component {
     Expense._delete(this.state.value.id, this.props.user.auth_token).then(
       () => {
         this.props.get_expenses();
-        this.props.get_dash_data();
+        this.props.get_data();
         this.props.handleClose();
       }
     );
@@ -196,6 +208,12 @@ class ExpenseDialogEdit extends Component {
               fullWidth
               className={classes.dialog}
               defaultValue={value.description}
+            />
+            <Checkbox
+              id="bill"
+              onChange={this.handleCheckbox}
+              checked={value.bill}
+              className={classes.dialog}
             />
             <DatePicker
               id="date"

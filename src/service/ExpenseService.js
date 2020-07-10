@@ -22,6 +22,7 @@ const create = async function (expense, auth_token) {
         vendor: expense.vendor,
         date: expense.date,
         description: expense.description,
+        bill: expense.bill,
       },
     })
     .catch((error) => console.log(error));
@@ -46,6 +47,7 @@ const edit = async function (expense, auth_token) {
         group: expense.group,
         vendor: expense.vendor,
         date: expense.date,
+        bill: expense.bill,
         description: expense.description,
       },
     })
