@@ -26,14 +26,6 @@ class Dashboard extends Component {
     reload_workHour_state: false,
   };
 
-  get_dash_data = this.get_dash_data.bind(this);
-  reload_expenses = this.reload_expenses.bind(this);
-  stop_reload_expenses = this.stop_reload_expenses.bind(this);
-  reload_incomes = this.reload_incomes.bind(this);
-  stop_reload_incomes = this.stop_reload_incomes.bind(this);
-  reload_workHours = this.reload_workHours.bind(this);
-  stop_reload_workHours = this.stop_reload_workHours.bind(this);
-
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
@@ -42,7 +34,7 @@ class Dashboard extends Component {
     }
   }
 
-  get_dash_data() {
+  get_dash_data = () => {
     DashboardService.getData(this.props.user.auth_token).then((result) => {
       this.setState({
         incomes: result.incomes,
@@ -53,42 +45,42 @@ class Dashboard extends Component {
         isLoaded: true,
       });
     });
-  }
+  };
 
-  reload_expenses() {
+  reload_expenses = () => {
     this.setState({
       reload_expense_state: true,
     });
-  }
+  };
 
-  stop_reload_expenses() {
+  stop_reload_expenses = () => {
     this.setState({
       reload_expense_state: false,
     });
-  }
+  };
 
-  reload_incomes() {
+  reload_incomes = () => {
     this.setState({
       reload_income_state: true,
     });
-  }
+  };
 
-  stop_reload_incomes() {
+  stop_reload_incomes = () => {
     this.setState({
       reload_income_state: false,
     });
-  }
-  reload_workHours() {
+  };
+  reload_workHours = () => {
     this.setState({
       reload_workHour_state: true,
     });
-  }
+  };
 
-  stop_reload_workHours() {
+  stop_reload_workHours = () => {
     this.setState({
       reload_workHour_state: false,
     });
-  }
+  };
 
   render() {
     const {
