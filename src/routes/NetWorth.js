@@ -1,132 +1,132 @@
-import React, { Component } from 'react';
-import { isEqual } from 'lodash';
-import { Grid, withStyles } from '@material-ui/core';
+// import React, { Component } from 'react';
+// import { isEqual } from 'lodash';
+// import { Grid, withStyles } from '@material-ui/core';
 
-import NetWorthService from '../service/NetWorthService';
-import formatter from '../helpers/currency';
-import NavBar from '../components/NavBar';
-import Loader from '../components/Loader';
-import CashFlowTable from '../components/CashFlowTable';
-import month from '../helpers/month_name';
+// import NetWorthService from '../service/NetWorthService';
+// import formatter from '../helpers/currency';
+// import NavBar from '../components/NavBar';
+// import Loader from '../components/Loader';
+// import CashFlowTable from '../components/CashFlowTable';
+// import month from '../helpers/month_name';
 
-const styles = (theme) => ({
-  root: {
-    flexGrow: 1,
-    margin: '10px',
-  },
-});
+// const styles = (theme) => ({
+//   root: {
+//     flexGrow: 1,
+//     margin: '10px',
+//   },
+// });
 
-class NetWorth extends Component {
-  state = {
-    isLoaded: false,
-  };
+// class NetWorth extends Component {
+//   state = {
+//     isLoaded: false,
+//   };
 
-  async get_networth_data() {
-    NetWorthService.getData(this.props.user.auth_token)
-      .then((response) => {
-        this.setState({
-          cwdate: response.cwdate,
-          assets: response.properties,
-          liabilities: response.debts,
-          netWorthLast12: response.netWorthLast12,
-          isLoaded: true,
-        });
-      })
-      .catch((error) => console.log(error));
-  }
+//   async get_networth_data() {
+//     NetWorthService.getData(this.props.user.auth_token)
+//       .then((response) => {
+//         this.setState({
+//           cwdate: response.cwdate,
+//           assets: response.properties,
+//           liabilities: response.debts,
+//           netWorthLast12: response.netWorthLast12,
+//           isLoaded: true,
+//         });
+//       })
+//       .catch((error) => console.log(error));
+//   }
 
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.get_networth_data();
-    }
-  }
+//   componentDidMount() {
+//     if (isEqual(this.props.user, {})) {
+//       this.props.history.push('/');
+//     } else {
+//       this.get_networth_data();
+//     }
+//   }
 
-  render() {
-    const { assets, liabilities, netWorthLast12, isLoaded } = this.state;
-    if (!isLoaded) return <Loader />;
+//   render() {
+//     const { assets, liabilities, netWorthLast12, isLoaded } = this.state;
+//     if (!isLoaded) return <Loader />;
 
-    var months = [];
-    var netWorthData = [];
-    netWorthLast12.map((record) => {
-      months.push(`${month[record[0] - 1]} ${record[1].toString().slice(-2)}`);
-      netWorthData.push(formatter.format(record[2]));
-      return null;
-    });
-    netWorthLast12.push('net-worth-last-12-key');
-    netWorthData = [netWorthData];
+//     var months = [];
+//     var netWorthData = [];
+//     netWorthLast12.map((record) => {
+//       months.push(`${month[record[0] - 1]} ${record[1].toString().slice(-2)}`);
+//       netWorthData.push(formatter.format(record[2]));
+//       return null;
+//     });
+//     netWorthLast12.push('net-worth-last-12-key');
+//     netWorthData = [netWorthData];
 
-    const assetsData = [];
-    assets.map((asset) => {
-      var date = new Date(asset.date + ' 12:00');
-      assetsData.push([
-        date.getMonth() + 1 + '/' + date.getDate(),
-        formatter.format(asset.amount),
-        asset.source,
-        asset.id,
-      ]);
-      return null;
-    });
+//     const assetsData = [];
+//     assets.map((asset) => {
+//       var date = new Date(asset.date + ' 12:00');
+//       assetsData.push([
+//         date.getMonth() + 1 + '/' + date.getDate(),
+//         formatter.format(asset.amount),
+//         asset.source,
+//         asset.id,
+//       ]);
+//       return null;
+//     });
 
-    const liabilitiesData = [];
-    liabilities.map((liability) => {
-      var date = new Date(liability.date + ' 12:00');
-      liabilitiesData.push([
-        date.getMonth() + 1 + '/' + date.getDate(),
-        formatter.format(liability.amount),
-        liability.group,
-        liability.id,
-      ]);
-      return null;
-    });
+//     const liabilitiesData = [];
+//     liabilities.map((liability) => {
+//       var date = new Date(liability.date + ' 12:00');
+//       liabilitiesData.push([
+//         date.getMonth() + 1 + '/' + date.getDate(),
+//         formatter.format(liability.amount),
+//         liability.group,
+//         liability.id,
+//       ]);
+//       return null;
+//     });
 
-    const { user, history, classes } = this.props;
-    return (
-      <>
-        <NavBar title={'Net Worth'} user={user} history={history} />
-        <div className={classes.root}>
-          <Grid
-            container
-            spacing={2}
-            direction="row"
-            justify="center"
-            alignItems="flex-start"
-          >
-            {/* NET WORTH LAST 12 MONTHS */}
-            <Grid item xs={11} key="Net-Worth-grid">
-              <CashFlowTable
-                title="Net Worth Last 12 Months"
-                dataTextSize="subtitle1"
-                headers={months}
-                rows={netWorthData}
-              />
-            </Grid>
+//     const { user, history, classes } = this.props;
+//     return (
+//       <>
+//         <NavBar title={'Net Worth'} user={user} history={history} />
+//         <div className={classes.root}>
+//           <Grid
+//             container
+//             spacing={2}
+//             direction="row"
+//             justify="center"
+//             alignItems="flex-start"
+//           >
+//             {/* NET WORTH LAST 12 MONTHS */}
+//             <Grid item xs={11} key="Net-Worth-grid">
+//               <CashFlowTable
+//                 title="Net Worth Last 12 Months"
+//                 dataTextSize="subtitle1"
+//                 headers={months}
+//                 rows={netWorthData}
+//               />
+//             </Grid>
 
-            {/* ASSETS */}
-            <Grid item xs={4} key="assets">
-              <CashFlowTable
-                title="Assets"
-                dataTextSize="subtitle1"
-                headers={['date', 'amount', 'source']}
-                rows={assetsData}
-              />
-            </Grid>
+//             {/* ASSETS */}
+//             <Grid item xs={4} key="assets">
+//               <CashFlowTable
+//                 title="Assets"
+//                 dataTextSize="subtitle1"
+//                 headers={['date', 'amount', 'source']}
+//                 rows={assetsData}
+//               />
+//             </Grid>
 
-            {/* LIABILITIES */}
-            <Grid item xs={4} key="liabilities">
-              <CashFlowTable
-                title="Liabilities"
-                dataTextSize="subtitle1"
-                headers={['date', 'amount', 'group']}
-                rows={liabilitiesData}
-              />
-            </Grid>
-          </Grid>
-        </div>
-      </>
-    );
-  }
-}
+//             {/* LIABILITIES */}
+//             <Grid item xs={4} key="liabilities">
+//               <CashFlowTable
+//                 title="Liabilities"
+//                 dataTextSize="subtitle1"
+//                 headers={['date', 'amount', 'group']}
+//                 rows={liabilitiesData}
+//               />
+//             </Grid>
+//           </Grid>
+//         </div>
+//       </>
+//     );
+//   }
+// }
 
-export default withStyles(styles)(NetWorth);
+// export default withStyles(styles)(NetWorth);

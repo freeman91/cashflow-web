@@ -1,64 +1,34 @@
 import React, { Component } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
 import { isEqual } from 'lodash';
 import {
   Button,
   Card,
-  Collapse,
-  Paper,
-  TableContainer,
+  CardBody,
+  CardHeader,
+  CardTitle,
   Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+  UncontrolledTooltip,
+} from 'reactstrap';
+
 import formatter from '../helpers/currency';
-import ExpenseDialogEdit from './ExpenseDialogEdit';
+import ExpenseModalEdit from './ExpenseModalEdit';
 import Dashboard from '../service/DashboardService';
 
-const styles = (theme) => ({
-  card: {
-    textAlign: 'center',
+const defaultValue = {
+  isLoaded: false,
+  open: false,
+  value: {
+    amount: 0,
+    id: 0,
+    vendor: '',
+    description: '',
+    group: '',
+    date: new Date(),
   },
-  cardTitle: {
-    margin: '10px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    width: '50%',
-    float: 'left',
-  },
-  createButton: {
-    margin: '10px',
-    marginRight: '25px',
-    float: 'center',
-  },
-  dialog: {
-    margin: theme.spacing(1),
-  },
-  th: {
-    fontWeight: 'bold',
-  },
-});
+};
 
 class ExpenseTable extends Component {
-  state = {
-    isLoaded: false,
-    open: false,
-    collapse: true,
-    value: {
-      amount: 0,
-      id: 0,
-      vendor: '',
-      description: '',
-      group: '',
-      date: new Date(),
-    },
-  };
+  state = { ...defaultValue };
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
@@ -71,7 +41,7 @@ class ExpenseTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
       this.get_expenses().then(() => {
-        this.props.stop_reload();
+        this.props.stopReload();
       });
     }
   }
@@ -115,8 +85,8 @@ class ExpenseTable extends Component {
   };
 
   render() {
-    const { classes, user, get_data } = this.props;
-    const { expenses, isLoaded, open, value, collapse } = this.state;
+    const { user, get_data } = this.props;
+    const { expenses, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
     var expensesData = [];
@@ -135,73 +105,63 @@ class ExpenseTable extends Component {
 
     return (
       <>
-        <Card className={classes.card} variant="outlined">
-          <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            Recent Expenses
-          </Typography>
-          <Button onClick={this.handleCollapse}>
-            {collapse ? <ExpandLess /> : <ExpandMore />}
-          </Button>
-          <TableContainer component={Paper}>
-            <Collapse in={collapse} timeout="auto" unmountOnExit>
+        <Card>
+          <CardHeader>
+            <CardTitle className="card-title" tag="h2">
+              Recent Expenses
+            </CardTitle>
+          </CardHeader>
+          <CardBody className="card-body">
+            <div className="table-full-width table-responsive">
               <Table>
-                <TableHead>
-                  <TableRow>
-                    {['date', 'amount', 'group', 'vendor'].map((header) => {
-                      return (
-                        <TableCell key={`${header}-header`}>
-                          <Typography
-                            className={classes.th}
-                            variant="subtitle2"
-                          >
-                            {header}
-                          </Typography>
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
+                <thead className="text-primary">
+                  <tr>
+                    <th>date</th>
+                    <th>amount</th>
+                    <th>group</th>
+                    <th>vendor</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {expensesData.map((expense, idx) => {
                     return (
-                      <TableRow
-                        key={`${expense[0]}-data`}
-                        hover
-                        onClick={() => this.handleClick(expense)}
-                      >
-                        <TableCell key={`date-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {new Date(expense[6] + ' 12:00').getMonth() +
-                              1 +
-                              '/' +
-                              new Date(expense[6] + ' 12:00').getDate()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`amount-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {formatter.format(expense[1])}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`group-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {expense[2]}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`vendor-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {expense[3].substring(0, 10)}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
+                      <tr key={`expense-item ${idx}`}>
+                        <td>
+                          {new Date(expense[6] + ' 12:00').getMonth() +
+                            1 +
+                            '/' +
+                            new Date(expense[6] + ' 12:00').getDate()}
+                        </td>
+                        <td>{formatter.format(expense[1])}</td>
+                        <td>{expense[2]}</td>
+                        <td>{expense[3].substring(0, 10)}</td>
+                        <td className="td-actions text-right">
+                          <Button
+                            color="link"
+                            id="expense-table-tooltip"
+                            title=""
+                            type="button"
+                            onClick={() => this.handleClick(expense)}
+                          >
+                            <i className="tim-icons icon-pencil" />
+                          </Button>
+                          <UncontrolledTooltip
+                            delay={0}
+                            target="expense-table-tooltip"
+                            placement="right"
+                          >
+                            Edit Expense
+                          </UncontrolledTooltip>
+                        </td>
+                      </tr>
                     );
                   })}
-                </TableBody>
+                </tbody>
               </Table>
-            </Collapse>
-          </TableContainer>
+            </div>
+          </CardBody>
         </Card>
-        <ExpenseDialogEdit
+        <ExpenseModalEdit
           open={open}
           handleClose={this.handleClose}
           user={user}
@@ -214,4 +174,4 @@ class ExpenseTable extends Component {
   }
 }
 
-export default withStyles(styles)(ExpenseTable);
+export default ExpenseTable;

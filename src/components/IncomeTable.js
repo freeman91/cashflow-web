@@ -1,63 +1,32 @@
 import React, { Component } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
 import { isEqual } from 'lodash';
 import {
   Button,
   Card,
-  Collapse,
-  Paper,
-  TableContainer,
+  CardBody,
+  CardHeader,
+  CardTitle,
   Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+  UncontrolledTooltip,
+} from 'reactstrap';
+
 import formatter from '../helpers/currency';
-import IncomeDialogEdit from './IncomeDialogEdit';
+import IncomeModalEdit from './IncomeModalEdit';
 import Dashboard from '../service/DashboardService';
 
-const styles = (theme) => ({
-  card: {
-    textAlign: 'center',
+const defaultValue = {
+  isLoaded: false,
+  open: false,
+  value: {
+    amount: 0,
+    id: 0,
+    source: '',
+    description: '',
+    date: new Date(),
   },
-  cardTitle: {
-    margin: '10px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    width: '50%',
-    float: 'left',
-  },
-  createButton: {
-    margin: '10px',
-    marginRight: '25px',
-    float: 'center',
-  },
-  dialog: {
-    margin: theme.spacing(1),
-  },
-  th: {
-    fontWeight: 'bold',
-  },
-});
-
+};
 class IncomeTable extends Component {
-  state = {
-    isLoaded: false,
-    open: false,
-    collapse: true,
-    value: {
-      amount: 0,
-      id: 0,
-      source: '',
-      description: '',
-      date: new Date(),
-    },
-  };
+  state = { ...defaultValue };
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
@@ -70,7 +39,7 @@ class IncomeTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
       this.get_incomes().then(() => {
-        this.props.stop_reload();
+        this.props.stopReload();
       });
     }
   }
@@ -112,8 +81,8 @@ class IncomeTable extends Component {
   };
 
   render() {
-    const { classes, user, get_data } = this.props;
-    const { incomes, isLoaded, open, value, collapse } = this.state;
+    const { user, get_data } = this.props;
+    const { incomes, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
     var incomesData = [];
@@ -130,68 +99,61 @@ class IncomeTable extends Component {
 
     return (
       <>
-        <Card className={classes.card} variant="outlined">
-          <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            Recent Incomes
-          </Typography>
-          <Button onClick={this.handleCollapse}>
-            {collapse ? <ExpandLess /> : <ExpandMore />}
-          </Button>
-          <TableContainer component={Paper}>
-            <Collapse in={collapse} timeout="auto" unmountOnExit>
+        <Card>
+          <CardHeader>
+            <CardTitle className="card-title" tag="h2">
+              Recent Incomes
+            </CardTitle>
+          </CardHeader>
+          <CardBody className="card-body">
+            <div className="table-full-width table-responsive">
               <Table>
-                <TableHead>
-                  <TableRow>
-                    {['date', 'amount', 'source'].map((header) => {
-                      return (
-                        <TableCell key={`${header}-header`}>
-                          <Typography
-                            className={classes.th}
-                            variant="subtitle2"
-                          >
-                            {header}
-                          </Typography>
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
+                <thead className="text-primary">
+                  <tr>
+                    <th>date</th>
+                    <th>amount</th>
+                    <th>group</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {incomesData.map((income, idx) => {
                     return (
-                      <TableRow
-                        key={`${income[0]}-data`}
-                        hover
-                        onClick={() => this.handleClick(income)}
-                      >
-                        <TableCell key={`date-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {new Date(income[4] + ' 12:00').getMonth() +
-                              1 +
-                              '/' +
-                              new Date(income[4] + ' 12:00').getDate()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`amount-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {formatter.format(income[1])}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`source-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {income[2]}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
+                      <tr key={`income-item ${idx}`}>
+                        <td>
+                          {new Date(income[4] + ' 12:00').getMonth() +
+                            1 +
+                            '/' +
+                            new Date(income[4] + ' 12:00').getDate()}
+                        </td>
+                        <td>{formatter.format(income[1])}</td>
+                        <td>{income[2]}</td>
+                        <td className="td-actions text-right">
+                          <Button
+                            color="link"
+                            id="income-table-tooltip"
+                            title=""
+                            type="button"
+                            onClick={() => this.handleClick(income)}
+                          >
+                            <i className="tim-icons icon-pencil" />
+                          </Button>
+                          <UncontrolledTooltip
+                            delay={0}
+                            target="income-table-tooltip"
+                            placement="right"
+                          >
+                            Edit Income
+                          </UncontrolledTooltip>
+                        </td>
+                      </tr>
                     );
                   })}
-                </TableBody>
+                </tbody>
               </Table>
-            </Collapse>
-          </TableContainer>
+            </div>
+          </CardBody>
         </Card>
-        <IncomeDialogEdit
+        <IncomeModalEdit
           open={open}
           handleClose={this.handleClose}
           user={user}
@@ -204,4 +166,4 @@ class IncomeTable extends Component {
   }
 }
 
-export default withStyles(styles)(IncomeTable);
+export default IncomeTable;

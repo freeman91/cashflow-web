@@ -1,65 +1,35 @@
 import React, { Component } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
 import { isEqual } from 'lodash';
 import {
   Button,
   Card,
-  Collapse,
-  Paper,
-  TableContainer,
+  CardBody,
+  CardHeader,
+  CardTitle,
   Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+  UncontrolledTooltip,
+} from 'reactstrap';
+
 import formatter from '../helpers/currency';
-import ExpenseDialogEdit from './ExpenseDialogEdit';
+import ExpenseModalEdit from './ExpenseModalEdit';
 import Month from '../service/MonthService';
 
-const styles = (theme) => ({
-  card: {
-    textAlign: 'center',
+const defaultValue = {
+  isLoaded: false,
+  open: false,
+  value: {
+    amount: 0,
+    id: 0,
+    vendor: '',
+    description: '',
+    group: '',
+    bill: true,
+    date: new Date(),
   },
-  cardTitle: {
-    margin: '10px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    width: '50%',
-    float: 'left',
-  },
-  createButton: {
-    margin: '10px',
-    marginRight: '25px',
-    float: 'center',
-  },
-  dialog: {
-    margin: theme.spacing(1),
-  },
-  th: {
-    fontWeight: 'bold',
-  },
-});
+};
 
 class BillTable extends Component {
-  state = {
-    isLoaded: false,
-    open: false,
-    collapse: true,
-    value: {
-      amount: 0,
-      id: 0,
-      vendor: '',
-      description: '',
-      group: '',
-      bill: true,
-      date: new Date(),
-    },
-  };
+  state = { ...defaultValue };
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
@@ -72,7 +42,7 @@ class BillTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
       this.getBills().then(() => {
-        this.props.stop_reload();
+        this.props.stopReload();
       });
     }
   }
@@ -116,8 +86,8 @@ class BillTable extends Component {
   };
 
   render() {
-    const { classes, user, month, get_data } = this.props;
-    const { bills, isLoaded, open, value, collapse } = this.state;
+    const { user, month, get_data } = this.props;
+    const { bills, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
     var billsData = [];
@@ -136,71 +106,63 @@ class BillTable extends Component {
 
     return (
       <>
-        <Card className={classes.card} variant="outlined">
-          <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            {month + ' Bills'}
-          </Typography>
-          <Button onClick={this.handleCollapse}>
-            {collapse ? <ExpandLess /> : <ExpandMore />}
-          </Button>
-          <TableContainer component={Paper}>
-            <Collapse in={collapse} timeout="auto" unmountOnExit>
+        <Card>
+          <CardHeader>
+            <CardTitle className="card-title" tag="h2">
+              {month + ' Bills'}
+            </CardTitle>
+          </CardHeader>
+          <CardBody className="card-body">
+            <div className="table-full-width table-responsive">
               <Table>
-                <TableHead>
-                  <TableRow>
-                    {['date', 'amount', 'group', 'vendor'].map((header) => {
-                      return (
-                        <TableCell key={`${header}-header`}>
-                          <Typography
-                            className={classes.th}
-                            variant="subtitle2"
-                          >
-                            {header}
-                          </Typography>
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
+                <thead className="text-primary">
+                  <tr>
+                    <th>date</th>
+                    <th>amount</th>
+                    <th>group</th>
+                    <th>vendor</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {billsData.map((bill, idx) => {
                     return (
-                      <TableRow
-                        key={`${bill[0]}-data`}
-                        hover
-                        onClick={() => this.handleClick(bill)}
-                      >
-                        <TableCell key={`date-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {new Date(bill[6] + ' 12:00').getMonth() +
-                              1 +
-                              '/' +
-                              new Date(bill[6] + ' 12:00').getDate()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`amount-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {formatter.format(bill[1])}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`group-${idx}`}>
-                          <Typography variant="subtitle1">{bill[2]}</Typography>
-                        </TableCell>
-                        <TableCell key={`vendor-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {bill[3].substring(0, 10)}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
+                      <tr key={`bill-item ${idx}`}>
+                        <td>
+                          {new Date(bill[6] + ' 12:00').getMonth() +
+                            1 +
+                            '/' +
+                            new Date(bill[6] + ' 12:00').getDate()}
+                        </td>
+                        <td>{formatter.format(bill[1])}</td>
+                        <td>{bill[2]}</td>
+                        <td>{bill[3].substring(0, 10)}</td>
+                        <td className="td-actions text-right">
+                          <Button
+                            color="link"
+                            id="bill-table-tooltip"
+                            title=""
+                            type="button"
+                            onClick={() => this.handleClick(bill)}
+                          >
+                            <i className="tim-icons icon-pencil" />
+                          </Button>
+                          <UncontrolledTooltip
+                            delay={0}
+                            target="bill-table-tooltip"
+                            placement="right"
+                          >
+                            Edit Bill
+                          </UncontrolledTooltip>
+                        </td>
+                      </tr>
                     );
                   })}
-                </TableBody>
+                </tbody>
               </Table>
-            </Collapse>
-          </TableContainer>
+            </div>
+          </CardBody>
         </Card>
-        <ExpenseDialogEdit
+        <ExpenseModalEdit
           open={open}
           handleClose={this.handleClose}
           user={user}
@@ -213,4 +175,4 @@ class BillTable extends Component {
   }
 }
 
-export default withStyles(styles)(BillTable);
+export default BillTable;

@@ -1,9 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from 'App';
 
-ReactDOM.render(<App />, document.getElementById("root"));
+import 'assets/scss/black-dashboard-react.scss';
+import 'assets/demo/demo.css';
+import 'assets/css/nucleo-icons.css';
 
-serviceWorker.unregister();
+ReactDOM.render(<App />, document.getElementById('root'));

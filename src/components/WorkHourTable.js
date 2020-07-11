@@ -1,49 +1,18 @@
 import React, { Component } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
 import { isEqual } from 'lodash';
 import {
   Button,
   Card,
-  Collapse,
-  Paper,
-  TableContainer,
+  CardBody,
+  CardHeader,
+  CardTitle,
   Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import formatter_no$ from '../helpers/currency_no$';
-import WorkHourDialogEdit from './WorkHourDialogEdit';
-import Dashboard from '../service/DashboardService';
+  UncontrolledTooltip,
+} from 'reactstrap';
 
-const styles = (theme) => ({
-  card: {
-    textAlign: 'center',
-  },
-  cardTitle: {
-    margin: '10px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    width: '50%',
-    float: 'left',
-  },
-  createButton: {
-    margin: '10px',
-    marginRight: '25px',
-    float: 'center',
-  },
-  dialog: {
-    margin: theme.spacing(1),
-  },
-  th: {
-    fontWeight: 'bold',
-  },
-});
+import formatter_no$ from '../helpers/currency_no$';
+import WorkHourModalEdit from './WorkHourModalEdit';
+import Dashboard from '../service/DashboardService';
 
 const defaultState = {
   isLoaded: false,
@@ -71,7 +40,7 @@ class WorkHourTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
       this.get_workHours().then(() => {
-        this.props.stop_reload();
+        this.props.stopReload();
       });
     }
   }
@@ -110,8 +79,8 @@ class WorkHourTable extends Component {
   };
 
   render() {
-    const { classes, user } = this.props;
-    const { workHours, isLoaded, open, value, collapse } = this.state;
+    const { user } = this.props;
+    const { workHours, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
     var workHoursData = [];
@@ -122,68 +91,61 @@ class WorkHourTable extends Component {
 
     return (
       <>
-        <Card className={classes.card} variant="outlined">
-          <Typography className={classes.cardTitle} variant="h5" gutterBottom>
-            Recent Work Hours
-          </Typography>
-          <Button onClick={this.handleCollapse}>
-            {collapse ? <ExpandLess /> : <ExpandMore />}
-          </Button>
-          <TableContainer component={Paper}>
-            <Collapse in={collapse} timeout="auto" unmountOnExit>
+        <Card>
+          <CardHeader>
+            <CardTitle className="card-title" tag="h2">
+              Recent Work Hours
+            </CardTitle>
+          </CardHeader>
+          <CardBody className="card-body">
+            <div className="table-full-width table-responsive">
               <Table>
-                <TableHead>
-                  <TableRow>
-                    {['date', 'amount', 'source'].map((header) => {
-                      return (
-                        <TableCell key={`${header}-header`}>
-                          <Typography
-                            className={classes.th}
-                            variant="subtitle2"
-                          >
-                            {header}
-                          </Typography>
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
+                <thead className="text-primary">
+                  <tr>
+                    <th>date</th>
+                    <th>amount</th>
+                    <th>source</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {workHoursData.map((workHour, idx) => {
                     return (
-                      <TableRow
-                        key={`${workHour[0]}-data`}
-                        hover
-                        onClick={() => this.handleClick(workHour)}
-                      >
-                        <TableCell key={`date-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {new Date(workHour[3] + ' 12:00').getMonth() +
-                              1 +
-                              '/' +
-                              new Date(workHour[3] + ' 12:00').getDate()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`amount-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {formatter_no$.format(workHour[1])}
-                          </Typography>
-                        </TableCell>
-                        <TableCell key={`source-${idx}`}>
-                          <Typography variant="subtitle1">
-                            {workHour[2]}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
+                      <tr key={`workHour-item ${idx}`}>
+                        <td>
+                          {new Date(workHour[3] + ' 12:00').getMonth() +
+                            1 +
+                            '/' +
+                            new Date(workHour[3] + ' 12:00').getDate()}
+                        </td>
+                        <td>{formatter_no$.format(workHour[1])}</td>
+                        <td>{workHour[2]}</td>
+                        <td className="td-actions text-right">
+                          <Button
+                            color="link"
+                            id="workHour-table-tooltip"
+                            title=""
+                            type="button"
+                            onClick={() => this.handleClick(workHour)}
+                          >
+                            <i className="tim-icons icon-pencil" />
+                          </Button>
+                          <UncontrolledTooltip
+                            delay={0}
+                            target="workHour-table-tooltip"
+                            placement="right"
+                          >
+                            Edit Work Hour
+                          </UncontrolledTooltip>
+                        </td>
+                      </tr>
                     );
                   })}
-                </TableBody>
+                </tbody>
               </Table>
-            </Collapse>
-          </TableContainer>
+            </div>
+          </CardBody>
         </Card>
-        <WorkHourDialogEdit
+        <WorkHourModalEdit
           open={open}
           handleClose={this.handleClose}
           user={user}
@@ -195,4 +157,4 @@ class WorkHourTable extends Component {
   }
 }
 
-export default withStyles(styles)(WorkHourTable);
+export default WorkHourTable;
