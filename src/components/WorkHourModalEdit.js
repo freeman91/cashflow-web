@@ -97,7 +97,7 @@ class WorkHourDialogEdit extends Component {
           open: false,
           value: { ...defaultState },
         });
-        get_workHours();
+        if (get_workHours) get_workHours();
         handleClose();
       });
     }

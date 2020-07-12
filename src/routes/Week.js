@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Row,
+  Table,
+} from 'reactstrap';
 
 import formatter from '../helpers/currency';
+import ExpenseTableWeek from '../components/ExpenseTableWeek';
+import IncomeTableWeek from '../components/IncomeTableWeek';
+import WorkHourTableWeek from '../components/WorkHourTableWeek';
 import Loader from '../components/Loader';
 import WeekService from '../service/WeekService';
 
@@ -10,7 +22,7 @@ class Week extends Component {
     isLoaded: false,
   };
 
-  async get_week_data() {
+  getWeekData = async () => {
     WeekService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
@@ -21,75 +33,153 @@ class Week extends Component {
           wkhrTotal: response.wkhrTotal,
           expenses: response.expenses,
           incomes: response.incomes,
-          work_hours: response.work_hours,
+          workHours: response.work_hours,
           isLoaded: true,
         });
       })
       .catch((error) => console.log(error));
-  }
+  };
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_week_data();
+      this.getWeekData();
     }
   }
 
+  prepareExpenses = () => {
+    var expensesData = [];
+    this.state.expenses.map((exp) => {
+      expensesData.push([
+        exp.id,
+        exp.amount,
+        exp.group,
+        exp.vendor,
+        exp.description,
+        exp.bill,
+        exp.date,
+      ]);
+      return null;
+    });
+    return expensesData;
+  };
+
+  prepareIncomes = () => {
+    var incomesData = [];
+    this.state.incomes.map((inc) => {
+      incomesData.push([
+        inc.id,
+        inc.amount,
+        inc.source,
+        inc.description,
+        inc.date,
+      ]);
+      return null;
+    });
+    return incomesData;
+  };
+
+  prepareWorkHours = () => {
+    var workHourData = [];
+    this.state.workHours.map((wh) => {
+      workHourData.push([wh.id, wh.amount, wh.source, wh.date]);
+      return null;
+    });
+    return workHourData;
+  };
+
   render() {
     const {
-      isLoaded,
-      cwdate,
       netincome,
       expTotal,
       incTotal,
       wkhrTotal,
-      expenses,
-      incomes,
-      work_hours,
+      cwdate,
+      isLoaded,
     } = this.state;
     if (!isLoaded) return <Loader />;
+    console.log(this.state);
+    const expenseTableData = this.prepareExpenses();
+    const incomeTableData = this.prepareIncomes();
+    const workHourTableData = this.prepareWorkHours();
+    const weekTableData = [
+      formatter.format(netincome),
+      formatter.format(expTotal),
+      formatter.format(incTotal),
+      wkhrTotal,
+      formatter.format(incTotal / wkhrTotal),
+    ];
+    console.log(weekTableData);
 
-    // var expensesData = [];
-    // expenses.map((exp) => {
-    //   var date = new Date(exp.date + ' 12:00');
-    //   expensesData.push([
-    //     date.getMonth() + 1 + '/' + date.getDate(),
-    //     formatter.format(exp.amount),
-    //     exp.group,
-    //     exp.vendor,
-    //     exp.id,
-    //   ]);
-    //   return null;
-    // });
-
-    // var incomesData = [];
-    // incomes.map((inc) => {
-    //   var date = new Date(inc.date + ' 12:00');
-    //   incomesData.push([
-    //     date.getMonth() + 1 + '/' + date.getDate(),
-    //     formatter.format(inc.amount),
-    //     inc.source,
-    //     inc.id,
-    //   ]);
-    //   return null;
-    // });
-
-    // var workHoursData = [];
-    // work_hours.map((wkhr) => {
-    //   var date = new Date(wkhr.date + ' 12:00');
-    //   workHoursData.push([
-    //     date.getMonth() + 1 + '/' + date.getDate(),
-    //     formatter.format(wkhr.amount),
-    //     wkhr.source,
-    //     wkhr.id,
-    //   ]);
-    //   return null;
-    // });
-
-    const { user, history, classes } = this.props;
+    const { user } = this.props;
     return (
-      <></>
+      <>
+        <div className="content">
+          <Row>
+            <Col xs="2"></Col>
+            <Col xs="8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="card-title" tag="h2">
+                    {`Week ${cwdate.week} breakdown`}
+                  </CardTitle>
+                </CardHeader>
+                <CardBody className="card-body">
+                  <div className="table-full-width table-responsive">
+                    <Table>
+                      <thead className="text-primary">
+                        <tr>
+                          <th>net income</th>
+                          <th>expense total</th>
+                          <th>income total</th>
+                          <th>hours worked</th>
+                          <th>hourly wage</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {weekTableData.map((row, idx) => {
+                            return (
+                              <td className="td-price" key={`week-data-${idx}`}>
+                                {row}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col xs="2"></Col>
+          </Row>
+          <Row>
+            <Col xs="4">
+              <ExpenseTableWeek
+                user={user}
+                data={expenseTableData}
+                getData={this.getWeekData}
+              />
+            </Col>
+            <Col xs="4">
+              <IncomeTableWeek
+                user={user}
+                data={incomeTableData}
+                getData={this.getWeekData}
+              />
+            </Col>
+            <Col xs="4">
+              <WorkHourTableWeek
+                user={user}
+                data={workHourTableData}
+                getData={this.getWeekData}
+              />
+            </Col>
+          </Row>
+        </div>
+      </>
       //
       //         <div className={classes.root}>
       //           <Grid
@@ -122,35 +212,6 @@ class Week extends Component {
       //                 ]}
       //               />
       //             </Grid>
-
-      //             {/* EXPENSES */}
-      //             <Grid item xs={6} key="expenses">
-      //               <CashFlowTable
-      //                 title="Expenses"
-      //                 dataTextSize="subtitle1"
-      //                 headers={['date', 'amount', 'group', 'vendor']}
-      //                 rows={expensesData}
-      //               />
-      //             </Grid>
-
-      //             {/* Incomes */}
-      //             <Grid item xs={3} key="incomes">
-      //               <CashFlowTable
-      //                 title="Incomes"
-      //                 dataTextSize="subtitle1"
-      //                 headers={['date', 'amount', 'source']}
-      //                 rows={incomesData}
-      //               />
-      //             </Grid>
-
-      //             {/* WorkHours */}
-      //             <Grid item xs={3} key="work-hours">
-      //               <CashFlowTable
-      //                 title="Recent Work Hours"
-      //                 dataTextSize="subtitle1"
-      //                 headers={['date', 'hours', 'source']}
-      //                 rows={workHoursData}
-      //               />
       //             </Grid>
       //           </Grid>
       //         </div>

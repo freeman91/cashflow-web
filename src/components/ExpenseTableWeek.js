@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -12,10 +11,8 @@ import {
 
 import formatter from '../helpers/currency';
 import ExpenseModalEdit from './ExpenseModalEdit';
-import Month from '../service/MonthService';
 
-const defaultValue = {
-  isLoaded: false,
+const defaultState = {
   open: false,
   value: {
     amount: 0,
@@ -23,52 +20,24 @@ const defaultValue = {
     vendor: '',
     description: '',
     group: '',
-    bill: true,
     date: new Date(),
   },
 };
 
-class BillTable extends Component {
-  state = { ...defaultValue };
+class ExpenseTableWeek extends Component {
+  state = { ...defaultState };
 
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getBills();
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reload) {
-      this.getBills().then(() => {
-        this.props.stopReload();
-      });
-    }
-  }
-
-  getBills = async () => {
-    Month.getBills(this.props.user.auth_token).then((result) => {
-      if (result) {
-        this.setState({
-          bills: result.bills,
-          isLoaded: true,
-        });
-      }
-    });
-  };
-
-  handleClick = (bill) => {
+  handleClick = (expense) => {
     this.setState({
       open: true,
       value: {
-        id: bill[0],
-        amount: bill[1],
-        group: bill[2],
-        vendor: bill[3],
-        description: bill[4],
-        bill: bill[5],
-        date: bill[6],
+        id: expense[0],
+        amount: expense[1],
+        group: expense[2],
+        vendor: expense[3],
+        description: expense[4],
+        bill: expense[5],
+        date: expense[6],
       },
     });
   };
@@ -79,37 +48,16 @@ class BillTable extends Component {
     });
   };
 
-  handleCollapse = () => {
-    this.setState({
-      collapse: !this.state.collapse,
-    });
-  };
-
   render() {
-    const { user, month, getData } = this.props;
-    const { bills, isLoaded, open, value } = this.state;
-    if (!isLoaded) return null;
-
-    var billsData = [];
-    bills.map((bill) => {
-      billsData.push([
-        bill.id,
-        bill.amount,
-        bill.group,
-        bill.vendor,
-        bill.description,
-        bill.bill,
-        bill.date,
-      ]);
-      return null;
-    });
+    const { user, data, getData } = this.props;
+    const { open, value } = this.state;
 
     return (
       <>
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              {month + ' Bills'}
+              {`Expenses`}
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">
@@ -124,34 +72,34 @@ class BillTable extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {billsData.map((bill, idx) => {
+                  {data.map((expense, idx) => {
                     return (
-                      <tr key={`bill-item ${idx}`}>
+                      <tr key={`expense-record-${expense[0]}`}>
                         <td>
-                          {new Date(bill[6] + ' 12:00').getMonth() +
+                          {new Date(expense[6] + ' 12:00').getMonth() +
                             1 +
                             '/' +
-                            new Date(bill[6] + ' 12:00').getDate()}
+                            new Date(expense[6] + ' 12:00').getDate()}
                         </td>
-                        <td>{formatter.format(bill[1])}</td>
-                        <td>{bill[2]}</td>
-                        <td>{bill[3].substring(0, 10)}</td>
+                        <td>{formatter.format(expense[1])}</td>
+                        <td>{expense[2]}</td>
+                        <td>{expense[3].substring(0, 10)}</td>
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="bill-table-tooltip"
+                            id="week-expense-table-tooltip"
                             title=""
                             type="button"
-                            onClick={() => this.handleClick(bill)}
+                            onClick={() => this.handleClick(expense)}
                           >
                             <i className="tim-icons icon-pencil" />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="bill-table-tooltip"
+                            target="week-expense-table-tooltip"
                             placement="right"
                           >
-                            Edit Bill
+                            Edit Expense
                           </UncontrolledTooltip>
                         </td>
                       </tr>
@@ -167,7 +115,6 @@ class BillTable extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_expenses={this.getBills}
           get_data={getData}
         />
       </>
@@ -175,4 +122,4 @@ class BillTable extends Component {
   }
 }
 
-export default BillTable;
+export default ExpenseTableWeek;

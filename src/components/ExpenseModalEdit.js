@@ -114,7 +114,7 @@ class ExpenseModalEdit extends Component {
       ).then(() => {
         this.setState({ ...defaultValue });
         get_data();
-        get_expenses();
+        if (get_expenses) get_expenses();
         handleClose();
       });
     }

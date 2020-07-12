@@ -88,7 +88,6 @@ class Dashboard extends Component {
   };
 
   render() {
-    console.log(this.state);
     const {
       isLoaded,
       // net_income_week,

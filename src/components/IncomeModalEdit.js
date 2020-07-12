@@ -102,7 +102,7 @@ class IncomeModalEdit extends Component {
           },
         });
         get_data();
-        get_incomes();
+        if (get_incomes) get_incomes();
         handleClose();
       });
     }

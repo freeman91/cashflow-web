@@ -7,7 +7,6 @@ import {
   Input,
   InputGroup,
   InputGroupAddon,
-  InputGroupText,
   Modal,
   ModalBody,
   ModalHeader,
