@@ -12,7 +12,7 @@ class NetWorth extends Component {
     isLoaded: false,
   };
 
-  async get_networth_data() {
+  async getNetWorthData() {
     NetWorthService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
@@ -30,7 +30,7 @@ class NetWorth extends Component {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_networth_data();
+      this.getNetWorthData();
     }
   }
 

@@ -46,7 +46,7 @@ class Sidebar extends React.Component {
                 activeClassName="active"
                 onClick={this.props.toggleSidebar}
               >
-                <i className="tim-icons icon-chart-pie-36" />
+                <i className="tim-icons icon-components" />
                 <p>Dashboard</p>
               </NavLink>
             </li>

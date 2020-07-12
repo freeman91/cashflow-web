@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
 
+// reactstrap components
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Row,
+  Table,
+} from 'reactstrap';
+
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
-import CashFlowTable from '../components/CashFlowTable';
 import YearService from '../service/YearService';
 
 class Year extends Component {
@@ -11,7 +21,7 @@ class Year extends Component {
     isLoaded: false,
   };
 
-  async get_year_data() {
+  async getYearData() {
     YearService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
@@ -31,85 +41,108 @@ class Year extends Component {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_year_data();
+      this.getYearData();
     }
   }
 
-  render() {
-    const {
-      cwdate,
-      netincome,
-      expTotal,
-      incTotal,
+  prepareTableData = () => {
+    const { netincome, expTotal, incTotal, wkhrTotal } = this.state;
+    const yearStats = JSON.parse(this.state.yearStats);
+    const yearStatsArr = [];
+    Object.keys(yearStats)
+      .sort(function (a, b) {
+        return parseInt(a) - parseInt(b);
+      })
+      .forEach(function (month) {
+        if (
+          yearStats[month].expense !== 0 ||
+          yearStats[month].income !== 0 ||
+          yearStats[month].work_hours !== 0
+        ) {
+          yearStatsArr.push([
+            month,
+            formatter.format(yearStats[month].net),
+            formatter.format(yearStats[month].expense),
+            formatter.format(yearStats[month].income),
+            yearStats[month].work_hours,
+            formatter.format(yearStats[month].wage),
+            `month-${month}`,
+          ]);
+        }
+      });
+
+    yearStatsArr.push([
+      null,
+      formatter.format(netincome),
+      formatter.format(expTotal),
+      formatter.format(incTotal),
       wkhrTotal,
-      isLoaded,
-    } = this.state;
+      formatter.format(incTotal / wkhrTotal),
+      'year-stats-total',
+    ]);
+    return yearStatsArr;
+  };
+
+  render() {
+    const { cwdate, isLoaded } = this.state;
     if (!isLoaded) return <Loader />;
 
-    //     const yearStats = JSON.parse(this.state.yearStats);
-    //     const yearStatsArr = [];
-    //     Object.keys(yearStats)
-    //       .sort(function (a, b) {
-    //         return parseInt(a) - parseInt(b);
-    //       })
-    //       .forEach(function (month) {
-    //         if (
-    //           yearStats[month].expense !== 0 ||
-    //           yearStats[month].income !== 0 ||
-    //           yearStats[month].work_hours !== 0
-    //         ) {
-    //           yearStatsArr.push([
-    //             month,
-    //             formatter.format(yearStats[month].net),
-    //             formatter.format(yearStats[month].expense),
-    //             formatter.format(yearStats[month].income),
-    //             yearStats[month].work_hours,
-    //             formatter.format(yearStats[month].wage),
-    //             `${month}-stats-key`,
-    //           ]);
-    //         }
-    //       });
+    const yearTableData = this.prepareTableData();
 
-    //     yearStatsArr.push([
-    //       null,
-    //       formatter.format(netincome),
-    //       formatter.format(expTotal),
-    //       formatter.format(incTotal),
-    //       wkhrTotal,
-    //       formatter.format(incTotal / wkhrTotal),
-    //       'year-stats-key',
-    //     ]);
-
-    const { user, history, classes } = this.props;
     return (
-      <></>
-      //         <NavBar title={cwdate.year} user={user} history={history} />
-      //         <div className={classes.root}>
-      //           <Grid
-      //             container
-      //             spacing={2}
-      //             direction="row"
-      //             justify="center"
-      //             alignItems="flex-start"
-      //           >
-      //             {/* YEAR STATS */}
-      //             <Grid item xs={8} key="year-stats">
-      //               <CashFlowTable
-      //                 dataTextSize="subtitle1"
-      //                 headers={[
-      //                   'month',
-      //                   'net income',
-      //                   'expense total',
-      //                   'income total',
-      //                   'work hours',
-      //                   'hourly wage',
-      //                 ]}
-      //                 rows={yearStatsArr}
-      //               />
-      //             </Grid>
-      //           </Grid>
-      //         </div>
-      //       </>
+      <>
+        <div className="content">
+          <Row>
+            <Col xs="2"></Col>
+            <Col xs="8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="card-title" tag="h2">
+                    {cwdate.year + ' breakdown'}
+                  </CardTitle>
+                </CardHeader>
+                <CardBody className="card-body">
+                  <div className="table-full-width table-responsive">
+                    <Table>
+                      <thead className="text-primary">
+                        <tr>
+                          <th>week</th>
+                          <th>net income</th>
+                          <th>expense total</th>
+                          <th>income total</th>
+                          <th>hours worked</th>
+                          <th>hourly wage</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {yearTableData.map((row, idx) => {
+                          return (
+                            <tr key={`${row[row.length - 1]}`}>
+                              {row.map((item, i) => {
+                                if (i !== row.length - 1) {
+                                  return (
+                                    <td
+                                      className="td-price"
+                                      key={`${row[row.length - 1]}-${i}`}
+                                    >
+                                      {item}
+                                    </td>
+                                  );
+                                } else return null;
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col xs="2"></Col>
+          </Row>
+        </div>
+      </>
     );
   }
 }
