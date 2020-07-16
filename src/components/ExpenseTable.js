@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -11,6 +10,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../helpers/currency';
+import Loader from '../components/Loader';
 import ExpenseModalEdit from './ExpenseModalEdit';
 import Dashboard from '../service/DashboardService';
 
@@ -31,11 +31,7 @@ class ExpenseTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.get_expenses();
-    }
+    this.get_expenses();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,16 +74,10 @@ class ExpenseTable extends Component {
     });
   };
 
-  handleCollapse = () => {
-    this.setState({
-      collapse: !this.state.collapse,
-    });
-  };
-
   render() {
     const { user, get_data } = this.props;
     const { expenses, isLoaded, open, value } = this.state;
-    if (!isLoaded) return null;
+    if (!isLoaded) return <Loader />;
 
     var expensesData = [];
     expenses.map((exp) => {
