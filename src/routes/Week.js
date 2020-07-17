@@ -99,7 +99,6 @@ class Week extends Component {
       isLoaded,
     } = this.state;
     if (!isLoaded) return <Loader />;
-    console.log(this.state);
     const expenseTableData = this.prepareExpenses();
     const incomeTableData = this.prepareIncomes();
     const workHourTableData = this.prepareWorkHours();
@@ -108,7 +107,7 @@ class Week extends Component {
       formatter.format(expTotal),
       formatter.format(incTotal),
       wkhrTotal,
-      formatter.format(incTotal / wkhrTotal),
+      formatter.format(wkhrTotal === 0 ? 0 : incTotal / wkhrTotal),
     ];
     console.log(weekTableData);
 
