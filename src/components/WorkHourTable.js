@@ -30,11 +30,7 @@ class WorkHourTable extends Component {
   state = { ...defaultState };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.get_workHours();
-    }
+    this.get_workHours();
   }
 
   componentWillReceiveProps(nextProps) {

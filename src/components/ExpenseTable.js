@@ -31,18 +31,18 @@ class ExpenseTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    this.get_expenses();
+    this.getExpenses();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.get_expenses().then(() => {
+      this.getExpenses().then(() => {
         this.props.stopReload();
       });
     }
   }
 
-  get_expenses = async () => {
+  getExpenses = async () => {
     Dashboard.getExpenses(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
@@ -156,7 +156,7 @@ class ExpenseTable extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_expenses={this.get_expenses}
+          get_expenses={this.getExpenses}
           get_data={get_data}
         />
       </>

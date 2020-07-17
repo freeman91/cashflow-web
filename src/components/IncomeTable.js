@@ -29,11 +29,7 @@ class IncomeTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.get_incomes();
-    }
+    this.get_incomes();
   }
 
   componentWillReceiveProps(nextProps) {

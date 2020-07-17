@@ -32,11 +32,7 @@ class BillTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getBills();
-    }
+    this.getBills();
   }
 
   componentWillReceiveProps(nextProps) {
