@@ -153,9 +153,6 @@ class IncomeModalNew extends Component {
             <Button onClick={handleClose} color="default">
               Cancel
             </Button>
-            <Button onClick={this.handleDelete} color="warning">
-              Delete
-            </Button>
             <Button onClick={this.handleSubmit} color="primary">
               Submit
             </Button>
