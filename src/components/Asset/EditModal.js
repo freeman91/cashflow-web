@@ -81,7 +81,7 @@ class EditModal extends Component {
   }
 
   handleDelete = () => {
-    Asset._delete(this.state.value.id, this.props.user.auth_token).then(
+    Asset.destroy(this.state.value.id, this.props.user.auth_token).then(
       (response) => {
         if (response.status === 202) {
           this.props.getData();

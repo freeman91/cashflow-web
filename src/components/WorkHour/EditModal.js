@@ -104,7 +104,7 @@ class EditModal extends Component {
   };
 
   handleDelete = () => {
-    WorkHour._delete(this.state.value.id, this.props.user.auth_token).then(
+    WorkHour.destroy(this.state.value.id, this.props.user.auth_token).then(
       () => {
         this.props.get_workHours();
         this.props.handleClose();

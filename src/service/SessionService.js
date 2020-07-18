@@ -14,7 +14,7 @@ const create = async function (email, password) {
     .catch((error) => console.error(error));
 };
 
-const _delete = async function (auth_token) {
+const destroy = async function (auth_token) {
   return axios
     .get(API_HOST + '/sessions', {
       headers: { Authorization: auth_token },
@@ -27,5 +27,5 @@ const _delete = async function (auth_token) {
 
 export default {
   create,
-  _delete,
+  destroy,
 };

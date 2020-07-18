@@ -14,7 +14,7 @@ const create = async function (workHour, auth_token) {
     .catch((error) => console.error(error));
 };
 
-const _delete = async function (id, auth_token) {
+const destroy = async function (id, auth_token) {
   return axios.delete(API_HOST + '/work_hours', {
     headers: { Authorization: auth_token },
     params: {
@@ -39,6 +39,6 @@ const edit = async function (workHour, auth_token) {
 
 export default {
   create,
-  _delete,
+  destroy,
   edit,
 };

@@ -121,7 +121,7 @@ class EditModal extends Component {
   };
 
   handleDelete = () => {
-    Expense._delete(this.state.value.id, this.props.user.auth_token).then(
+    Expense.destroy(this.state.value.id, this.props.user.auth_token).then(
       () => {
         this.props.get_expenses();
         this.props.get_data();

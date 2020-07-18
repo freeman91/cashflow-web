@@ -28,7 +28,7 @@ const create = async function (expense, auth_token) {
     .catch((error) => console.error(error));
 };
 
-const _delete = async function (id, auth_token) {
+const destroy = async function (id, auth_token) {
   return axios.delete(API_HOST + '/expenses', {
     headers: { Authorization: auth_token },
     params: {
@@ -57,6 +57,6 @@ const edit = async function (expense, auth_token) {
 export default {
   getGroups,
   create,
-  _delete,
+  destroy,
   edit,
 };

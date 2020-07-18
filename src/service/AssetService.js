@@ -41,7 +41,7 @@ const create = async function (asset, auth_token) {
     .catch((error) => console.error(error));
 };
 
-const _delete = async function (id, auth_token) {
+const destroy = async function (id, auth_token) {
   return axios.delete(API_HOST + '/properties', {
     headers: { Authorization: auth_token },
     params: {
@@ -69,6 +69,6 @@ export default {
   getFromMonth,
   getSources,
   create,
-  _delete,
+  destroy,
   update,
 };

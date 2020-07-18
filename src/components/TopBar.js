@@ -67,7 +67,7 @@ class TopBar extends React.Component {
 
   async handleLogoutClick() {
     if (this.props.user.email) {
-      Session._delete(this.props.user.auth_token);
+      Session.destroy(this.props.user.auth_token);
     }
     this.props.history.push('/');
   }

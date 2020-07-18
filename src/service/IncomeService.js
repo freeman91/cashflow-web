@@ -26,7 +26,7 @@ const create = async function (income, auth_token) {
     .catch((error) => console.error(error));
 };
 
-const _delete = async function (id, auth_token) {
+const destroy = async function (id, auth_token) {
   return axios.delete(API_HOST + '/incomes', {
     headers: { Authorization: auth_token },
     params: {
@@ -54,6 +54,6 @@ const edit = async function (income, auth_token) {
 export default {
   getSources,
   create,
-  _delete,
+  destroy,
   edit,
 };
