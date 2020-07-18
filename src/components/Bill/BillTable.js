@@ -10,62 +10,69 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter_no$ from '../helpers/currency_no$';
-import WorkHourModalEdit from './WorkHourModalEdit';
-import Dashboard from '../service/DashboardService';
+import formatter from '../../helpers/currency';
+import EditModal from '../Expense/EditModal';
+import Month from '../../service/MonthService';
 
-const defaultState = {
+const defaultValue = {
   isLoaded: false,
   open: false,
-  collapse: true,
   value: {
     amount: 0,
     id: 0,
-    source: '',
+    vendor: '',
+    description: '',
+    group: '',
+    bill: true,
     date: new Date(),
   },
 };
 
-class WorkHourTable extends Component {
-  state = { ...defaultState };
+class BillTable extends Component {
+  state = { ...defaultValue };
 
   componentDidMount() {
-    this.get_workHours();
+    this.getBills();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.get_workHours().then(() => {
+      this.getBills().then(() => {
         this.props.stopReload();
       });
     }
   }
 
-  get_workHours = async () => {
-    Dashboard.getWorkHours(this.props.user.auth_token).then((result) => {
+  getBills = async () => {
+    Month.getBills(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
-          workHours: result.workHours,
+          bills: result.bills,
           isLoaded: true,
         });
       }
     });
   };
 
-  handleClick = (workHour) => {
+  handleClick = (bill) => {
     this.setState({
       open: true,
       value: {
-        id: workHour[0],
-        amount: workHour[1],
-        source: workHour[2],
-        date: workHour[3],
+        id: bill[0],
+        amount: bill[1],
+        group: bill[2],
+        vendor: bill[3],
+        description: bill[4],
+        bill: bill[5],
+        date: bill[6],
       },
     });
   };
 
   handleClose = () => {
-    this.setState({ ...defaultState });
+    this.setState({
+      open: false,
+    });
   };
 
   handleCollapse = () => {
@@ -75,13 +82,21 @@ class WorkHourTable extends Component {
   };
 
   render() {
-    const { user } = this.props;
-    const { workHours, isLoaded, open, value } = this.state;
+    const { user, month, getData } = this.props;
+    const { bills, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
-    var workHoursData = [];
-    workHours.map((exp) => {
-      workHoursData.push([exp.id, exp.amount, exp.source, exp.date]);
+    var billsData = [];
+    bills.map((bill) => {
+      billsData.push([
+        bill.id,
+        bill.amount,
+        bill.group,
+        bill.vendor,
+        bill.description,
+        bill.bill,
+        bill.date,
+      ]);
       return null;
     });
 
@@ -90,7 +105,7 @@ class WorkHourTable extends Component {
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              Recent Work Hours
+              {month + ' Bills'}
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">
@@ -100,37 +115,39 @@ class WorkHourTable extends Component {
                   <tr>
                     <th>date</th>
                     <th>amount</th>
-                    <th>source</th>
+                    <th>group</th>
+                    <th>vendor</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {workHoursData.map((workHour, idx) => {
+                  {billsData.map((bill, idx) => {
                     return (
-                      <tr key={`workHour-item ${idx}`}>
+                      <tr key={`bill-item ${idx}`}>
                         <td>
-                          {new Date(workHour[3] + ' 12:00').getMonth() +
+                          {new Date(bill[6] + ' 12:00').getMonth() +
                             1 +
                             '/' +
-                            new Date(workHour[3] + ' 12:00').getDate()}
+                            new Date(bill[6] + ' 12:00').getDate()}
                         </td>
-                        <td>{formatter_no$.format(workHour[1])}</td>
-                        <td>{workHour[2]}</td>
+                        <td>{formatter.format(bill[1])}</td>
+                        <td>{bill[2]}</td>
+                        <td>{bill[3].substring(0, 10)}</td>
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="workHour-table-tooltip"
+                            id="bill-table-tooltip"
                             title=""
                             type="button"
-                            onClick={() => this.handleClick(workHour)}
+                            onClick={() => this.handleClick(bill)}
                           >
                             <i className="tim-icons icon-pencil" />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="workHour-table-tooltip"
+                            target="bill-table-tooltip"
                             placement="right"
                           >
-                            Edit Work Hour
+                            Edit Bill
                           </UncontrolledTooltip>
                         </td>
                       </tr>
@@ -141,16 +158,17 @@ class WorkHourTable extends Component {
             </div>
           </CardBody>
         </Card>
-        <WorkHourModalEdit
+        <EditModal
           open={open}
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_workHours={this.get_workHours}
+          get_expenses={this.getBills}
+          get_data={getData}
         />
       </>
     );
   }
 }
 
-export default WorkHourTable;
+export default BillTable;

@@ -11,9 +11,9 @@ import {
 } from 'reactstrap';
 
 import formatter from '../helpers/currency';
-import ExpenseTableWeek from '../components/ExpenseTableWeek';
-import IncomeTableWeek from '../components/IncomeTableWeek';
-import WorkHourTableWeek from '../components/WorkHourTableWeek';
+import ExpenseTable from '../components/Expense/ExpenseTableWeek';
+import IncomeTable from '../components/Income/IncomeTableWeek';
+import WorkHourTable from '../components/WorkHour/WorkHourTableWeek';
 import Loader from '../components/Loader';
 import WeekService from '../service/WeekService';
 
@@ -37,7 +37,7 @@ class Week extends Component {
           isLoaded: true,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   };
 
   componentDidMount() {
@@ -156,21 +156,21 @@ class Week extends Component {
           </Row>
           <Row>
             <Col xs="4">
-              <ExpenseTableWeek
+              <ExpenseTable
                 user={user}
                 data={expenseTableData}
                 getData={this.getWeekData}
               />
             </Col>
             <Col xs="4">
-              <IncomeTableWeek
+              <IncomeTable
                 user={user}
                 data={incomeTableData}
                 getData={this.getWeekData}
               />
             </Col>
             <Col xs="4">
-              <WorkHourTableWeek
+              <WorkHourTable
                 user={user}
                 data={workHourTableData}
                 getData={this.getWeekData}

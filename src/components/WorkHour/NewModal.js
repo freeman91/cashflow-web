@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 
 // reactstrap components
 import {
@@ -12,10 +11,10 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import WorkHour from '../service/WorkHourService';
-import Income from '../service/IncomeService';
-import formatter_no$ from '../helpers/currency_no$';
-import formatDate from '../helpers/date';
+import WorkHour from '../../service/WorkHourService';
+import Income from '../../service/IncomeService';
+import formatter_no$ from '../../helpers/currency_no$';
+import formatDate from '../../helpers/date';
 
 const defaultState = {
   open: false,
@@ -26,18 +25,11 @@ const defaultState = {
   },
 };
 
-class WorkHourModalgNew extends Component {
+class NewModal extends Component {
   state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
-    const { user, history } = newProps;
-    if (user) {
-      if (isEqual(user, {})) {
-        history.push('/');
-      } else {
-        this.getIncomeSources();
-      }
-    }
+    this.getIncomeSources();
   }
 
   handleChange = (event) => {
@@ -153,4 +145,4 @@ class WorkHourModalgNew extends Component {
   }
 }
 
-export default WorkHourModalgNew;
+export default NewModal;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -9,10 +10,9 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../helpers/currency';
-import Loader from '../components/Loader';
-import ExpenseModalEdit from './ExpenseModalEdit';
-import Dashboard from '../service/DashboardService';
+import formatter from '../../helpers/currency';
+import EditModal from './EditModal';
+import Dashboard from '../../service/DashboardService';
 
 const defaultValue = {
   isLoaded: false,
@@ -20,50 +20,46 @@ const defaultValue = {
   value: {
     amount: 0,
     id: 0,
-    vendor: '',
+    source: '',
     description: '',
-    group: '',
     date: new Date(),
   },
 };
-
-class ExpenseTable extends Component {
+class IncomeTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    this.getExpenses();
+    this.get_incomes();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.getExpenses().then(() => {
+      this.get_incomes().then(() => {
         this.props.stopReload();
       });
     }
   }
 
-  getExpenses = async () => {
-    Dashboard.getExpenses(this.props.user.auth_token).then((result) => {
+  get_incomes = async () => {
+    Dashboard.getIncomes(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
-          expenses: result.expenses,
+          incomes: result.incomes,
           isLoaded: true,
         });
       }
     });
   };
 
-  handleClick = (expense) => {
+  handleClick = (income) => {
     this.setState({
       open: true,
       value: {
-        id: expense[0],
-        amount: expense[1],
-        group: expense[2],
-        vendor: expense[3],
-        description: expense[4],
-        bill: expense[5],
-        date: expense[6],
+        id: income[0],
+        amount: income[1],
+        source: income[2],
+        description: income[3],
+        date: income[4],
       },
     });
   };
@@ -74,21 +70,25 @@ class ExpenseTable extends Component {
     });
   };
 
+  handleCollapse = () => {
+    this.setState({
+      collapse: !this.state.collapse,
+    });
+  };
+
   render() {
     const { user, get_data } = this.props;
-    const { expenses, isLoaded, open, value } = this.state;
-    if (!isLoaded) return <Loader />;
+    const { incomes, isLoaded, open, value } = this.state;
+    if (!isLoaded) return null;
 
-    var expensesData = [];
-    expenses.map((exp) => {
-      expensesData.push([
-        exp.id,
-        exp.amount,
-        exp.group,
-        exp.vendor,
-        exp.description,
-        exp.bill,
-        exp.date,
+    var incomesData = [];
+    incomes.map((income) => {
+      incomesData.push([
+        income.id,
+        income.amount,
+        income.source,
+        income.description,
+        income.date,
       ]);
       return null;
     });
@@ -98,7 +98,7 @@ class ExpenseTable extends Component {
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              Recent Expenses
+              Recent Incomes
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">
@@ -109,38 +109,36 @@ class ExpenseTable extends Component {
                     <th>date</th>
                     <th>amount</th>
                     <th>group</th>
-                    <th>vendor</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {expensesData.map((expense, idx) => {
+                  {incomesData.map((income, idx) => {
                     return (
-                      <tr key={`expense-item ${idx}`}>
+                      <tr key={`income-item ${idx}`}>
                         <td>
-                          {new Date(expense[6] + ' 12:00').getMonth() +
+                          {new Date(income[4] + ' 12:00').getMonth() +
                             1 +
                             '/' +
-                            new Date(expense[6] + ' 12:00').getDate()}
+                            new Date(income[4] + ' 12:00').getDate()}
                         </td>
-                        <td>{formatter.format(expense[1])}</td>
-                        <td>{expense[2]}</td>
-                        <td>{expense[3].substring(0, 10)}</td>
+                        <td>{formatter.format(income[1])}</td>
+                        <td>{income[2]}</td>
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="expense-table-tooltip"
+                            id="income-table-tooltip"
                             title=""
                             type="button"
-                            onClick={() => this.handleClick(expense)}
+                            onClick={() => this.handleClick(income)}
                           >
                             <i className="tim-icons icon-pencil" />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="expense-table-tooltip"
+                            target="income-table-tooltip"
                             placement="right"
                           >
-                            Edit Expense
+                            Edit Income
                           </UncontrolledTooltip>
                         </td>
                       </tr>
@@ -151,12 +149,12 @@ class ExpenseTable extends Component {
             </div>
           </CardBody>
         </Card>
-        <ExpenseModalEdit
+        <EditModal
           open={open}
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_expenses={this.getExpenses}
+          get_incomes={this.get_incomes}
           get_data={get_data}
         />
       </>
@@ -164,4 +162,4 @@ class ExpenseTable extends Component {
   }
 }
 
-export default ExpenseTable;
+export default IncomeTable;

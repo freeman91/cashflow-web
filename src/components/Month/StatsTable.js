@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, CardTitle, Table } from 'reactstrap';
 
-class MonthDataTable extends Component {
+class StatsTable extends Component {
   render() {
     const { data } = this.props;
 
@@ -55,4 +55,4 @@ class MonthDataTable extends Component {
   }
 }
 
-export default MonthDataTable;
+export default StatsTable;

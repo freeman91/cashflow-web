@@ -7,8 +7,8 @@ import { Col, Row } from 'reactstrap';
 import MonthService from '../service/MonthService';
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
-import BillsTable from '../components/BillsTable';
-import MonthDataTable from '../components/MonthDataTable';
+import BillTable from '../components/Bill/BillTable';
+import StatsTable from '../components/Month/StatsTable';
 import month from '../helpers/month_name';
 
 class Month extends Component {
@@ -30,7 +30,7 @@ class Month extends Component {
           isLoaded: true,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   };
 
   componentDidMount() {
@@ -89,7 +89,7 @@ class Month extends Component {
         <div className="content">
           <Row>
             <Col xs="8">
-              <MonthDataTable
+              <StatsTable
                 data={monthTableData}
                 month={month[cwdate.month - 1]}
               />
@@ -97,7 +97,7 @@ class Month extends Component {
           </Row>
           <Row>
             <Col xs="5">
-              <BillsTable
+              <BillTable
                 user={user}
                 reload={reloadBillState}
                 month={month[cwdate.month - 1]}

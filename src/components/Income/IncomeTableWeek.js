@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -10,56 +9,32 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../helpers/currency';
-import IncomeModalEdit from './IncomeModalEdit';
-import Dashboard from '../service/DashboardService';
+import formatter from '../../helpers/currency';
+import EditModal from './EditModal';
 
-const defaultValue = {
-  isLoaded: false,
+const defaultState = {
   open: false,
   value: {
     amount: 0,
     id: 0,
-    source: '',
     description: '',
+    source: '',
     date: new Date(),
   },
 };
-class IncomeTable extends Component {
-  state = { ...defaultValue };
 
-  componentDidMount() {
-    this.get_incomes();
-  }
+class IncomeTableWeek extends Component {
+  state = { ...defaultState };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reload) {
-      this.get_incomes().then(() => {
-        this.props.stopReload();
-      });
-    }
-  }
-
-  get_incomes = async () => {
-    Dashboard.getIncomes(this.props.user.auth_token).then((result) => {
-      if (result) {
-        this.setState({
-          incomes: result.incomes,
-          isLoaded: true,
-        });
-      }
-    });
-  };
-
-  handleClick = (income) => {
+  handleClick = (expense) => {
     this.setState({
       open: true,
       value: {
-        id: income[0],
-        amount: income[1],
-        source: income[2],
-        description: income[3],
-        date: income[4],
+        id: expense[0],
+        amount: expense[1],
+        source: expense[2],
+        description: expense[3],
+        date: expense[4],
       },
     });
   };
@@ -70,35 +45,16 @@ class IncomeTable extends Component {
     });
   };
 
-  handleCollapse = () => {
-    this.setState({
-      collapse: !this.state.collapse,
-    });
-  };
-
   render() {
-    const { user, get_data } = this.props;
-    const { incomes, isLoaded, open, value } = this.state;
-    if (!isLoaded) return null;
-
-    var incomesData = [];
-    incomes.map((income) => {
-      incomesData.push([
-        income.id,
-        income.amount,
-        income.source,
-        income.description,
-        income.date,
-      ]);
-      return null;
-    });
+    const { user, data, getData } = this.props;
+    const { open, value } = this.state;
 
     return (
       <>
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              Recent Incomes
+              {`Incomes`}
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">
@@ -108,13 +64,13 @@ class IncomeTable extends Component {
                   <tr>
                     <th>date</th>
                     <th>amount</th>
-                    <th>group</th>
+                    <th>source</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {incomesData.map((income, idx) => {
+                  {data.map((income, idx) => {
                     return (
-                      <tr key={`income-item ${idx}`}>
+                      <tr key={`income-record-${income[0]}`}>
                         <td>
                           {new Date(income[4] + ' 12:00').getMonth() +
                             1 +
@@ -126,7 +82,7 @@ class IncomeTable extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="income-table-tooltip"
+                            id="week-income-table-tooltip"
                             title=""
                             type="button"
                             onClick={() => this.handleClick(income)}
@@ -135,7 +91,7 @@ class IncomeTable extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="income-table-tooltip"
+                            target="week-income-table-tooltip"
                             placement="right"
                           >
                             Edit Income
@@ -149,17 +105,16 @@ class IncomeTable extends Component {
             </div>
           </CardBody>
         </Card>
-        <IncomeModalEdit
+        <EditModal
           open={open}
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_incomes={this.get_incomes}
-          get_data={get_data}
+          get_data={getData}
         />
       </>
     );
   }
 }
 
-export default IncomeTable;
+export default IncomeTableWeek;

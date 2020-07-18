@@ -9,21 +9,20 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../helpers/currency';
-import IncomeModalEdit from './IncomeModalEdit';
+import formatter_no$ from '../../helpers/currency_no$';
+import EditModal from './EditModal';
 
 const defaultState = {
   open: false,
   value: {
     amount: 0,
     id: 0,
-    description: '',
     source: '',
     date: new Date(),
   },
 };
 
-class IncomeTableWeek extends Component {
+class WorkHourTableWeek extends Component {
   state = { ...defaultState };
 
   handleClick = (expense) => {
@@ -33,8 +32,7 @@ class IncomeTableWeek extends Component {
         id: expense[0],
         amount: expense[1],
         source: expense[2],
-        description: expense[3],
-        date: expense[4],
+        date: expense[3],
       },
     });
   };
@@ -54,7 +52,7 @@ class IncomeTableWeek extends Component {
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              {`Incomes`}
+              {`Work Hours`}
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">
@@ -68,24 +66,24 @@ class IncomeTableWeek extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((income, idx) => {
+                  {data.map((workHour, idx) => {
                     return (
-                      <tr key={`income-record-${income[0]}`}>
+                      <tr key={`workHour-record-${workHour[0]}`}>
                         <td>
-                          {new Date(income[4] + ' 12:00').getMonth() +
+                          {new Date(workHour[3] + ' 12:00').getMonth() +
                             1 +
                             '/' +
-                            new Date(income[4] + ' 12:00').getDate()}
+                            new Date(workHour[3] + ' 12:00').getDate()}
                         </td>
-                        <td>{formatter.format(income[1])}</td>
-                        <td>{income[2]}</td>
+                        <td>{formatter_no$.format(workHour[1])}</td>
+                        <td>{workHour[2]}</td>
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="week-income-table-tooltip"
+                            id="week-workHour-table-tooltip"
                             title=""
                             type="button"
-                            onClick={() => this.handleClick(income)}
+                            onClick={() => this.handleClick(workHour)}
                           >
                             <i className="tim-icons icon-pencil" />
                           </Button>
@@ -105,16 +103,16 @@ class IncomeTableWeek extends Component {
             </div>
           </CardBody>
         </Card>
-        <IncomeModalEdit
+        <EditModal
           open={open}
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_data={getData}
+          get_workHours={getData}
         />
       </>
     );
   }
 }
 
-export default IncomeTableWeek;
+export default WorkHourTableWeek;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 
 // reactstrap components
 import {
@@ -12,9 +11,8 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import formatter_no$ from '../helpers/currency_no$';
-import formatDate from '../helpers/date';
-import Income from '../service/IncomeService';
+import formatter_no$ from '../../helpers/currency_no$';
+import Asset from '../../service/AssetService';
 
 const defaultState = {
   open: false,
@@ -26,17 +24,22 @@ const defaultState = {
   },
 };
 
-class IncomeModalNew extends Component {
+class EditModal extends Component {
   state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
-    const { user, history } = newProps;
-    if (user) {
-      if (isEqual(user, {})) {
-        history.push('/');
-      } else {
-        this.getIncomeSources();
-      }
+    const { open, value } = newProps;
+    if (open) {
+      this.setState({
+        value: {
+          id: value.id,
+          amount: value.amount,
+          source: value.group,
+          description: value.description,
+          date: value.date,
+        },
+      });
+      this.getSources();
     }
   }
 
@@ -64,33 +67,55 @@ class IncomeModalNew extends Component {
     });
   };
 
-  async getIncomeSources() {
-    Income.getSources(this.props.user.auth_token).then((result) => {
+  async getSources() {
+    Asset.getSources(this.props.user.auth_token).then((result) => {
       this.setState({
-        sources: result.income_sources,
+        value: {
+          ...this.state.value,
+          source: result.sources[0],
+        },
+        sources: result.sources,
         isLoaded: true,
       });
     });
   }
 
+  handleDelete = () => {
+    Asset._delete(this.state.value.id, this.props.user.auth_token).then(
+      (response) => {
+        if (response.status === 202) {
+          this.props.getData();
+          this.props.handleClose();
+        }
+      }
+    );
+  };
+
   handleSubmit = () => {
+    const amount =
+      typeof this.state.value.amount === 'string'
+        ? Number(this.state.value.amount.replace(',', ''))
+        : Number(this.state.value.amount);
+
     const { value } = this.state;
-    const { user, get_data, handleClose } = this.props;
-    if (isNaN(value.amount) || value.source === '') {
+    const { user, getData, handleClose } = this.props;
+
+    if (isNaN(amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      Income.create(
+      Asset.update(
         {
-          amount: Number(value.amount),
+          id: value.id,
+          amount: Number(amount),
           source: value.source,
           description: value.description,
           date: value.date,
         },
         user.auth_token
-      ).then((result) => {
-        if (result.status === 201) {
+      ).then((response) => {
+        if (response.status === 202) {
           this.setState({ ...defaultState });
-          get_data('income');
+          getData();
           handleClose();
         }
       });
@@ -99,11 +124,11 @@ class IncomeModalNew extends Component {
 
   render() {
     const { open, handleClose } = this.props;
-    const { sources, isLoaded } = this.state;
+    const { sources, isLoaded, value } = this.state;
     if (!isLoaded) return null;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>New Income</ModalHeader>
+        <ModalHeader>Edit Asset</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend">$</InputGroupAddon>
@@ -111,7 +136,7 @@ class IncomeModalNew extends Component {
               type="float"
               name="amount"
               id="amount"
-              placeholder={formatter_no$.format(0)}
+              defaultValue={formatter_no$.format(value.amount)}
               onChange={this.handleChange}
             />
           </InputGroup>
@@ -121,7 +146,7 @@ class IncomeModalNew extends Component {
               type="select"
               name="source"
               id="source"
-              placeholder="source select"
+              defaultValue={value.source}
               onChange={this.handleChange}
             >
               {sources.map((source) => {
@@ -135,7 +160,7 @@ class IncomeModalNew extends Component {
               type="text"
               name="description"
               id="description"
-              placeholder="description"
+              defaultValue={value.description ? value.description : null}
               onChange={this.handleChange}
             />
           </InputGroup>
@@ -145,13 +170,16 @@ class IncomeModalNew extends Component {
               type="date"
               name="date"
               id="date"
-              defaultValue={formatDate.dateToString(new Date())}
+              defaultValue={value.date}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
             <Button onClick={handleClose} color="default">
               Cancel
+            </Button>
+            <Button onClick={this.handleDelete} color="warning">
+              Delete
             </Button>
             <Button onClick={this.handleSubmit} color="primary">
               Submit
@@ -163,4 +191,4 @@ class IncomeModalNew extends Component {
   }
 }
 
-export default IncomeModalNew;
+export default EditModal;

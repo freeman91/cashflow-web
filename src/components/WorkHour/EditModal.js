@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import formatter_no$ from '../helpers/currency_no$';
 import {
   Button,
   Input,
@@ -10,20 +9,22 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import Income from '../service/IncomeService';
-import formatDate from '../helpers/date';
+import WorkHour from '../../service/WorkHourService';
+import Income from '../../service/IncomeService';
+import formatDate from '../../helpers/date';
+import formatter_no$ from '../../helpers/currency_no$';
 
-const defaultValue = {
-  amount: null,
-  source: '',
-  description: '',
-  date: new Date(),
+const defaultState = {
+  open: false,
+  value: {
+    amount: null,
+    source: '',
+    date: new Date(),
+  },
 };
 
-class IncomeModalEdit extends Component {
-  state = {
-    ...defaultValue,
-  };
+class EditModal extends Component {
+  state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
     const { open, value } = newProps;
@@ -33,7 +34,6 @@ class IncomeModalEdit extends Component {
           id: value.id,
           amount: value.amount,
           source: value.source,
-          description: value.description,
           date: value.date,
         },
       });
@@ -50,7 +50,7 @@ class IncomeModalEdit extends Component {
     });
   };
 
-  handleSourceSelect = (event) => {
+  handleGroupSelect = (event) => {
     this.setState({
       value: {
         ...this.state.value,
@@ -66,9 +66,9 @@ class IncomeModalEdit extends Component {
   };
 
   async get_income_sources() {
-    Income.getSources(this.props.user.auth_token).then((response) => {
+    Income.getSources(this.props.user.auth_token).then((result) => {
       this.setState({
-        sources: response.income_sources,
+        sources: result.income_sources,
         isLoaded: true,
       });
     });
@@ -80,40 +80,36 @@ class IncomeModalEdit extends Component {
         ? Number(this.state.value.amount.replace(',', ''))
         : Number(this.state.value.amount);
     const { value } = this.state;
-    const { user, handleClose, get_incomes, get_data } = this.props;
-
+    const { user, handleClose, get_workHours } = this.props;
     if (isNaN(value.amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      Income.edit(
+      WorkHour.edit(
         {
           id: value.id,
-          amount,
+          amount: amount,
           source: value.source,
-          description: value.description,
           date: formatDate.stringToDate(value.date),
         },
         user.auth_token
-      ).then((res) => {
+      ).then(() => {
         this.setState({
           open: false,
-          value: {
-            ...defaultValue,
-          },
+          value: { ...defaultState },
         });
-        get_data();
-        if (get_incomes) get_incomes();
+        if (get_workHours) get_workHours();
         handleClose();
       });
     }
   };
 
   handleDelete = () => {
-    Income._delete(this.state.value.id, this.props.user.auth_token).then(() => {
-      this.props.get_incomes();
-      this.props.get_data();
-      this.props.handleClose();
-    });
+    WorkHour._delete(this.state.value.id, this.props.user.auth_token).then(
+      () => {
+        this.props.get_workHours();
+        this.props.handleClose();
+      }
+    );
   };
 
   render() {
@@ -123,10 +119,10 @@ class IncomeModalEdit extends Component {
 
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>Edit Income</ModalHeader>
+        <ModalHeader>Edit Work Hour</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
             <Input
               type="float"
               name="amount"
@@ -148,17 +144,6 @@ class IncomeModalEdit extends Component {
                 return <option key={source}>{source}</option>;
               })}
             </Input>
-          </InputGroup>
-          <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
-            <Input
-              type="text"
-              name="description"
-              id="description"
-              placeholder="description"
-              defaultValue={value.description ? value.description : null}
-              onChange={this.handleChange}
-            />
           </InputGroup>
           <InputGroup>
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
@@ -187,4 +172,4 @@ class IncomeModalEdit extends Component {
   }
 }
 
-export default IncomeModalEdit;
+export default EditModal;

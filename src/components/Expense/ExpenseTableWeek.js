@@ -9,8 +9,8 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../helpers/currency';
-import ExpenseModalEdit from './ExpenseModalEdit';
+import formatter from '../../helpers/currency';
+import EditModal from './EditModal';
 
 const defaultState = {
   open: false,
@@ -110,7 +110,7 @@ class ExpenseTableWeek extends Component {
             </div>
           </CardBody>
         </Card>
-        <ExpenseModalEdit
+        <EditModal
           open={open}
           handleClose={this.handleClose}
           user={user}

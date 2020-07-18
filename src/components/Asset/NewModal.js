@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import formatter_no$ from '../helpers/currency_no$';
+
+// reactstrap components
 import {
   Button,
   Input,
@@ -10,35 +11,25 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import WorkHour from '../service/WorkHourService';
-import Income from '../service/IncomeService';
-import formatDate from '../helpers/date';
+import formatter_no$ from '../../helpers/currency_no$';
+import formatDate from '../../helpers/date';
+import Asset from '../../service/AssetService';
 
 const defaultState = {
   open: false,
   value: {
     amount: null,
     source: '',
+    description: '',
     date: new Date(),
   },
 };
 
-class WorkHourDialogEdit extends Component {
+class NewModal extends Component {
   state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
-    const { open, value } = newProps;
-    if (open) {
-      this.setState({
-        value: {
-          id: value.id,
-          amount: value.amount,
-          source: value.source,
-          date: value.date,
-        },
-      });
-      this.get_income_sources();
-    }
+    this.getSources();
   }
 
   handleChange = (event) => {
@@ -50,7 +41,7 @@ class WorkHourDialogEdit extends Component {
     });
   };
 
-  handleGroupSelect = (event) => {
+  handleSourceSelect = (event) => {
     this.setState({
       value: {
         ...this.state.value,
@@ -65,69 +56,58 @@ class WorkHourDialogEdit extends Component {
     });
   };
 
-  async get_income_sources() {
-    Income.getSources(this.props.user.auth_token).then((result) => {
+  async getSources() {
+    Asset.getSources(this.props.user.auth_token).then((result) => {
       this.setState({
-        sources: result.income_sources,
+        value: {
+          ...this.state.value,
+          source: result.sources[0],
+        },
+        sources: result.sources,
         isLoaded: true,
       });
     });
   }
 
   handleSubmit = () => {
-    const amount =
-      typeof this.state.value.amount === 'string'
-        ? Number(this.state.value.amount.replace(',', ''))
-        : Number(this.state.value.amount);
     const { value } = this.state;
-    const { user, handleClose, get_workHours } = this.props;
+    const { user, getData, handleClose } = this.props;
     if (isNaN(value.amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      WorkHour.edit(
+      Asset.create(
         {
-          id: value.id,
-          amount: amount,
+          amount: Number(value.amount),
           source: value.source,
-          date: formatDate.stringToDate(value.date),
+          description: value.description,
+          date: value.date,
         },
         user.auth_token
-      ).then(() => {
-        this.setState({
-          open: false,
-          value: { ...defaultState },
-        });
-        if (get_workHours) get_workHours();
-        handleClose();
+      ).then((result) => {
+        if (result.status === 201) {
+          this.setState({ ...defaultState });
+          getData();
+          handleClose();
+        }
       });
     }
   };
 
-  handleDelete = () => {
-    WorkHour._delete(this.state.value.id, this.props.user.auth_token).then(
-      () => {
-        this.props.get_workHours();
-        this.props.handleClose();
-      }
-    );
-  };
-
   render() {
     const { open, handleClose } = this.props;
-    const { sources, isLoaded, value } = this.state;
+    const { sources, isLoaded } = this.state;
     if (!isLoaded) return null;
-
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>Edit Work Hour</ModalHeader>
+        <ModalHeader>New Asset</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
             <Input
               type="float"
               name="amount"
               id="amount"
-              defaultValue={formatter_no$.format(value.amount)}
+              placeholder={formatter_no$.format(0)}
               onChange={this.handleChange}
             />
           </InputGroup>
@@ -137,7 +117,7 @@ class WorkHourDialogEdit extends Component {
               type="select"
               name="source"
               id="source"
-              defaultValue={value.source}
+              defaultValue={sources[0]}
               onChange={this.handleChange}
             >
               {sources.map((source) => {
@@ -148,19 +128,26 @@ class WorkHourDialogEdit extends Component {
           <InputGroup>
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
             <Input
+              type="text"
+              name="description"
+              id="description"
+              placeholder="description"
+              onChange={this.handleChange}
+            />
+          </InputGroup>
+          <InputGroup>
+            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <Input
               type="date"
               name="date"
               id="date"
-              defaultValue={value.date}
+              defaultValue={formatDate.dateToString(new Date())}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
             <Button onClick={handleClose} color="default">
               Cancel
-            </Button>
-            <Button onClick={this.handleDelete} color="warning">
-              Delete
             </Button>
             <Button onClick={this.handleSubmit} color="primary">
               Submit
@@ -172,4 +159,4 @@ class WorkHourDialogEdit extends Component {
   }
 }
 
-export default WorkHourDialogEdit;
+export default NewModal;

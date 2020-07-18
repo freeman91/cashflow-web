@@ -10,7 +10,7 @@ import Settings from '../routes/Settings';
 
 // import Footer from 'components/Footer/Footer.js';
 import Sidebar from 'components/Sidebar';
-import UserNavbar from 'components/UserNavbar.js';
+import TopBar from 'components/TopBar.js';
 import '../assets/scss/black-dashboard-react.scss';
 
 var ps;
@@ -137,7 +137,7 @@ class User extends React.Component {
             ref="mainPanel"
             data={this.state.backgroundColor}
           >
-            <UserNavbar
+            <TopBar
               {...this.props}
               toggleSidebar={this.toggleSidebar}
               sidebarOpened={this.state.sidebarOpened}

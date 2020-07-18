@@ -9,7 +9,7 @@ const getData = async function (auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const getExpenses = async function (auth_token) {
@@ -20,7 +20,7 @@ const getExpenses = async function (auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const getIncomes = async function (auth_token) {
@@ -31,7 +31,7 @@ const getIncomes = async function (auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const getWorkHours = async function (auth_token) {
@@ -42,7 +42,7 @@ const getWorkHours = async function (auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 export default {

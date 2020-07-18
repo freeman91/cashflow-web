@@ -11,7 +11,7 @@ const create = async function (workHour, auth_token) {
         date: workHour.date,
       },
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const _delete = async function (id, auth_token) {
@@ -34,7 +34,7 @@ const edit = async function (workHour, auth_token) {
         date: workHour.date,
       },
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 export default {

@@ -34,7 +34,7 @@ class Year extends Component {
           isLoaded: true,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   }
 
   componentDidMount() {

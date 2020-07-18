@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
-
-// reactstrap components
 import {
   Button,
   Input,
   InputGroup,
   InputGroupAddon,
+  InputGroupText,
   Modal,
   ModalBody,
   ModalHeader,
 } from 'reactstrap';
 
-import formatter_no$ from '../helpers/currency_no$';
-import formatDate from '../helpers/date';
-import Asset from '../service/AssetService';
+import formatter_no$ from '../../helpers/currency_no$';
+import Expense from '../../service/ExpenseService';
+import formatDate from '../../helpers/date';
 
-const defaultState = {
+const defaultValue = {
   open: false,
   value: {
     amount: null,
-    source: '',
+    group: '',
     description: '',
+    bill: false,
     date: new Date(),
   },
+  isLoaded: false,
 };
 
-class AssetModalNew extends Component {
-  state = { ...defaultState };
+class EditModal extends Component {
+  state = { ...defaultValue };
 
   componentWillReceiveProps(newProps) {
     const { open, value } = newProps;
@@ -36,12 +36,14 @@ class AssetModalNew extends Component {
         value: {
           id: value.id,
           amount: value.amount,
-          source: value.group,
+          group: value.group,
+          vendor: value.vendor,
           description: value.description,
+          bill: value.bill,
           date: value.date,
         },
       });
-      this.getSources();
+      this.get_expense_groups();
     }
   }
 
@@ -54,11 +56,11 @@ class AssetModalNew extends Component {
     });
   };
 
-  handleSourceSelect = (event) => {
+  handleGroupSelect = (event) => {
     this.setState({
       value: {
         ...this.state.value,
-        source: event.target.value,
+        group: event.target.value,
       },
     });
   };
@@ -69,68 +71,72 @@ class AssetModalNew extends Component {
     });
   };
 
-  async getSources() {
-    Asset.getSources(this.props.user.auth_token).then((result) => {
+  handleCheckbox = () => {
+    this.setState({
+      value: {
+        ...this.state.value,
+        bill: !this.state.value.bill,
+      },
+    });
+  };
+
+  async get_expense_groups() {
+    Expense.getGroups(this.props.user.auth_token).then((result) => {
       this.setState({
-        value: {
-          ...this.state.value,
-          source: result.sources[0],
-        },
-        sources: result.sources,
+        groups: result.expense_groups,
         isLoaded: true,
       });
     });
   }
-
-  handleDelete = () => {
-    Asset._delete(this.state.value.id, this.props.user.auth_token).then(
-      (response) => {
-        if (response.status === 202) {
-          this.props.getData();
-          this.props.handleClose();
-        }
-      }
-    );
-  };
 
   handleSubmit = () => {
     const amount =
       typeof this.state.value.amount === 'string'
         ? Number(this.state.value.amount.replace(',', ''))
         : Number(this.state.value.amount);
-
     const { value } = this.state;
-    const { user, getData, handleClose } = this.props;
+    const { user, handleClose, get_expenses, get_data } = this.props;
 
-    if (isNaN(amount) || value.source === '') {
+    if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      Asset.update(
+      Expense.edit(
         {
           id: value.id,
-          amount: Number(amount),
-          source: value.source,
+          amount,
+          group: value.group,
+          vendor: value.vendor,
           description: value.description,
-          date: value.date,
+          bill: value.bill,
+          date: formatDate.stringToDate(value.date),
         },
         user.auth_token
-      ).then((response) => {
-        if (response.status === 202) {
-          this.setState({ ...defaultState });
-          getData();
-          handleClose();
-        }
+      ).then(() => {
+        this.setState({ ...defaultValue });
+        get_data();
+        if (get_expenses) get_expenses();
+        handleClose();
       });
     }
   };
 
+  handleDelete = () => {
+    Expense._delete(this.state.value.id, this.props.user.auth_token).then(
+      () => {
+        this.props.get_expenses();
+        this.props.get_data();
+        this.props.handleClose();
+      }
+    );
+  };
+
   render() {
     const { open, handleClose } = this.props;
-    const { sources, isLoaded, value } = this.state;
+    const { groups, isLoaded, value } = this.state;
     if (!isLoaded) return null;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>Edit Asset</ModalHeader>
+        <ModalHeader>Edit Expense</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend">$</InputGroupAddon>
@@ -146,13 +152,13 @@ class AssetModalNew extends Component {
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
             <Input
               type="select"
-              name="source"
-              id="source"
-              defaultValue={value.source}
+              name="group"
+              id="group"
+              defaultValue={value.group}
               onChange={this.handleChange}
             >
-              {sources.map((source) => {
-                return <option key={source}>{source}</option>;
+              {groups.map((group) => {
+                return <option key={group}>{group}</option>;
               })}
             </Input>
           </InputGroup>
@@ -160,8 +166,20 @@ class AssetModalNew extends Component {
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
             <Input
               type="text"
+              name="vendor"
+              id="vendor"
+              placeholder="vendor"
+              defaultValue={value.vendor ? value.vendor : null}
+              onChange={this.handleChange}
+            />
+          </InputGroup>
+          <InputGroup>
+            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <Input
+              type="text"
               name="description"
               id="description"
+              placeholder="description"
               defaultValue={value.description ? value.description : null}
               onChange={this.handleChange}
             />
@@ -175,6 +193,20 @@ class AssetModalNew extends Component {
               defaultValue={value.date}
               onChange={this.handleChange}
             />
+          </InputGroup>
+          <InputGroup>
+            <InputGroupAddon addonType="prepend">
+              <InputGroupText>
+                <Input
+                  addon
+                  type="checkbox"
+                  id="bill"
+                  onChange={this.handleCheckbox}
+                  checked={value.bill}
+                />
+              </InputGroupText>
+            </InputGroupAddon>
+            <Input placeholder="Bill?" disabled />
           </InputGroup>
           <InputGroup>
             <Button onClick={handleClose} color="default">
@@ -193,4 +225,4 @@ class AssetModalNew extends Component {
   }
 }
 
-export default AssetModalNew;
+export default EditModal;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 
 // reactstrap components
 import {
@@ -13,9 +12,9 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import formatter_no$ from '../helpers/currency_no$';
-import formatDate from '../helpers/date';
-import Expense from '../service/ExpenseService';
+import formatter_no$ from '../../helpers/currency_no$';
+import formatDate from '../../helpers/date';
+import Expense from '../../service/ExpenseService';
 
 const defaultState = {
   open: false,
@@ -29,18 +28,12 @@ const defaultState = {
   },
 };
 
-class ExpenseModalNew extends Component {
+class NewModal extends Component {
   state = { ...defaultState };
 
-  componentWillReceiveProps(newProps) {
-    const { user, history } = newProps;
-    if (user) {
-      if (isEqual(user, {})) {
-        history.push('/');
-      } else {
-        this.getExpenseGroups();
-      }
-    }
+  componentWillReceiveProps() {
+    this.getExpenseGroups();
+    console.log('load');
   }
 
   handleChange = (event) => {
@@ -202,4 +195,4 @@ class ExpenseModalNew extends Component {
   }
 }
 
-export default ExpenseModalNew;
+export default NewModal;

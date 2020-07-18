@@ -9,7 +9,7 @@ const getSources = async function (auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const getFromMonth = async function (month, year, auth_token) {
@@ -24,7 +24,7 @@ const getFromMonth = async function (month, year, auth_token) {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const create = async function (asset, auth_token) {
@@ -38,7 +38,7 @@ const create = async function (asset, auth_token) {
         date: asset.date,
       },
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 const _delete = async function (id, auth_token) {
@@ -62,7 +62,7 @@ const update = async function (asset, auth_token) {
         date: asset.date,
       },
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 export default {

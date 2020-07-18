@@ -12,8 +12,8 @@ import {
   Table,
 } from 'reactstrap';
 
-import AssetsTable from '../components/AssetsTable';
-import LiabilitiesTable from '../components/LiabilitiesTable';
+import AssetTable from '../components/Asset/AssetTable';
+import LiabilityTable from '../components/Liability/LiabilityTable';
 import NetWorthService from '../service/NetWorthService';
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
@@ -43,7 +43,7 @@ class NetWorth extends Component {
           isLoaded: true,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   }
 
   prepareTableData = () => {
@@ -122,9 +122,9 @@ class NetWorth extends Component {
           <Row>
             <Col xs="1"></Col>
             <Col xs="5">
-              <AssetsTable user={user} />
+              <AssetTable user={user} />
             </Col>
-            <Col xs="5">{/* <LiabilitiesTable /> */}</Col>
+            <Col xs="5">{/* <LiabilityTable /> */}</Col>
           </Row>
         </div>
       </>

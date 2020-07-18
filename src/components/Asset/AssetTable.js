@@ -13,11 +13,11 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../helpers/currency';
-import AssetModalNew from '../components/AssetModalNew';
-import AssetModalEdit from '../components/AssetModalEdit';
-import Loader from '../components/Loader';
-import Asset from '../service/AssetService';
+import formatter from '../../helpers/currency';
+import NewModal from './NewModal';
+import EditModal from './EditModal';
+import Loader from '../../components/Loader';
+import Asset from '../../service/AssetService';
 
 const defaultState = {
   isLoaded: false,
@@ -44,7 +44,7 @@ const defaultState = {
   },
 };
 
-class AssetsTable extends Component {
+class AssetTable extends Component {
   state = { ...defaultState };
 
   componentDidMount() {
@@ -194,7 +194,7 @@ class AssetsTable extends Component {
             </div>
           </CardBody>
         </Card>
-        <AssetModalNew
+        <NewModal
           user={user}
           open={this.state.dialogs.assetNewOpen}
           handleClose={() => {
@@ -204,7 +204,7 @@ class AssetsTable extends Component {
             this.getAssets(new Date().getMonth() + 1, new Date().getFullYear())
           }
         />
-        <AssetModalEdit
+        <EditModal
           user={user}
           open={this.state.dialogs.assetEditOpen}
           handleClose={() => {
@@ -220,4 +220,4 @@ class AssetsTable extends Component {
   }
 }
 
-export default AssetsTable;
+export default AssetTable;

@@ -3,7 +3,6 @@ import { isEqual } from 'lodash';
 
 import SettingsService from '../service/SettingsService';
 import Loader from '../components/Loader';
-import CashFlowTable from '../components/CashFlowTable';
 
 class Settings extends Component {
   state = {
@@ -21,7 +20,7 @@ class Settings extends Component {
           isLoaded: true,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   }
 
   componentDidMount() {

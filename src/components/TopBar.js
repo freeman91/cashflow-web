@@ -22,7 +22,7 @@ const defaultState = {
   color: 'navbar-transparent',
 };
 
-class UserNavbar extends React.Component {
+class TopBar extends React.Component {
   state = { ...defaultState };
 
   componentDidMount() {
@@ -158,4 +158,4 @@ class UserNavbar extends React.Component {
   }
 }
 
-export default UserNavbar;
+export default TopBar;

@@ -14,13 +14,13 @@ import {
 
 // import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
-import ExpenseTable from '../components/ExpenseTable';
-import WorkHourTable from '../components/WorkHourTable';
-import IncomeTable from '../components/IncomeTable';
+import ExpenseTable from '../components/Expense/ExpenseTableRecent';
+import WorkHourTable from '../components/WorkHour/WorkHourTable';
+import IncomeTable from '../components/Income/IncomeTable';
 import DashboardService from '../service/DashboardService';
-import ExpenseModalNew from '../components/ExpenseModalNew.js';
-import IncomeModalNew from '../components/IncomeModalNew.js';
-import WorkHourModalNew from '../components/WorkHourModalNew.js';
+import ExpenseNewModal from '../components/Expense/NewModal';
+import IncomeNewModal from '../components/Income/NewModal';
+import WorkHourNewModal from '../components/WorkHour/NewModal';
 
 const defaultState = {
   isLoaded: false,
@@ -183,21 +183,21 @@ class Dashboard extends Component {
             </Col>
           </Row>
         </div>
-        <ExpenseModalNew
+        <ExpenseNewModal
           user={user}
           open={this.state.dialogs.expOpen}
           handleClose={this.handleClose}
           get_data={this.get_dash_data}
           reload_expenses={this.reload_expenses}
         />
-        <IncomeModalNew
+        <IncomeNewModal
           user={user}
           open={this.state.dialogs.incOpen}
           handleClose={this.handleClose}
           get_data={this.get_dash_data}
           reload_incomes={this.reload_incomes}
         />
-        <WorkHourModalNew
+        <WorkHourNewModal
           user={user}
           open={this.state.dialogs.whOpen}
           handleClose={this.handleClose}
