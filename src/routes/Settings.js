@@ -9,14 +9,14 @@ class Settings extends Component {
     isLoaded: false,
   };
 
-  async get_settings_data() {
+  async getSettingsData() {
     SettingsService.getData(this.props.user.auth_token)
       .then((response) => {
         this.setState({
-          expense_groups: response.expense_groups,
-          income_sources: response.income_sources,
-          asset_sources: response.property_sources,
-          liability_groups: response.debt_groups,
+          expenseGroups: response.expense_groups,
+          incomeSources: response.income_sources,
+          assetSources: response.property_sources,
+          liabilityGroups: response.debt_groups,
           isLoaded: true,
         });
       })
@@ -27,17 +27,17 @@ class Settings extends Component {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_settings_data();
+      this.getSettingsData();
     }
   }
 
   render() {
     const {
       isLoaded,
-      expense_groups,
-      income_sources,
-      liability_groups,
-      asset_sources,
+      expenseGroups,
+      incomeSources,
+      liabilityGroups,
+      assetSources,
     } = this.state;
     if (!isLoaded) return <Loader />;
 

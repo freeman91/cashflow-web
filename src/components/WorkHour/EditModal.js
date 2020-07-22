@@ -37,7 +37,7 @@ class EditModal extends Component {
           date: value.date,
         },
       });
-      this.get_income_sources();
+      this.getIncomeSources();
     }
   }
 
@@ -65,7 +65,7 @@ class EditModal extends Component {
     });
   };
 
-  async get_income_sources() {
+  async getIncomeSources() {
     Income.getSources(this.props.user.auth_token).then((result) => {
       this.setState({
         sources: result.income_sources,
@@ -80,7 +80,7 @@ class EditModal extends Component {
         ? Number(this.state.value.amount.replace(',', ''))
         : Number(this.state.value.amount);
     const { value } = this.state;
-    const { user, handleClose, get_workHours } = this.props;
+    const { user, handleClose, getWorkHours } = this.props;
     if (isNaN(value.amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -97,7 +97,7 @@ class EditModal extends Component {
           open: false,
           value: { ...defaultState },
         });
-        if (get_workHours) get_workHours();
+        if (getWorkHours) getWorkHours();
         handleClose();
       });
     }
@@ -106,7 +106,7 @@ class EditModal extends Component {
   handleDelete = () => {
     WorkHour.destroy(this.state.value.id, this.props.user.auth_token).then(
       () => {
-        this.props.get_workHours();
+        this.props.getWorkHours();
         this.props.handleClose();
       }
     );

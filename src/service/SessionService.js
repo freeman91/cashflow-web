@@ -1,5 +1,5 @@
 import axios from 'axios';
-import API_HOST from '../helpers/api_host.js';
+import API_HOST from '../helpers/api-host.js';
 
 const create = async function (email, password) {
   return axios

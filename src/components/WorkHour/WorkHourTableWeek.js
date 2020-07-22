@@ -108,7 +108,7 @@ class WorkHourTableWeek extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_workHours={getData}
+          getWorkHours={getData}
         />
       </>
     );

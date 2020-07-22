@@ -9,7 +9,7 @@ import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import BillTable from '../components/Bill/BillTable';
 import StatsTable from '../components/Month/StatsTable';
-import month from '../helpers/month_name';
+import month from '../helpers/month-names';
 
 class Month extends Component {
   state = {

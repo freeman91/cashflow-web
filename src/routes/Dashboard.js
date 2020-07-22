@@ -42,16 +42,16 @@ class Dashboard extends Component {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.get_dash_data();
+      this.getDashData();
     }
   }
 
-  get_dash_data = async (type) => {
+  getDashData = async (type) => {
     DashboardService.getData(this.props.user.auth_token).then((result) => {
       this.setState({
-        net_income_year: result.net_income_year,
-        net_income_month: result.net_income_month,
-        net_income_week: result.net_income_week,
+        netIncomeYear: result.net_income_year,
+        NetIncomeMonth: result.net_income_month,
+        netIncomeWeek: result.net_income_week,
         isLoaded: true,
         reload: {
           ...defaultState.reload,
@@ -90,9 +90,9 @@ class Dashboard extends Component {
   render() {
     const {
       isLoaded,
-      // net_income_week,
-      // net_income_month,
-      // net_income_year,
+      // netIncomeYear,
+      // netIncomeMonth,
+      // netIncomeWeek,
       reload,
     } = this.state;
     if (!isLoaded) return <Loader />;
@@ -161,7 +161,7 @@ class Dashboard extends Component {
               <ExpenseTable
                 user={user}
                 reload={reload.expense}
-                get_data={this.get_dash_data}
+                getData={this.getDashData}
                 stopReload={this.stopReload}
               />
             </Col>
@@ -169,7 +169,7 @@ class Dashboard extends Component {
               <IncomeTable
                 user={user}
                 reload={reload.income}
-                get_data={this.get_dash_data}
+                getData={this.getDashData}
                 stopReload={this.stopReload}
               />
             </Col>
@@ -177,7 +177,7 @@ class Dashboard extends Component {
               <WorkHourTable
                 user={user}
                 reload={reload.workHour}
-                get_data={this.get_dash_data}
+                getData={this.getDashData}
                 stopReload={this.stopReload}
               />
             </Col>
@@ -187,22 +187,22 @@ class Dashboard extends Component {
           user={user}
           open={this.state.dialogs.expOpen}
           handleClose={this.handleClose}
-          get_data={this.get_dash_data}
-          reload_expenses={this.reload_expenses}
+          getData={this.getDashData}
+          reloadExpenses={this.reloadExpenses}
         />
         <IncomeNewModal
           user={user}
           open={this.state.dialogs.incOpen}
           handleClose={this.handleClose}
-          get_data={this.get_dash_data}
-          reload_incomes={this.reload_incomes}
+          getData={this.getDashData}
+          reloadIncomes={this.reloadIncomes}
         />
         <WorkHourNewModal
           user={user}
           open={this.state.dialogs.whOpen}
           handleClose={this.handleClose}
-          reload_workHours={this.reload_workHours}
-          get_data={this.get_dash_data}
+          reloadWorkHours={this.reloadWorkHours}
+          getData={this.getDashData}
         />
       </>
     );

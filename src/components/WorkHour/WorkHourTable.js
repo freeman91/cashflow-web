@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -30,18 +29,18 @@ class WorkHourTable extends Component {
   state = { ...defaultState };
 
   componentDidMount() {
-    this.get_workHours();
+    this.getWorkHours();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.get_workHours().then(() => {
+      this.getWorkHours().then(() => {
         this.props.stopReload();
       });
     }
   }
 
-  get_workHours = async () => {
+  getWorkHours = async () => {
     Dashboard.getWorkHours(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
@@ -146,7 +145,7 @@ class WorkHourTable extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_workHours={this.get_workHours}
+          getWorkHours={this.getWorkHours}
         />
       </>
     );

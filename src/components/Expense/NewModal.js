@@ -80,7 +80,7 @@ class NewModal extends Component {
 
   handleSubmit = () => {
     const { value } = this.state;
-    const { user, get_data, handleClose } = this.props;
+    const { user, getData, handleClose } = this.props;
     if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -97,7 +97,7 @@ class NewModal extends Component {
       ).then((result) => {
         if (result.status === 201) {
           this.setState({ ...defaultState });
-          get_data('expense');
+          getData('expense');
           handleClose();
         }
       });

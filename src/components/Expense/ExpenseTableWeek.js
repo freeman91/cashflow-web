@@ -115,7 +115,7 @@ class ExpenseTableWeek extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_data={getData}
+          getData={getData}
         />
       </>
     );

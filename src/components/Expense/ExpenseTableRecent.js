@@ -75,7 +75,7 @@ class ExpenseTableRecent extends Component {
   };
 
   render() {
-    const { user, get_data } = this.props;
+    const { user, getData } = this.props;
     const { expenses, isLoaded, open, value } = this.state;
     if (!isLoaded) return <Loader />;
 
@@ -156,8 +156,8 @@ class ExpenseTableRecent extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_expenses={this.getExpenses}
-          get_data={get_data}
+          getExpenses={this.getExpenses}
+          getData={getData}
         />
       </>
     );

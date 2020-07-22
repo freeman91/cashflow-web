@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -29,18 +28,18 @@ class IncomeTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    this.get_incomes();
+    this.getIncomes();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.get_incomes().then(() => {
+      this.getIncomes().then(() => {
         this.props.stopReload();
       });
     }
   }
 
-  get_incomes = async () => {
+  getIncomes = async () => {
     Dashboard.getIncomes(this.props.user.auth_token).then((result) => {
       if (result) {
         this.setState({
@@ -77,7 +76,7 @@ class IncomeTable extends Component {
   };
 
   render() {
-    const { user, get_data } = this.props;
+    const { user, getData } = this.props;
     const { incomes, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
@@ -154,8 +153,8 @@ class IncomeTable extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_incomes={this.get_incomes}
-          get_data={get_data}
+          getIncomes={this.getIncomes}
+          getData={getData}
         />
       </>
     );

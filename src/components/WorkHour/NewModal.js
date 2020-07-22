@@ -66,7 +66,7 @@ class NewModal extends Component {
   }
 
   handleSubmit = () => {
-    const { user, get_data, handleClose } = this.props;
+    const { user, getData, handleClose } = this.props;
     if (isNaN(this.state.value.amount) || this.state.value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
@@ -82,7 +82,7 @@ class NewModal extends Component {
           this.setState({
             ...defaultState,
           });
-          get_data('workHour');
+          getData('workHour');
           handleClose();
         }
       });

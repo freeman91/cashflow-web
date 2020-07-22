@@ -43,7 +43,7 @@ class EditModal extends Component {
           date: value.date,
         },
       });
-      this.get_expense_groups();
+      this.getExpenseGroups();
     }
   }
 
@@ -80,7 +80,7 @@ class EditModal extends Component {
     });
   };
 
-  async get_expense_groups() {
+  async getExpenseGroups() {
     Expense.getGroups(this.props.user.auth_token).then((result) => {
       this.setState({
         groups: result.expense_groups,
@@ -95,7 +95,7 @@ class EditModal extends Component {
         ? Number(this.state.value.amount.replace(',', ''))
         : Number(this.state.value.amount);
     const { value } = this.state;
-    const { user, handleClose, get_expenses, get_data } = this.props;
+    const { user, handleClose, getExpenses, getData } = this.props;
 
     if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
@@ -113,8 +113,8 @@ class EditModal extends Component {
         user.auth_token
       ).then(() => {
         this.setState({ ...defaultValue });
-        get_data();
-        if (get_expenses) get_expenses();
+        getData();
+        if (getExpenses) getExpenses();
         handleClose();
       });
     }
@@ -123,8 +123,8 @@ class EditModal extends Component {
   handleDelete = () => {
     Expense.destroy(this.state.value.id, this.props.user.auth_token).then(
       () => {
-        this.props.get_expenses();
-        this.props.get_data();
+        this.props.getExpenses();
+        this.props.getData();
         this.props.handleClose();
       }
     );

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isEqual } from 'lodash';
 import {
   Button,
   Card,
@@ -163,8 +162,8 @@ class BillTable extends Component {
           handleClose={this.handleClose}
           user={user}
           value={value}
-          get_expenses={this.getBills}
-          get_data={getData}
+          getExpenses={this.getBills}
+          getData={getData}
         />
       </>
     );
