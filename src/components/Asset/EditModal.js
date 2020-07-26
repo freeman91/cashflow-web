@@ -34,7 +34,7 @@ class EditModal extends Component {
         value: {
           id: value.id,
           amount: value.amount,
-          source: value.group,
+          source: value.source,
           description: value.description,
           date: value.date,
         },
@@ -52,15 +52,6 @@ class EditModal extends Component {
     });
   };
 
-  handleSourceSelect = (event) => {
-    this.setState({
-      value: {
-        ...this.state.value,
-        source: event.target.value,
-      },
-    });
-  };
-
   handleDateChange = (date) => {
     this.setState({
       value: { ...this.state.value, date: date },
@@ -70,10 +61,6 @@ class EditModal extends Component {
   async getSources() {
     Asset.getSources(this.props.user.auth_token).then((result) => {
       this.setState({
-        value: {
-          ...this.state.value,
-          source: result.sources[0],
-        },
         sources: result.sources,
         isLoaded: true,
       });

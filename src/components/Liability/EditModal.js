@@ -12,24 +12,35 @@ import {
 } from 'reactstrap';
 
 import formatter_no$ from '../../helpers/currency_no$';
-import formatDate from '../../helpers/date';
-import Asset from '../../service/AssetService';
+import Liability from '../../service/LiabilityService';
 
 const defaultState = {
   open: false,
   value: {
     amount: null,
-    source: '',
+    group: '',
     description: '',
     date: new Date(),
   },
 };
 
-class NewModal extends Component {
+class EditModal extends Component {
   state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
-    this.getSources();
+    const { open, value } = newProps;
+    if (open) {
+      this.setState({
+        value: {
+          id: value.id,
+          amount: value.amount,
+          group: value.group,
+          description: value.description,
+          date: value.date,
+        },
+      });
+      this.getGroups();
+    }
   }
 
   handleChange = (event) => {
@@ -47,35 +58,48 @@ class NewModal extends Component {
     });
   };
 
-  async getSources() {
-    Asset.getSources(this.props.user.auth_token).then((result) => {
+  async getGroups() {
+    Liability.getGroups(this.props.user.auth_token).then((result) => {
       this.setState({
-        value: {
-          ...this.state.value,
-          source: result.sources[0],
-        },
-        sources: result.sources,
+        groups: result.groups,
         isLoaded: true,
       });
     });
   }
 
+  handleDelete = () => {
+    Liability.destroy(this.state.value.id, this.props.user.auth_token).then(
+      (response) => {
+        if (response.status === 202) {
+          this.props.getData();
+          this.props.handleClose();
+        }
+      }
+    );
+  };
+
   handleSubmit = () => {
+    const amount =
+      typeof this.state.value.amount === 'string'
+        ? Number(this.state.value.amount.replace(',', ''))
+        : Number(this.state.value.amount);
+
     const { value } = this.state;
     const { user, getData, handleClose } = this.props;
-    if (isNaN(value.amount) || value.source === '') {
+    if (isNaN(amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      Asset.create(
+      Liability.update(
         {
-          amount: Number(value.amount),
-          source: value.source,
+          id: value.id,
+          amount: Number(amount),
+          group: value.group,
           description: value.description,
           date: value.date,
         },
         user.auth_token
-      ).then((result) => {
-        if (result.status === 201) {
+      ).then((response) => {
+        if (response.status === 202) {
           this.setState({ ...defaultState });
           getData();
           handleClose();
@@ -86,11 +110,11 @@ class NewModal extends Component {
 
   render() {
     const { open, handleClose } = this.props;
-    const { sources, isLoaded } = this.state;
+    const { groups, isLoaded, value } = this.state;
     if (!isLoaded) return null;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>New Asset</ModalHeader>
+        <ModalHeader>Edit Liability</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend">$</InputGroupAddon>
@@ -98,7 +122,7 @@ class NewModal extends Component {
               type="float"
               name="amount"
               id="amount"
-              placeholder={formatter_no$.format(0)}
+              defaultValue={formatter_no$.format(value.amount)}
               onChange={this.handleChange}
             />
           </InputGroup>
@@ -106,13 +130,13 @@ class NewModal extends Component {
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
             <Input
               type="select"
-              name="source"
-              id="source"
-              defaultValue={sources[0]}
+              name="group"
+              id="group"
+              defaultValue={value.group}
               onChange={this.handleChange}
             >
-              {sources.map((source) => {
-                return <option key={source}>{source}</option>;
+              {groups.map((group) => {
+                return <option key={group}>{group}</option>;
               })}
             </Input>
           </InputGroup>
@@ -122,7 +146,7 @@ class NewModal extends Component {
               type="text"
               name="description"
               id="description"
-              placeholder="description"
+              defaultValue={value.description ? value.description : null}
               onChange={this.handleChange}
             />
           </InputGroup>
@@ -132,13 +156,16 @@ class NewModal extends Component {
               type="date"
               name="date"
               id="date"
-              defaultValue={formatDate.dateToString(new Date())}
+              defaultValue={value.date}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
             <Button onClick={handleClose} color="default">
               Cancel
+            </Button>
+            <Button onClick={this.handleDelete} color="warning">
+              Delete
             </Button>
             <Button onClick={this.handleSubmit} color="primary">
               Submit
@@ -150,4 +177,4 @@ class NewModal extends Component {
   }
 }
 
-export default NewModal;
+export default EditModal;

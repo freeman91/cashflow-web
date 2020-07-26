@@ -13,13 +13,13 @@ import {
 
 import formatter_no$ from '../../helpers/currency_no$';
 import formatDate from '../../helpers/date';
-import Asset from '../../service/AssetService';
+import Liability from '../../service/LiabilityService';
 
 const defaultState = {
   open: false,
   value: {
     amount: null,
-    source: '',
+    group: '',
     description: '',
     date: new Date(),
   },
@@ -29,7 +29,7 @@ class NewModal extends Component {
   state = { ...defaultState };
 
   componentWillReceiveProps(newProps) {
-    this.getSources();
+    this.getGroups();
   }
 
   handleChange = (event) => {
@@ -47,14 +47,14 @@ class NewModal extends Component {
     });
   };
 
-  async getSources() {
-    Asset.getSources(this.props.user.auth_token).then((result) => {
+  async getGroups() {
+    Liability.getGroups(this.props.user.auth_token).then((result) => {
       this.setState({
         value: {
           ...this.state.value,
-          source: result.sources[0],
+          group: result.groups[0],
         },
-        sources: result.sources,
+        groups: result.groups,
         isLoaded: true,
       });
     });
@@ -63,13 +63,13 @@ class NewModal extends Component {
   handleSubmit = () => {
     const { value } = this.state;
     const { user, getData, handleClose } = this.props;
-    if (isNaN(value.amount) || value.source === '') {
+    if (isNaN(value.amount) || value.group === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      Asset.create(
+      Liability.create(
         {
           amount: Number(value.amount),
-          source: value.source,
+          group: value.group,
           description: value.description,
           date: value.date,
         },
@@ -86,11 +86,11 @@ class NewModal extends Component {
 
   render() {
     const { open, handleClose } = this.props;
-    const { sources, isLoaded } = this.state;
+    const { groups, isLoaded } = this.state;
     if (!isLoaded) return null;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>New Asset</ModalHeader>
+        <ModalHeader>New Liability</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend">$</InputGroupAddon>
@@ -106,13 +106,13 @@ class NewModal extends Component {
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
             <Input
               type="select"
-              name="source"
-              id="source"
-              defaultValue={sources[0]}
+              name="group"
+              id="group"
+              defaultValue={groups[0]}
               onChange={this.handleChange}
             >
-              {sources.map((source) => {
-                return <option key={source}>{source}</option>;
+              {groups.map((group) => {
+                return <option key={group}>{group}</option>;
               })}
             </Input>
           </InputGroup>

@@ -124,30 +124,12 @@ class NetWorth extends Component {
             <Col xs="5">
               <AssetTable user={user} />
             </Col>
-            <Col xs="5">{/* <LiabilityTable /> */}</Col>
+            <Col xs="5">
+              <LiabilityTable user={user} />
+            </Col>
           </Row>
         </div>
       </>
-
-      //             {/* ASSETS */}
-      //             <Grid item xs={4} key="assets">
-      //               <CashFlowTable
-      //                 title="Assets"
-      //                 dataTextSize="subtitle1"
-      //                 headers={['date', 'amount', 'source']}
-      //                 rows={assetsData}
-      //               />
-      //             </Grid>
-
-      //             {/* LIABILITIES */}
-      //             <Grid item xs={4} key="liabilities">
-      //               <CashFlowTable
-      //                 title="Liabilities"
-      //                 dataTextSize="subtitle1"
-      //                 headers={['date', 'amount', 'group']}
-      //                 rows={liabilitiesData}
-      //               />
-      //             </Grid>
     );
   }
 }

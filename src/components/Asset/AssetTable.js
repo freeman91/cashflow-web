@@ -22,25 +22,15 @@ import Asset from '../../service/AssetService';
 const defaultState = {
   isLoaded: false,
   dialogs: {
-    assetNewOpen: false,
-    assetEditOpen: false,
-    liabilityNewOpen: false,
-    liabilityEditOpen: false,
+    newOpen: false,
+    editOpen: false,
   },
   assets: [],
-  values: {
-    liability: {
-      id: '',
-      amount: 0,
-      group: '',
-      date: new Date(),
-    },
-    asset: {
-      id: '',
-      amount: 0,
-      source: '',
-      date: new Date(),
-    },
+  value: {
+    id: '',
+    amount: 0,
+    source: '',
+    date: new Date(),
   },
 };
 
@@ -78,25 +68,23 @@ class AssetTable extends Component {
         ...this.state.dialogs,
         [name]: false,
       },
-      values: {
-        ...defaultState.values,
+      value: {
+        ...defaultState.value,
       },
     });
   };
 
-  handleAssetClick = (asset) => {
+  handleClick = (asset) => {
     this.setState({
       dialogs: {
-        assetEditOpen: true,
+        editOpen: true,
       },
-      values: {
-        asset: {
-          id: asset[0],
-          amount: asset[1],
-          source: asset[2],
-          description: asset[3],
-          date: asset[4],
-        },
+      value: {
+        id: asset[0],
+        amount: asset[1],
+        source: asset[2],
+        description: asset[3],
+        date: asset[4],
       },
     });
   };
@@ -137,7 +125,7 @@ class AssetTable extends Component {
                   size="sm"
                   color="primary"
                   onClick={() => {
-                    this.handleOpen('assetNewOpen');
+                    this.handleOpen('newOpen');
                   }}
                 >
                   New Asset
@@ -174,7 +162,7 @@ class AssetTable extends Component {
                             id="asset-table-tooltip"
                             title=""
                             type="button"
-                            onClick={() => this.handleAssetClick(asset)}
+                            onClick={() => this.handleClick(asset)}
                           >
                             <i className="tim-icons icon-pencil" />
                           </Button>
@@ -196,9 +184,9 @@ class AssetTable extends Component {
         </Card>
         <NewModal
           user={user}
-          open={this.state.dialogs.assetNewOpen}
+          open={this.state.dialogs.newOpen}
           handleClose={() => {
-            this.handleClose('assetNewOpen');
+            this.handleClose('newOpen');
           }}
           getData={() =>
             this.getAssets(new Date().getMonth() + 1, new Date().getFullYear())
@@ -206,14 +194,14 @@ class AssetTable extends Component {
         />
         <EditModal
           user={user}
-          open={this.state.dialogs.assetEditOpen}
+          open={this.state.dialogs.editOpen}
           handleClose={() => {
-            this.handleClose('assetEditOpen');
+            this.handleClose('editOpen');
           }}
           getData={() =>
             this.getAssets(new Date().getMonth() + 1, new Date().getFullYear())
           }
-          value={this.state.values.asset}
+          value={this.state.value}
         />
       </>
     );
