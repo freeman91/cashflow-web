@@ -107,7 +107,7 @@ class TopBar extends React.Component {
                 href="/user/dashboard"
                 onClick={(e) => e.preventDefault()}
               >
-                {pathname[pathname.length - 1]}
+                {pathname[pathname.length - 1].replace('-', ' ')}
               </NavbarBrand>
             </div>
             <button
