@@ -50,15 +50,6 @@ class EditModal extends Component {
     });
   };
 
-  handleGroupSelect = (event) => {
-    this.setState({
-      value: {
-        ...this.state.value,
-        source: event.target.value,
-      },
-    });
-  };
-
   handleDateChange = (date) => {
     this.setState({
       value: { ...this.state.value, date: date },

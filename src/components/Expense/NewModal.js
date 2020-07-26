@@ -45,15 +45,6 @@ class NewModal extends Component {
     });
   };
 
-  handleGroupSelect = (event) => {
-    this.setState({
-      value: {
-        ...this.state.value,
-        group: event.target.value,
-      },
-    });
-  };
-
   handleCheckbox = () => {
     this.setState({
       value: {
