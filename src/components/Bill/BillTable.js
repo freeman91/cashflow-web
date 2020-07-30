@@ -134,7 +134,7 @@ class BillTable extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="bill-table-tooltip"
+                            id={`bill-table-tooltip_${idx}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(bill)}
@@ -143,7 +143,7 @@ class BillTable extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="bill-table-tooltip"
+                            target={`bill-table-tooltip_${idx}`}
                             placement="right"
                           >
                             Edit Bill

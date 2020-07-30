@@ -125,7 +125,7 @@ class IncomeTable extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="income-table-tooltip"
+                            id={`income-table-tooltip-${idx}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(income)}
@@ -134,7 +134,7 @@ class IncomeTable extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="income-table-tooltip"
+                            target={`income-table-tooltip-${idx}`}
                             placement="right"
                           >
                             Edit Income

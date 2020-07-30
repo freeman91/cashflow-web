@@ -122,7 +122,6 @@ class LiabilityTable extends Component {
               </Col>
               <Col xs="3">
                 <Button
-                  // block
                   size="sm"
                   color="primary"
                   onClick={() => {
@@ -160,7 +159,7 @@ class LiabilityTable extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="liability-table-tooltip"
+                            id={`liability-table-tooltip-${i}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(asset)}
@@ -169,7 +168,7 @@ class LiabilityTable extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="liability-table-tooltip"
+                            target={`liability-table-tooltip-${i}`}
                             placement="right"
                           >
                             Edit Liability

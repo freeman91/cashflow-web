@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-// reactstrap components
 import {
   Button,
   Card,
@@ -13,44 +11,41 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../../helpers/currency';
-import NewModal from './NewModal';
 import EditModal from './EditModal';
+import NewModal from './NewModal';
 import Loader from '../../components/Loader';
-import Asset from '../../service/AssetService';
+import ExpenseGroup from '../../service/ExpenseGroupService';
 
 const defaultState = {
   isLoaded: false,
+  groups: [],
   dialogs: {
     newOpen: false,
     editOpen: false,
   },
-  assets: [],
   value: {
     id: '',
     amount: 0,
-    source: '',
+    group: '',
+    description: '',
     date: new Date(),
   },
 };
 
-class AssetTable extends Component {
+class ExpenseGroupsTable extends Component {
   state = { ...defaultState };
 
   componentDidMount() {
-    const date = new Date();
-    this.getAssets(date.getMonth() + 1, date.getFullYear());
+    this.getGroups();
   }
 
-  getAssets = (month, year) => {
-    Asset.getFromMonth(month, year, this.props.user.auth_token).then(
-      (response) => {
-        this.setState({
-          assets: response.properties,
-          isLoaded: true,
-        });
-      }
-    );
+  getGroups = () => {
+    ExpenseGroup.getGroups(this.props.user.auth_token).then((result) => {
+      this.setState({
+        groups: result.expense_groups,
+        isLoaded: true,
+      });
+    });
   };
 
   handleOpen = (name) => {
@@ -74,60 +69,45 @@ class AssetTable extends Component {
     });
   };
 
-  handleClick = (asset) => {
+  handleClick = (group) => {
     this.setState({
       dialogs: {
         editOpen: true,
       },
       value: {
-        id: asset[0],
-        amount: asset[1],
-        source: asset[2],
-        description: asset[3],
-        date: asset[4],
+        id: group.id,
+        name: group.name,
+        description: group.description,
       },
     });
-  };
-
-  prepareTableData = () => {
-    const assetsData = [];
-    this.state.assets.map((asset) => {
-      assetsData.push([
-        asset.id,
-        asset.amount,
-        asset.source,
-        asset.description,
-        asset.date,
-      ]);
-      return null;
-    });
-    return assetsData;
   };
 
   render() {
     const { isLoaded } = this.state;
     const { user } = this.props;
     if (!isLoaded) return <Loader />;
-    const assetsData = this.prepareTableData();
     return (
       <>
         <Card>
           <CardHeader>
             <Row>
-              <Col xs="8">
+              <Col xs="12">
                 <CardTitle className="card-title" tag="h2">
-                  Current Month's Assets
+                  Expense Groups
                 </CardTitle>
               </Col>
-              <Col xs="3">
+            </Row>
+            <Row>
+              <Col xs="12">
                 <Button
+                  block
                   size="sm"
                   color="primary"
                   onClick={() => {
                     this.handleOpen('newOpen');
                   }}
                 >
-                  New Asset
+                  New Expense Group
                 </Button>
               </Col>
             </Row>
@@ -137,40 +117,31 @@ class AssetTable extends Component {
               <Table>
                 <thead className="text-primary">
                   <tr>
-                    <th>date</th>
-                    <th>amount</th>
-                    <th>source</th>
+                    <th>name</th>
+                    <th>description</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {assetsData.map((asset, i) => {
+                  {this.state.groups.map((group, i) => {
                     return (
-                      <tr key={`asset-${i}`}>
-                        <td>
-                          {new Date(asset[4] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(asset[4] + ' 12:00').getDate()}
-                        </td>
-                        <td>{formatter.format(asset[1])}</td>
-                        <td>{asset[2]}</td>
-                        <td>{asset[3].substring(0, 10)}</td>
+                      <tr key={`group-${i}`}>
+                        <td>{group.name}</td>
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id={`asset-table-tooltip-${i}`}
+                            id={`group-table-tooltip-${i}`}
                             title=""
                             type="button"
-                            onClick={() => this.handleClick(asset)}
+                            onClick={() => this.handleClick(group)}
                           >
                             <i className="tim-icons icon-pencil" />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target={`asset-table-tooltip-${i}`}
+                            target={`group-table-tooltip-${i}`}
                             placement="right"
                           >
-                            Edit Asset
+                            Edit Group
                           </UncontrolledTooltip>
                         </td>
                       </tr>
@@ -187,9 +158,7 @@ class AssetTable extends Component {
           handleClose={() => {
             this.handleClose('newOpen');
           }}
-          getData={() =>
-            this.getAssets(new Date().getMonth() + 1, new Date().getFullYear())
-          }
+          getData={this.getGroups}
         />
         <EditModal
           user={user}
@@ -197,9 +166,7 @@ class AssetTable extends Component {
           handleClose={() => {
             this.handleClose('editOpen');
           }}
-          getData={() =>
-            this.getAssets(new Date().getMonth() + 1, new Date().getFullYear())
-          }
+          getData={this.getGroups}
           value={this.state.value}
         />
       </>
@@ -207,4 +174,4 @@ class AssetTable extends Component {
   }
 }
 
-export default AssetTable;
+export default ExpenseGroupsTable;

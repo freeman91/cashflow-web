@@ -65,18 +65,6 @@ class NetWorth extends Component {
 
     const [months, netWorthData] = this.prepareTableData();
 
-    //     const liabilitiesData = [];
-    //     liabilities.map((liability) => {
-    //       var date = new Date(liability.date + ' 12:00');
-    //       liabilitiesData.push([
-    //         date.getMonth() + 1 + '/' + date.getDate(),
-    //         formatter.format(liability.amount),
-    //         liability.group,
-    //         liability.id,
-    //       ]);
-    //       return null;
-    //     });
-
     const { user } = this.props;
     return (
       <>

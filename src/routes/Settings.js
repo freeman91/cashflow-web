@@ -1,113 +1,34 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
+import { Col, Row } from 'reactstrap';
 
-import SettingsService from '../service/SettingsService';
-import Loader from '../components/Loader';
+import ExpenseGroupsTable from '../components/ExpenseGroups/Table';
+// import IncomeSourcesTable from '../components/IncomeSources/Table';
+// import LiabilityGroupsTable from '../components/LiabilityGroups/Table';
+// import AssetSourcesTable from '../components/AssetSources/Table';
 
 class Settings extends Component {
-  state = {
-    isLoaded: false,
-  };
-
-  async getSettingsData() {
-    SettingsService.getData(this.props.user.auth_token)
-      .then((response) => {
-        this.setState({
-          expenseGroups: response.expense_groups,
-          incomeSources: response.income_sources,
-          assetSources: response.property_sources,
-          liabilityGroups: response.debt_groups,
-          isLoaded: true,
-        });
-      })
-      .catch((error) => console.error(error));
-  }
-
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
-    } else {
-      this.getSettingsData();
     }
   }
 
   render() {
-    const {
-      isLoaded,
-      expenseGroups,
-      incomeSources,
-      liabilityGroups,
-      assetSources,
-    } = this.state;
-    if (!isLoaded) return <Loader />;
-
-    //     const expGroupData = [];
-    //     expense_groups.map((group) => {
-    //       expGroupData.push([group.name, group.id]);
-    //       return null;
-    //     });
-
-    //     const incSourceData = [];
-    //     income_sources.map((source) => {
-    //       incSourceData.push([source.name, source.id]);
-    //       return null;
-    //     });
-
-    //     const liabGroupData = [];
-    //     liability_groups.map((group) => {
-    //       liabGroupData.push([group.name, group.id]);
-    //       return null;
-    //     });
-
-    //     const propSourceData = [];
-    //     asset_sources.map((source) => {
-    //       propSourceData.push([source.name, source.id]);
-    //       return null;
-    //     });
-
-    const { user, history, classes } = this.props;
+    const { user } = this.props;
     return (
-      <></>
-      //         <NavBar title={'Settings'} user={user} history={history} />
-      //         <div className={classes.root}>
-      //           <Grid
-      //             container
-      //             spacing={2}
-      //             direction="row"
-      //             justify="center"
-      //             alignItems="flex-start"
-      //           >
-      //             <Grid item xs={3} key="expense-groups">
-      //               <CashFlowTable
-      //                 title="Expense Groups"
-      //                 dataTextSize="subtitle2"
-      //                 rows={expGroupData}
-      //               />
-      //             </Grid>
-      //             <Grid item xs={3} key="income-sources">
-      //               <CashFlowTable
-      //                 title="Income Sources"
-      //                 dataTextSize="subtitle2"
-      //                 rows={incSourceData}
-      //               />
-      //             </Grid>
-      //             <Grid item xs={3} key="liability-groups">
-      //               <CashFlowTable
-      //                 title="Liability Groups"
-      //                 dataTextSize="subtitle2"
-      //                 rows={liabGroupData}
-      //               />
-      //             </Grid>
-      //             <Grid item xs={3} key="property-sources">
-      //               <CashFlowTable
-      //                 title="Property Groups"
-      //                 dataTextSize="subtitle2"
-      //                 rows={propSourceData}
-      //               />
-      //             </Grid>
-      //           </Grid>
-      //         </div>
-      //       </>
+      <>
+        <div className="content">
+          <Row>
+            <Col xs="3">
+              <ExpenseGroupsTable user={user} />
+            </Col>
+            <Col xs="3">{/* <IncomeSourcesTable user={user} /> */}</Col>
+            <Col xs="3">{/* <LiabilityGroupsTable user={user} /> */}</Col>
+            <Col xs="3">{/* <AssetSourcesTable user={user} /> */}</Col>
+          </Row>
+        </div>
+      </>
     );
   }
 }

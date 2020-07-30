@@ -87,7 +87,7 @@ class ExpenseTableWeek extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="week-expense-table-tooltip"
+                            id={`week-expense-table-tooltip-${idx}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(expense)}
@@ -96,7 +96,7 @@ class ExpenseTableWeek extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="week-expense-table-tooltip"
+                            target={`week-expense-table-tooltip-${idx}`}
                             placement="right"
                           >
                             Edit Expense

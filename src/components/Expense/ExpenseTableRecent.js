@@ -128,7 +128,7 @@ class ExpenseTableRecent extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="expense-table-tooltip"
+                            id={`expense-table-tooltip-${idx}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(expense)}
@@ -137,7 +137,7 @@ class ExpenseTableRecent extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="expense-table-tooltip"
+                            target={`expense-table-tooltip-${idx}`}
                             placement="right"
                           >
                             Edit Expense

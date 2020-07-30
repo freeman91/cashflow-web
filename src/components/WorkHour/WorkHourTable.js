@@ -117,7 +117,7 @@ class WorkHourTable extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="workHour-table-tooltip"
+                            id={`workHour-table-tooltip-${idx}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(workHour)}
@@ -126,7 +126,7 @@ class WorkHourTable extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="workHour-table-tooltip"
+                            target={`workHour-table-tooltip-${idx}`}
                             placement="right"
                           >
                             Edit Work Hour

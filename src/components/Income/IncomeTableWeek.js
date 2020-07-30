@@ -82,7 +82,7 @@ class IncomeTableWeek extends Component {
                         <td className="td-actions text-right">
                           <Button
                             color="link"
-                            id="week-income-table-tooltip"
+                            id={`week-income-table-tooltip-${idx}`}
                             title=""
                             type="button"
                             onClick={() => this.handleClick(income)}
@@ -91,7 +91,7 @@ class IncomeTableWeek extends Component {
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
-                            target="week-income-table-tooltip"
+                            target={`week-income-table-tooltip-${idx}`}
                             placement="right"
                           >
                             Edit Income
