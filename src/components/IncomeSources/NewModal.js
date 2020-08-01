@@ -11,7 +11,7 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import ExpenseGroup from '../../service/ExpenseGroupService';
+import IncomeSource from '../../service/IncomeSourceService';
 
 const defaultState = {
   open: false,
@@ -39,7 +39,7 @@ class NewModal extends Component {
     if (value.name === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      ExpenseGroup.create(
+      IncomeSource.create(
         {
           name: value.name,
           description: value.description,
@@ -59,7 +59,7 @@ class NewModal extends Component {
     const { open, handleClose } = this.props;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>New Expense Group</ModalHeader>
+        <ModalHeader>New Income Source</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>

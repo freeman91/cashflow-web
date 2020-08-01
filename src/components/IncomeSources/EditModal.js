@@ -11,7 +11,7 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import ExpenseGroup from '../../service/ExpenseGroupService';
+import IncomeSource from '../../service/IncomeSourceService';
 
 const defaultState = {
   open: false,
@@ -19,10 +19,25 @@ const defaultState = {
     name: '',
     description: '',
   },
+  isLoaded: false,
 };
 
-class NewModal extends Component {
+class EditModal extends Component {
   state = { ...defaultState };
+
+  componentWillReceiveProps(newProps) {
+    const { open, value } = newProps;
+    if (open) {
+      this.setState({
+        value: {
+          id: value.id,
+          name: value.name,
+          description: value.description,
+        },
+        isLoaded: true,
+      });
+    }
+  }
 
   handleChange = (event) => {
     this.setState({
@@ -33,20 +48,33 @@ class NewModal extends Component {
     });
   };
 
+  handleDelete = () => {
+    IncomeSource.destroy(this.state.value.id, this.props.user.auth_token).then(
+      (response) => {
+        if (response.status === 200) {
+          this.props.getData();
+          this.props.handleClose();
+        }
+      }
+    );
+  };
+
   handleSubmit = () => {
     const { value } = this.state;
     const { user, getData, handleClose } = this.props;
+
     if (value.name === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
-      ExpenseGroup.create(
+      IncomeSource.update(
         {
+          id: value.id,
           name: value.name,
           description: value.description,
         },
         user.auth_token
-      ).then((result) => {
-        if (result.status === 201) {
+      ).then((response) => {
+        if (response.status === 200) {
           this.setState({ ...defaultState });
           getData();
           handleClose();
@@ -57,9 +85,11 @@ class NewModal extends Component {
 
   render() {
     const { open, handleClose } = this.props;
+    const { isLoaded, value } = this.state;
+    if (!isLoaded) return null;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>New Expense Group</ModalHeader>
+        <ModalHeader>Edit Income Source</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
@@ -67,7 +97,7 @@ class NewModal extends Component {
               type="text"
               name="name"
               id="name"
-              placeholder="name"
+              defaultValue={value.name}
               onChange={this.handleChange}
             />
           </InputGroup>
@@ -77,13 +107,17 @@ class NewModal extends Component {
               type="text"
               name="description"
               id="description"
-              placeholder="description"
+              placeholder={value.description ? null : 'description'}
+              defaultValue={value.description ? value.description : null}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
             <Button onClick={handleClose} color="default">
               Cancel
+            </Button>
+            <Button onClick={this.handleDelete} color="warning">
+              Delete
             </Button>
             <Button onClick={this.handleSubmit} color="primary">
               Submit
@@ -95,4 +129,4 @@ class NewModal extends Component {
   }
 }
 
-export default NewModal;
+export default EditModal;
