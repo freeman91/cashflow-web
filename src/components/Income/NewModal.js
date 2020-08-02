@@ -52,6 +52,10 @@ class NewModal extends Component {
       this.setState({
         sources: result.income_sources,
         isLoaded: true,
+        value: {
+          ...this.state.value,
+          source: result.income_sources[0],
+        },
       });
     });
   }
