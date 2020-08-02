@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
+
+// reactstrap components
+import { Col, Row } from 'reactstrap';
+
 import Header from '../components/Header';
 import LoginForm from '../components/auth/LoginForm';
+
+const headerStyle = {
+  height: '40vh',
+};
 
 class Home extends Component {
   handleSuccessfulAuth = (data) => {
@@ -11,8 +19,16 @@ class Home extends Component {
   render() {
     return (
       <>
-        <Header />
-        <LoginForm handleSuccessfulAuth={this.handleSuccessfulAuth} />
+        <Row style={headerStyle}>
+          <Header />
+        </Row>
+        <Row>
+          <Col xs="3"></Col>
+          <Col xs="6">
+            <LoginForm handleSuccessfulAuth={this.handleSuccessfulAuth} />
+          </Col>
+          <Col xs="3"></Col>
+        </Row>
       </>
     );
   }
