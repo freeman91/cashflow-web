@@ -5,7 +5,9 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
+  Col,
   Table,
+  Row,
   UncontrolledTooltip,
 } from 'reactstrap';
 
@@ -99,13 +101,24 @@ class BillTable extends Component {
       return null;
     });
 
+    const billTotal = bills.reduce((total, bill) => {
+      return total + bill.amount;
+    }, 0);
+
     return (
       <>
         <Card>
           <CardHeader>
-            <CardTitle className="card-title" tag="h2">
-              {month + ' Bills'}
-            </CardTitle>
+            <Row>
+              <Col xs="6">
+                <CardTitle className="card-title" tag="h2">
+                  {month + ' Bills'}
+                </CardTitle>
+              </Col>
+              <Col xs="6">
+                <h3>{'Total: ' + formatter.format(billTotal)}</h3>
+              </Col>
+            </Row>
           </CardHeader>
           <CardBody className="card-body">
             <div className="table-full-width table-responsive">

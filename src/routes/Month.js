@@ -71,7 +71,7 @@ class Month extends Component {
       formatter.format(expTotal),
       formatter.format(incTotal),
       wkhrTotal,
-      formatter.format(incTotal / wkhrTotal),
+      formatter.format(wkhrTotal !== 0 ? incTotal / wkhrTotal : 0),
       'month-stats-totals',
     ]);
     return monthStatsArr;

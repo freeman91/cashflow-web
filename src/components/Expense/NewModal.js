@@ -33,7 +33,6 @@ class NewModal extends Component {
 
   componentWillReceiveProps() {
     this.getExpenseGroups();
-    console.log('load');
   }
 
   handleChange = (event) => {
@@ -65,6 +64,10 @@ class NewModal extends Component {
       this.setState({
         groups: result.expense_groups,
         isLoaded: true,
+        value: {
+          ...this.state.value,
+          group: result.expense_groups[0],
+        },
       });
     });
   }
