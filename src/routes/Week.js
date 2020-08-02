@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { isEqual } from 'lodash';
 import {
   Card,
@@ -6,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
   Col,
+  Input,
+  InputGroup,
   Row,
   Table,
 } from 'reactstrap';
@@ -17,9 +21,28 @@ import WorkHourTable from '../components/WorkHour/WorkHourTableWeek';
 import Loader from '../components/Loader';
 import WeekService from '../service/WeekService';
 
+const datePicker = {
+  align: 'center',
+};
+
 class Week extends Component {
   state = {
     isLoaded: false,
+    date: new Date(),
+  };
+
+  componentDidMount() {
+    if (isEqual(this.props.user, {})) {
+      this.props.history.push('/');
+    } else {
+      this.getWeekData();
+    }
+  }
+
+  handleChange = (nextDate) => {
+    this.setState({
+      date: nextDate,
+    });
   };
 
   getWeekData = async () => {
@@ -39,14 +62,6 @@ class Week extends Component {
       })
       .catch((error) => console.error(error));
   };
-
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getWeekData();
-    }
-  }
 
   prepareExpenses = () => {
     var expensesData = [];
@@ -97,6 +112,7 @@ class Week extends Component {
       wkhrTotal,
       cwdate,
       isLoaded,
+      date,
     } = this.state;
     if (!isLoaded) return <Loader />;
     const expenseTableData = this.prepareExpenses();
@@ -109,14 +125,24 @@ class Week extends Component {
       wkhrTotal,
       formatter.format(wkhrTotal === 0 ? 0 : incTotal / wkhrTotal),
     ];
-    console.log(weekTableData);
 
     const { user } = this.props;
     return (
       <>
         <div className="content">
           <Row>
-            <Col xs="2"></Col>
+            <Col xs="2">
+              <Card>
+                <InputGroup>
+                  <DatePicker
+                    style={datePicker}
+                    selected={date}
+                    onChange={this.handleChange}
+                    showWeekNumbers
+                  />
+                </InputGroup>
+              </Card>
+            </Col>
             <Col xs="8">
               <Card>
                 <CardHeader>
@@ -179,41 +205,6 @@ class Week extends Component {
           </Row>
         </div>
       </>
-      //
-      //         <div className={classes.root}>
-      //           <Grid
-      //             container
-      //             spacing={2}
-      //             direction="row"
-      //             justify="center"
-      //             alignItems="flex-start"
-      //           >
-      //             {/* WEEK STATS */}
-      //             <Grid item xs={8} key="week-stats">
-      //               <CashFlowTable
-      //                 dataTextSize="h5"
-      //                 headers={[
-      //                   'net income',
-      //                   'expense total',
-      //                   'income total',
-      //                   'work hours',
-      //                   'hourly wage',
-      //                 ]}
-      //                 rows={[
-      //                   [
-      //                     formatter.format(netincome),
-      //                     formatter.format(expTotal),
-      //                     formatter.format(incTotal),
-      //                     wkhrTotal,
-      //                     formatter.format(wkhrTotal ? incTotal / wkhrTotal : 0),
-      //                     'week-stats-key',
-      //                   ],
-      //                 ]}
-      //               />
-      //             </Grid>
-      //             </Grid>
-      //           </Grid>
-      //         </div>
     );
   }
 }
