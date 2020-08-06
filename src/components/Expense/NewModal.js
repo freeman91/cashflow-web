@@ -13,7 +13,7 @@ import {
 } from 'reactstrap';
 
 import formatter_no$ from '../../helpers/currency_no$';
-import formatDate from '../../helpers/date';
+import formatDateObject from '../../helpers/format-date-object';
 import Expense from '../../service/ExpenseService';
 
 const defaultState = {
@@ -85,7 +85,7 @@ class NewModal extends Component {
           vendor: value.vendor,
           description: value.description,
           bill: value.bill,
-          date: value.date,
+          date: formatDateObject(value.date),
         },
         user.auth_token
       ).then((result) => {
@@ -157,7 +157,7 @@ class NewModal extends Component {
               type="date"
               name="date"
               id="date"
-              defaultValue={formatDate.dateToString(new Date())}
+              defaultValue={formatDateObject(new Date())}
               onChange={this.handleChange}
             />
           </InputGroup>

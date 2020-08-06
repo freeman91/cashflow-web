@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 
 import formatter_no$ from '../../helpers/currency_no$';
+import formatDateObject from '../../helpers/format-date-object';
 import Liability from '../../service/LiabilityService';
 
 const defaultState = {
@@ -95,7 +96,7 @@ class EditModal extends Component {
           amount: Number(amount),
           group: value.group,
           description: value.description,
-          date: value.date,
+          date: formatDateObject(value.date),
         },
         user.auth_token
       ).then((response) => {

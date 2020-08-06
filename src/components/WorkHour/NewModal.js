@@ -14,7 +14,7 @@ import {
 import WorkHour from '../../service/WorkHourService';
 import Income from '../../service/IncomeService';
 import formatter_no$ from '../../helpers/currency_no$';
-import formatDate from '../../helpers/date';
+import formatDateObject from '../../helpers/format-date-object';
 
 const defaultState = {
   open: false,
@@ -62,14 +62,15 @@ class NewModal extends Component {
 
   handleSubmit = () => {
     const { user, getData, handleClose } = this.props;
-    if (isNaN(this.state.value.amount) || this.state.value.source === '') {
+    const { value } = this.state;
+    if (isNaN(value.amount) || value.source === '') {
       console.error('[ERROR]: Invalid data in input field');
     } else {
       WorkHour.create(
         {
-          amount: Number(this.state.value.amount),
-          source: this.state.value.source,
-          date: this.state.value.date,
+          amount: Number(value.amount),
+          source: value.source,
+          date: formatDateObject(value.date),
         },
         user.auth_token
       ).then((result) => {
@@ -90,7 +91,7 @@ class NewModal extends Component {
     if (!isLoaded) return null;
     return (
       <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
-        <ModalHeader>New Income</ModalHeader>
+        <ModalHeader>New Work Hour</ModalHeader>
         <ModalBody>
           <InputGroup>
             <InputGroupAddon addonType="prepend"> </InputGroupAddon>
@@ -122,7 +123,7 @@ class NewModal extends Component {
               type="date"
               name="date"
               id="date"
-              defaultValue={formatDate.dateToString(new Date())}
+              defaultValue={formatDateObject(new Date())}
               onChange={this.handleChange}
             />
           </InputGroup>

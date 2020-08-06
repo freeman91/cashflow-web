@@ -11,7 +11,7 @@ import {
 
 import WorkHour from '../../service/WorkHourService';
 import Income from '../../service/IncomeService';
-import formatDate from '../../helpers/date';
+import formatDateObject from '../../helpers/format-date-object';
 import formatter_no$ from '../../helpers/currency_no$';
 
 const defaultState = {
@@ -80,7 +80,7 @@ class EditModal extends Component {
           id: value.id,
           amount: amount,
           source: value.source,
-          date: formatDate.stringToDate(value.date),
+          date: formatDateObject(value.date),
         },
         user.auth_token
       ).then(() => {

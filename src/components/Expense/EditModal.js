@@ -12,7 +12,7 @@ import {
 
 import formatter_no$ from '../../helpers/currency_no$';
 import Expense from '../../service/ExpenseService';
-import formatDate from '../../helpers/date';
+import formatDateObject from '../../helpers/format-date-object';
 
 const defaultValue = {
   open: false,
@@ -99,7 +99,7 @@ class EditModal extends Component {
           vendor: value.vendor,
           description: value.description,
           bill: value.bill,
-          date: formatDate.stringToDate(value.date),
+          date: formatDateObject(value.date),
         },
         user.auth_token
       ).then(() => {
