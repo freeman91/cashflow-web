@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../../helpers/currency';
+import { getMonth } from '../../helpers/month-names';
 import EditModal from '../Expense/EditModal';
 import Month from '../../service/MonthService';
 
@@ -33,19 +34,19 @@ class BillTable extends Component {
   state = { ...defaultValue };
 
   componentDidMount() {
-    this.getBills();
+    this.getBills(this.props.week, this.props.year);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reload) {
-      this.getBills().then(() => {
+      this.getBills(nextProps.week, nextProps.year).then(() => {
         this.props.stopReload();
       });
     }
   }
 
-  getBills = async () => {
-    Month.getBills(this.props.user.auth_token).then((result) => {
+  getBills = async (week, year) => {
+    Month.getBills(this.props.user.auth_token, week, year).then((result) => {
       if (result) {
         this.setState({
           bills: result.bills,
@@ -83,7 +84,7 @@ class BillTable extends Component {
   };
 
   render() {
-    const { user, month, getData } = this.props;
+    const { user, week, getData } = this.props;
     const { bills, isLoaded, open, value } = this.state;
     if (!isLoaded) return null;
 
@@ -104,7 +105,6 @@ class BillTable extends Component {
     const billTotal = bills.reduce((total, bill) => {
       return total + bill.amount;
     }, 0);
-
     return (
       <>
         <Card>
@@ -112,7 +112,7 @@ class BillTable extends Component {
             <Row>
               <Col xs="6">
                 <CardTitle className="card-title" tag="h2">
-                  {month + ' Bills'}
+                  {getMonth(week) + ' Bills'}
                 </CardTitle>
               </Col>
               <Col xs="6">
