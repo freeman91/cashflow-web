@@ -1,24 +1,45 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
+import DatePicker from 'react-datepicker';
+import { Card, Col, InputGroup, Row } from 'reactstrap';
 
-// reactstrap components
-import { Col, Row } from 'reactstrap';
+import 'react-datepicker/dist/react-datepicker.css';
+import '../assets/css/cashflow-styles.css';
 
 import MonthService from '../service/MonthService';
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import BillTable from '../components/Bill/BillTable';
 import StatsTable from '../components/Month/StatsTable';
-import month from '../helpers/month-names';
+import { month } from '../helpers/month-names';
+import '../helpers/Date';
+
+const cardDatePicker = {
+  padding: '0.5rem',
+  margin: '0',
+  width: '100%',
+};
 
 class Month extends Component {
   state = {
     isLoaded: false,
     reloadBillState: false,
+    date: new Date(),
   };
 
-  getMonthData = async () => {
-    MonthService.getData(this.props.user.auth_token)
+  componentDidMount() {
+    if (isEqual(this.props.user, {})) {
+      this.props.history.push('/');
+    } else {
+      this.getMonthData(
+        this.state.date.getWeek(),
+        this.state.date.getFullYear()
+      );
+    }
+  }
+
+  getMonthData = async (week, year) => {
+    MonthService.getData(this.props.user.auth_token, week, year)
       .then((response) => {
         this.setState({
           cwdate: response.cwdate,
@@ -32,14 +53,6 @@ class Month extends Component {
       })
       .catch((error) => console.error(error));
   };
-
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getMonthData();
-    }
-  }
 
   reloadBills = () => {
     this.setState({
@@ -77,8 +90,28 @@ class Month extends Component {
     return monthStatsArr;
   };
 
+  handleChange = (nextDate) => {
+    const prevDate = this.state.date;
+    if (prevDate.getWeek() !== nextDate.getWeek()) {
+      this.setState({
+        date: nextDate,
+      });
+      this.getMonthData(nextDate.getWeek(), nextDate.getFullYear()).then(() => {
+        this.setState({
+          reloadBillState: true,
+        });
+      });
+    }
+  };
+
+  stopReload = () => {
+    this.setState({
+      reloadBillState: false,
+    });
+  };
+
   render() {
-    const { isLoaded, cwdate, reloadBillState } = this.state;
+    const { isLoaded, cwdate, reloadBillState, date } = this.state;
     if (!isLoaded) return <Loader />;
 
     const monthTableData = this.prepareTableData();
@@ -88,6 +121,17 @@ class Month extends Component {
       <>
         <div className="content">
           <Row>
+            <Col xs="2">
+              <Card style={cardDatePicker}>
+                <InputGroup style={{ margin: 'auto' }}>
+                  <DatePicker
+                    selected={date}
+                    onChange={this.handleChange}
+                    showWeekNumbers
+                  />
+                </InputGroup>
+              </Card>
+            </Col>
             <Col xs="8">
               <StatsTable
                 data={monthTableData}
@@ -100,8 +144,10 @@ class Month extends Component {
               <BillTable
                 user={user}
                 reload={reloadBillState}
-                month={month[cwdate.month - 1]}
+                week={date.getWeek()}
+                year={date.getFullYear()}
                 getData={this.getMonthData}
+                stopReload={this.stopReload}
               />
             </Col>
           </Row>
