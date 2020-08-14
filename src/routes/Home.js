@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-// reactstrap components
 import { Col, Row } from 'reactstrap';
 
 import Header from '../components/Header';

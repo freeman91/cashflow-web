@@ -17,7 +17,7 @@ import LiabilityTable from '../components/Liability/LiabilityTable';
 import NetWorthService from '../service/NetWorthService';
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
-import month from '../helpers/month-names';
+import { month } from '../helpers/month-names';
 
 class NetWorth extends Component {
   state = {

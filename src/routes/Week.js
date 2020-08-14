@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { isEqual } from 'lodash';
 import {
   Card,
@@ -13,15 +12,21 @@ import {
   Table,
 } from 'reactstrap';
 
+import 'react-datepicker/dist/react-datepicker.css';
+import '../assets/css/cashflow-styles.css';
+
 import formatter from '../helpers/currency';
 import ExpenseTable from '../components/Expense/ExpenseTableWeek';
 import IncomeTable from '../components/Income/IncomeTableWeek';
 import WorkHourTable from '../components/WorkHour/WorkHourTableWeek';
 import Loader from '../components/Loader';
 import WeekService from '../service/WeekService';
+import '../helpers/Date';
 
-const datePicker = {
-  align: 'center',
+const cardDatePicker = {
+  padding: '0.5rem',
+  margin: '0',
+  width: '100%',
 };
 
 class Week extends Component {
@@ -34,18 +39,25 @@ class Week extends Component {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.getWeekData();
+      this.getWeekData(
+        this.state.date.getWeek(),
+        this.state.date.getFullYear()
+      );
     }
   }
 
   handleChange = (nextDate) => {
-    this.setState({
-      date: nextDate,
-    });
+    const prevDate = this.state.date;
+    if (prevDate.getWeek() !== nextDate.getWeek()) {
+      this.setState({
+        date: nextDate,
+      });
+      this.getWeekData(nextDate.getWeek(), nextDate.getFullYear());
+    }
   };
 
-  getWeekData = async () => {
-    WeekService.getData(this.props.user.auth_token)
+  getWeekData = async (week, year) => {
+    WeekService.getData(this.props.user.auth_token, week, year)
       .then((response) => {
         this.setState({
           cwdate: response.cwdate,
@@ -131,10 +143,9 @@ class Week extends Component {
         <div className="content">
           <Row>
             <Col xs="2">
-              <Card>
-                <InputGroup>
+              <Card style={cardDatePicker}>
+                <InputGroup style={{ margin: 'auto' }}>
                   <DatePicker
-                    style={datePicker}
                     selected={date}
                     onChange={this.handleChange}
                     showWeekNumbers
