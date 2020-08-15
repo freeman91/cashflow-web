@@ -11,7 +11,7 @@ import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import BillTable from '../components/Bill/BillTable';
 import StatsTable from '../components/Month/StatsTable';
-import { month } from '../helpers/month-names';
+import { month, getMonth } from '../helpers/month-names';
 import '../helpers/Date';
 
 const cardDatePicker = {
@@ -92,13 +92,17 @@ class Month extends Component {
 
   handleChange = (nextDate) => {
     const prevDate = this.state.date;
-    if (prevDate.getWeek() !== nextDate.getWeek()) {
+    this.setState({
+      isLoaded: false,
+    });
+    if (prevDate.getMonth() !== nextDate.getMonth()) {
       this.setState({
         date: nextDate,
       });
       this.getMonthData(nextDate.getWeek(), nextDate.getFullYear()).then(() => {
         this.setState({
           reloadBillState: true,
+          isLoaded: true,
         });
       });
     }
@@ -125,9 +129,9 @@ class Month extends Component {
               <Card style={cardDatePicker}>
                 <InputGroup style={{ margin: 'auto' }}>
                   <DatePicker
+                    showMonthYearPicker
                     selected={date}
                     onChange={this.handleChange}
-                    showWeekNumbers
                   />
                 </InputGroup>
               </Card>
@@ -135,12 +139,13 @@ class Month extends Component {
             <Col xs="8">
               <StatsTable
                 data={monthTableData}
-                month={month[cwdate.month - 1]}
+                month={getMonth(date.getWeek())}
               />
             </Col>
           </Row>
           <Row>
-            <Col xs="5">
+            <Col xs="3"></Col>
+            <Col xs="6">
               <BillTable
                 user={user}
                 reload={reloadBillState}

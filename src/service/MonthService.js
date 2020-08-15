@@ -17,8 +17,6 @@ const getData = async function (auth_token, week, year) {
 };
 
 const getBills = async function (auth_token, week, year) {
-  console.log('week: ', week);
-  console.log('year: ', year);
   return axios
     .get(API_HOST + '/month/bills', {
       headers: { Authorization: auth_token },

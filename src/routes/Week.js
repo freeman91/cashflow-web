@@ -47,10 +47,14 @@ class Week extends Component {
   }
 
   handleChange = (nextDate) => {
+    this.setState({
+      isLoaded: false,
+    });
     const prevDate = this.state.date;
     if (prevDate.getWeek() !== nextDate.getWeek()) {
       this.setState({
         date: nextDate,
+        isLoaded: true,
       });
       this.getWeekData(nextDate.getWeek(), nextDate.getFullYear());
     }

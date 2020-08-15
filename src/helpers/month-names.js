@@ -13,7 +13,6 @@ month[10] = 'November';
 month[11] = 'December';
 
 const getMonth = (week) => {
-  console.log(week);
   switch (week) {
     case 1:
     case 2:
