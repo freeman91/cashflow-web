@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-// reactstrap components
 import {
   Button,
   Card,
@@ -38,8 +36,8 @@ class LiabilityTable extends Component {
   state = { ...defaultState };
 
   componentDidMount() {
-    const date = new Date();
-    this.getLiabilities(date.getMonth() + 1, date.getFullYear());
+    const { date } = this.props;
+    this.getLiabilities(date[0] + 1, date[1]);
   }
 
   getLiabilities = (month, year) => {

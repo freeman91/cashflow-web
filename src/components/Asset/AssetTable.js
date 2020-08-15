@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-// reactstrap components
 import {
   Button,
   Card,
@@ -18,6 +16,7 @@ import NewModal from './NewModal';
 import EditModal from './EditModal';
 import Loader from '../../components/Loader';
 import Asset from '../../service/AssetService';
+import { month } from '../../helpers/month-names';
 
 const defaultState = {
   isLoaded: false,
@@ -38,8 +37,8 @@ class AssetTable extends Component {
   state = { ...defaultState };
 
   componentDidMount() {
-    const date = new Date();
-    this.getAssets(date.getMonth() + 1, date.getFullYear());
+    const { date } = this.props;
+    this.getAssets(date[0] + 1, date[1]);
   }
 
   getAssets = (month, year) => {
@@ -106,7 +105,7 @@ class AssetTable extends Component {
 
   render() {
     const { isLoaded } = this.state;
-    const { user } = this.props;
+    const { user, date } = this.props;
     if (!isLoaded) return <Loader />;
     const assetsData = this.prepareTableData();
     return (
@@ -116,7 +115,7 @@ class AssetTable extends Component {
             <Row>
               <Col xs="8">
                 <CardTitle className="card-title" tag="h2">
-                  Current Month's Assets
+                  {`${month[date[0]]}'s Assets`}
                 </CardTitle>
               </Col>
               <Col xs="3">
