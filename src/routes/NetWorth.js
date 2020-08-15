@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
-
-// reactstrap components
+import DatePicker from 'react-datepicker';
 import {
   Card,
   CardBody,
   CardHeader,
   CardTitle,
   Col,
+  InputGroup,
   Row,
   Table,
 } from 'reactstrap';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import '../assets/css/cashflow-styles.css';
 
 import AssetTable from '../components/Asset/AssetTable';
 import LiabilityTable from '../components/Liability/LiabilityTable';
@@ -19,24 +22,30 @@ import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import { month } from '../helpers/month-names';
 
+const cardDatePicker = {
+  padding: '0.5rem',
+  margin: '0',
+  width: '100%',
+};
+
 class NetWorth extends Component {
   state = {
     isLoaded: false,
+    date: new Date(),
   };
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
       this.props.history.push('/');
     } else {
-      this.getData();
+      this.getData(this.state.date.getWeek(), this.state.date.getFullYear());
     }
   }
 
-  async getData() {
-    NetWorthService.getData(this.props.user.auth_token)
+  async getData(week, year) {
+    NetWorthService.getData(this.props.user.auth_token, week, year)
       .then((response) => {
         this.setState({
-          cwdate: response.cwdate,
           assets: response.properties,
           liabilities: response.debts,
           netWorthLast12: response.netWorthLast12,
@@ -48,7 +57,6 @@ class NetWorth extends Component {
 
   prepareTableData = () => {
     const { netWorthLast12 } = this.state;
-
     var months = [];
     var netWorthData = [];
     netWorthLast12.map((record) => {
@@ -59,16 +67,43 @@ class NetWorth extends Component {
     return [months.reverse(), netWorthData.reverse()];
   };
 
+  handleChange = (nextDate) => {
+    const prevDate = this.state.date;
+    if (prevDate.getMonth() !== nextDate.getMonth()) {
+      this.setState({
+        isLoaded: false,
+        date: nextDate,
+      });
+      this.getData(nextDate.getWeek(), nextDate.getFullYear()).then(() => {
+        this.setState({
+          isLoaded: true,
+        });
+      });
+    }
+  };
+
   render() {
-    const { isLoaded } = this.state;
+    const { isLoaded, date } = this.state;
     if (!isLoaded) return <Loader />;
 
     const [months, netWorthData] = this.prepareTableData();
-
     const { user } = this.props;
     return (
       <>
         <div className="content">
+          <Row>
+            <Col xs="2">
+              <Card style={cardDatePicker}>
+                <InputGroup style={{ margin: 'auto' }}>
+                  <DatePicker
+                    showMonthYearPicker
+                    selected={date}
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+              </Card>
+            </Col>
+          </Row>
           <Row>
             <Col xs="12">
               <Card>
@@ -82,14 +117,14 @@ class NetWorth extends Component {
                     <Table>
                       <thead className="text-primary">
                         <tr>
-                          {months.slice(5, 11).map((month) => {
+                          {months.slice(6, 12).map((month) => {
                             return <th key={'header' + month}>{month}</th>;
                           })}
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          {netWorthData.slice(5, 11).map((row, idx) => {
+                          {netWorthData.slice(6, 12).map((row, idx) => {
                             return (
                               <td
                                 className="td-price"
@@ -110,10 +145,16 @@ class NetWorth extends Component {
           <Row>
             <Col xs="1"></Col>
             <Col xs="5">
-              <AssetTable user={user} />
+              <AssetTable
+                user={user}
+                date={[date.getMonth(), date.getFullYear()]}
+              />
             </Col>
             <Col xs="5">
-              <LiabilityTable user={user} />
+              <LiabilityTable
+                user={user}
+                date={[date.getMonth(), date.getFullYear()]}
+              />
             </Col>
           </Row>
         </div>

@@ -1,31 +1,48 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
-
-// reactstrap components
+import DatePicker from 'react-datepicker';
 import {
   Card,
   CardBody,
   CardHeader,
   CardTitle,
   Col,
+  InputGroup,
   Row,
   Table,
 } from 'reactstrap';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import '../assets/css/cashflow-styles.css';
 
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import YearService from '../service/YearService';
 
+const cardDatePicker = {
+  padding: '0.5rem',
+  margin: '0',
+  width: '100%',
+};
+
 class Year extends Component {
   state = {
     isLoaded: false,
+    date: new Date(),
   };
 
-  async getYearData() {
-    YearService.getData(this.props.user.auth_token)
+  componentDidMount() {
+    if (isEqual(this.props.user, {})) {
+      this.props.history.push('/');
+    } else {
+      this.getYearData(this.state.date.getFullYear());
+    }
+  }
+
+  async getYearData(year) {
+    YearService.getData(this.props.user.auth_token, year)
       .then((response) => {
         this.setState({
-          cwdate: response.cwdate,
           yearStats: response.yearStats,
           netincome: response.netincome,
           expTotal: response.expTotal,
@@ -35,14 +52,6 @@ class Year extends Component {
         });
       })
       .catch((error) => console.error(error));
-  }
-
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getYearData();
-    }
   }
 
   prepareTableData = () => {
@@ -83,8 +92,23 @@ class Year extends Component {
     return yearStatsArr;
   };
 
+  handleChange = (nextDate) => {
+    const prevDate = this.state.date;
+    if (prevDate.getFullYear() !== nextDate.getFullYear()) {
+      this.setState({
+        date: nextDate,
+        isLoaded: false,
+      });
+      this.getYearData(nextDate.getFullYear()).then(() => {
+        this.setState({
+          isLoaded: true,
+        });
+      });
+    }
+  };
+
   render() {
-    const { cwdate, isLoaded } = this.state;
+    const { cwdate, isLoaded, date } = this.state;
     if (!isLoaded) return <Loader />;
 
     const yearTableData = this.prepareTableData();
@@ -93,12 +117,23 @@ class Year extends Component {
       <>
         <div className="content">
           <Row>
-            <Col xs="2"></Col>
+            <Col xs="2">
+              <Card style={cardDatePicker}>
+                <InputGroup style={{ margin: 'auto' }}>
+                  <DatePicker
+                    showYearPicker
+                    selected={date}
+                    onChange={this.handleChange}
+                    format="yyyy"
+                  />
+                </InputGroup>
+              </Card>
+            </Col>
             <Col xs="8">
               <Card>
                 <CardHeader>
                   <CardTitle className="card-title" tag="h2">
-                    {cwdate.year + ' breakdown'}
+                    {date.getFullYear() + ' breakdown'}
                   </CardTitle>
                 </CardHeader>
                 <CardBody className="card-body">
