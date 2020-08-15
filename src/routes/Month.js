@@ -11,7 +11,7 @@ import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import BillTable from '../components/Bill/BillTable';
 import StatsTable from '../components/Month/StatsTable';
-import { month, getMonth } from '../helpers/month-names';
+import { getMonth } from '../helpers/month-names';
 import '../helpers/Date';
 
 const cardDatePicker = {
@@ -42,7 +42,6 @@ class Month extends Component {
     MonthService.getData(this.props.user.auth_token, week, year)
       .then((response) => {
         this.setState({
-          cwdate: response.cwdate,
           monthStats: response.monthStats,
           netincome: response.netincome,
           expTotal: response.expTotal,
@@ -92,11 +91,9 @@ class Month extends Component {
 
   handleChange = (nextDate) => {
     const prevDate = this.state.date;
-    this.setState({
-      isLoaded: false,
-    });
     if (prevDate.getMonth() !== nextDate.getMonth()) {
       this.setState({
+        isLoaded: false,
         date: nextDate,
       });
       this.getMonthData(nextDate.getWeek(), nextDate.getFullYear()).then(() => {
@@ -115,11 +112,10 @@ class Month extends Component {
   };
 
   render() {
-    const { isLoaded, cwdate, reloadBillState, date } = this.state;
+    const { isLoaded, reloadBillState, date } = this.state;
     if (!isLoaded) return <Loader />;
 
     const monthTableData = this.prepareTableData();
-
     const { user } = this.props;
     return (
       <>
