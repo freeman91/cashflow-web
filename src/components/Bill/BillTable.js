@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../../helpers/currency';
+import { renderDate } from '../../helpers/render-date';
 import { getMonth } from '../../helpers/month-names';
 import EditModal from '../Expense/EditModal';
 import Month from '../../service/MonthService';
@@ -135,12 +136,7 @@ class BillTable extends Component {
                   {billsData.map((bill, idx) => {
                     return (
                       <tr key={`bill-item ${idx}`}>
-                        <td>
-                          {new Date(bill[6] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(bill[6] + ' 12:00').getDate()}
-                        </td>
+                        <td>{renderDate(bill[6])}</td>
                         <td>{formatter.format(bill[1])}</td>
                         <td>{bill[2]}</td>
                         <td>{bill[3].substring(0, 10)}</td>

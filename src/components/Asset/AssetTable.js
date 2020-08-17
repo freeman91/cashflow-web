@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../../helpers/currency';
+import { renderDate } from '../../helpers/render-date';
 import NewModal from './NewModal';
 import EditModal from './EditModal';
 import Loader from '../../components/Loader';
@@ -145,12 +146,7 @@ class AssetTable extends Component {
                   {assetsData.map((asset, i) => {
                     return (
                       <tr key={`asset-${i}`}>
-                        <td>
-                          {new Date(asset[4] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(asset[4] + ' 12:00').getDate()}
-                        </td>
+                        <td>{renderDate(asset[4])}</td>
                         <td>{formatter.format(asset[1])}</td>
                         <td>{asset[2]}</td>
                         <td>{asset[3].substring(0, 10)}</td>

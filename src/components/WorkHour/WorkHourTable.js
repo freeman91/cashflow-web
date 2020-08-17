@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 
 import formatter_no$ from '../../helpers/currency_no$';
+import { renderDate } from '../../helpers/render-date';
 import EditModal from './EditModal';
 import Dashboard from '../../service/DashboardService';
 
@@ -106,12 +107,7 @@ class WorkHourTable extends Component {
                   {workHoursData.map((workHour, idx) => {
                     return (
                       <tr key={`workHour-item ${idx}`}>
-                        <td>
-                          {new Date(workHour[3] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(workHour[3] + ' 12:00').getDate()}
-                        </td>
+                        <td>{renderDate(workHour[3])}</td>
                         <td>{formatter_no$.format(workHour[1])}</td>
                         <td>{workHour[2]}</td>
                         <td className="td-actions text-right">

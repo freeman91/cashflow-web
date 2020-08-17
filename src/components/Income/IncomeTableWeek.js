@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../../helpers/currency';
+import { renderDate } from '../../helpers/render-date';
 import EditModal from './EditModal';
 
 const defaultState = {
@@ -71,12 +72,7 @@ class IncomeTableWeek extends Component {
                   {data.map((income, idx) => {
                     return (
                       <tr key={`income-record-${income[0]}`}>
-                        <td>
-                          {new Date(income[4] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(income[4] + ' 12:00').getDate()}
-                        </td>
+                        <td>{renderDate(income[4])}</td>
                         <td>{formatter.format(income[1])}</td>
                         <td>{income[2]}</td>
                         <td className="td-actions text-right">

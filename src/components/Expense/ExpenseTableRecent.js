@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../../helpers/currency';
+import { renderDate } from '../../helpers/render-date';
 import Loader from '../Loader';
 import EditModal from './EditModal';
 import Dashboard from '../../service/DashboardService';
@@ -116,12 +117,7 @@ class ExpenseTableRecent extends Component {
                   {expensesData.map((expense, idx) => {
                     return (
                       <tr key={`expense-item ${idx}`}>
-                        <td>
-                          {new Date(expense[6] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(expense[6] + ' 12:00').getDate()}
-                        </td>
+                        <td>{renderDate(expense[6])}</td>
                         <td>{formatter.format(expense[1])}</td>
                         <td>{expense[2]}</td>
                         <td>{expense[3].substring(0, 10)}</td>

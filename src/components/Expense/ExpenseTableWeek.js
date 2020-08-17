@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 
 import formatter from '../../helpers/currency';
+import { renderDate } from '../../helpers/render-date';
 import EditModal from './EditModal';
 
 const defaultState = {
@@ -75,12 +76,7 @@ class ExpenseTableWeek extends Component {
                   {data.map((expense, idx) => {
                     return (
                       <tr key={`expense-record-${expense[0]}`}>
-                        <td>
-                          {new Date(expense[6] + ' 12:00').getMonth() +
-                            1 +
-                            '/' +
-                            new Date(expense[6] + ' 12:00').getDate()}
-                        </td>
+                        <td>{renderDate(expense[6])}</td>
                         <td>{formatter.format(expense[1])}</td>
                         <td>{expense[2]}</td>
                         <td>{expense[3].substring(0, 10)}</td>
