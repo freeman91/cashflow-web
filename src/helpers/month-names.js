@@ -54,7 +54,7 @@ const getMonth = (week) => {
     case 31:
     case 32:
     case 33:
-    case 24:
+    case 34:
       return 'August';
     case 35:
     case 36:

@@ -108,7 +108,7 @@ class Year extends Component {
   };
 
   render() {
-    const { cwdate, isLoaded, date } = this.state;
+    const { isLoaded, date } = this.state;
     if (!isLoaded) return <Loader />;
 
     const yearTableData = this.prepareTableData();
