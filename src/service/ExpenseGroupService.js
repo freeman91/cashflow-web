@@ -1,5 +1,5 @@
 import axios from 'axios';
-import API_HOST from '../helpers/api-host.js';
+const API_HOST = process.env.REACT_APP_API_HOST;
 
 const create = async function (newGroup, auth_token) {
   return axios.post(API_HOST + '/expense_groups', {
