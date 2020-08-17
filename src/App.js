@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import Home from 'routes/Home';
-import UserLayout from 'layouts/User';
+import Home from './routes/Home';
+import UserLayout from './layouts/User';
 
 const hist = createBrowserHistory();
 

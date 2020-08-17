@@ -8,9 +8,8 @@ import Year from '../routes/Year';
 import NetWorth from '../routes/NetWorth';
 import Settings from '../routes/Settings';
 
-// import Footer from 'components/Footer/Footer.js';
-import Sidebar from 'components/Sidebar';
-import TopBar from 'components/TopBar.js';
+import Sidebar from '../components/Sidebar';
+import TopBar from '../components/TopBar.js';
 import '../assets/scss/black-dashboard-react.scss';
 
 var ps;
