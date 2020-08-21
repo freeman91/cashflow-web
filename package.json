@@ -20,7 +20,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-typed": "^1.2.0",
-    "reactstrap": "8.4.1"
+    "reactstrap": "8.4.1",
+    "recharts": "^1.8.5"
   },
   "scripts": {
     "start": "env REACT_APP_API_HOST='http://localhost:3001' NODE_PATH=./src react-scripts start",
