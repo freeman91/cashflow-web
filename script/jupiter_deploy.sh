@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+# Run this script on juptiter when you want to deploy the newest release
+
 red="\033[31m"
 yellow="\033[33m"
 green="\033[32m"
