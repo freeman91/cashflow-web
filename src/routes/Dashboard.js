@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
-
-// reactstrap components
+import {
+  Legend,
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import {
   Button,
   Card,
@@ -24,6 +31,9 @@ import WorkHourNewModal from '../components/WorkHour/NewModal';
 
 const defaultState = {
   isLoaded: false,
+  expenses: [],
+  incomes: [],
+  workHours: [],
   dialogs: {
     expOpen: false,
     incOpen: false,
@@ -35,6 +45,20 @@ const defaultState = {
     },
   },
 };
+
+const prepareChartData = (expenses, incomes, workHours) => {
+  let ret = [];
+  for (let i = 0; i < expenses.length; i++) {
+    ret.push({
+      week: Math.round(expenses[i].week),
+      expense: Math.round(expenses[i].amount),
+      income: Math.round(incomes[i].amount),
+      workHour: Math.round(workHours[i].amount),
+    });
+  }
+  return ret;
+};
+
 class Dashboard extends Component {
   state = { ...defaultState };
 
@@ -51,7 +75,9 @@ class Dashboard extends Component {
       this.setState({
         netIncomeYear: result.net_income_year,
         NetIncomeMonth: result.net_income_month,
-        netIncomeWeek: result.net_income_week,
+        expenses: result.expenses,
+        incomes: result.incomes,
+        workHours: result.workHours,
         isLoaded: true,
         reload: {
           ...defaultState.reload,
@@ -88,16 +114,20 @@ class Dashboard extends Component {
   };
 
   render() {
+    const { user } = this.props;
     const {
       isLoaded,
       // netIncomeYear,
       // netIncomeMonth,
-      // netIncomeWeek,
       reload,
+      expenses,
+      incomes,
+      workHours,
     } = this.state;
     if (!isLoaded) return <Loader />;
 
-    const { user } = this.props;
+    const chartData = prepareChartData(expenses, incomes, workHours);
+    console.log(chartData);
     return (
       <>
         <div className="content">
@@ -145,14 +175,31 @@ class Dashboard extends Component {
             </Col>
             <Col xs="10">
               <Card>
-                <div className="font-icon-detail">
-                  <CardHeader>
-                    <CardTitle className="card-title" tag="h1">
-                      Chart Under Construction
-                    </CardTitle>
-                  </CardHeader>
-                  <CardBody className="image"></CardBody>
-                </div>
+                <CardBody
+                  style={{
+                    flex: '1 1 auto',
+                    overflowY: 'auto',
+                    minHeight: '500px',
+                    width: '100%',
+                  }}
+                >
+                  <ResponsiveContainer minHeight="250" minWidth="250">
+                    <BarChart
+                      height="500"
+                      width="700"
+                      data={chartData}
+                      margin={{ top: 15, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <XAxis dataKey="week" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar type="monotone" dataKey="expense" fill="#8884d8" />
+                      <Bar type="monotone" dataKey="income" fill="#82ca9d" />
+                      <Bar type="monotone" dataKey="workHour" fill="#ff6600" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardBody>
               </Card>
             </Col>
           </Row>
