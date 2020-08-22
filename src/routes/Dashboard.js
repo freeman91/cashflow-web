@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { isEqual } from 'lodash';
 import {
   Legend,
-  Bar,
-  BarChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -28,6 +28,7 @@ import DashboardService from '../service/DashboardService';
 import ExpenseNewModal from '../components/Expense/NewModal';
 import IncomeNewModal from '../components/Income/NewModal';
 import WorkHourNewModal from '../components/WorkHour/NewModal';
+import formatDateObject from '../helpers/format-date-object';
 
 const defaultState = {
   isLoaded: false,
@@ -46,15 +47,47 @@ const defaultState = {
   },
 };
 
+const getMonday = (d) => {
+  d = new Date(d + ' 12:00:00');
+  var day = d.getDay(),
+    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return new Date(d.setDate(diff));
+};
+
 const prepareChartData = (expenses, incomes, workHours) => {
+  const today = new Date();
   let ret = [];
   for (let i = 0; i < expenses.length; i++) {
-    ret.push({
-      week: Math.round(expenses[i].week),
-      expense: Math.round(expenses[i].amount),
-      income: Math.round(incomes[i].amount),
-      workHour: Math.round(workHours[i].amount),
-    });
+    let currentDate = getMonday(expenses[i][expenses[i].length - 1][1]);
+    for (let j = 0; j < 7; j++) {
+      // TODO: group expense[i] by date first, then find sun where group key = currentDate
+      let expenseSum = 0;
+      let incomeSum = 0;
+      let workHourSum = 0;
+      expenses[i].forEach((expense) => {
+        if (expense[1] === formatDateObject(currentDate)) {
+          expenseSum += expense[0];
+        }
+      });
+      incomes[i].forEach((income) => {
+        if (income[1] === formatDateObject(currentDate)) {
+          incomeSum += income[0];
+        }
+      });
+      workHours[i].forEach((workHour) => {
+        if (workHour[1] === formatDateObject(currentDate)) {
+          workHourSum += workHour[0];
+        }
+      });
+      ret.push({
+        date: formatDateObject(currentDate),
+        expense: expenseSum,
+        income: incomeSum,
+        workHour: workHourSum,
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
+      if (currentDate > today) j = 10;
+    }
   }
   return ret;
 };
@@ -127,7 +160,6 @@ class Dashboard extends Component {
     if (!isLoaded) return <Loader />;
 
     const chartData = prepareChartData(expenses, incomes, workHours);
-    console.log(chartData);
     return (
       <>
         <div className="content">
@@ -184,20 +216,40 @@ class Dashboard extends Component {
                   }}
                 >
                   <ResponsiveContainer minHeight="250" minWidth="250">
-                    <BarChart
+                    <LineChart
                       height="500"
                       width="700"
                       data={chartData}
                       margin={{ top: 15, right: 30, left: 20, bottom: 5 }}
                     >
-                      <XAxis dataKey="week" />
+                      <XAxis
+                        dataKey="date"
+                        tickFormatter={(date) => {
+                          return date.slice(5, 10).replace('-', '/');
+                        }}
+                      />
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Bar type="monotone" dataKey="expense" fill="#8884d8" />
-                      <Bar type="monotone" dataKey="income" fill="#82ca9d" />
-                      <Bar type="monotone" dataKey="workHour" fill="#ff6600" />
-                    </BarChart>
+                      <Line
+                        dot={false}
+                        type="monotone"
+                        dataKey="expense"
+                        stroke="#8884d8"
+                      />
+                      <Line
+                        dot={false}
+                        type="monotone"
+                        dataKey="income"
+                        stroke="#82ca9d"
+                      />
+                      <Line
+                        dot={false}
+                        type="monotone"
+                        dataKey="workHour"
+                        stroke="#ff6600"
+                      />
+                    </LineChart>
                   </ResponsiveContainer>
                 </CardBody>
               </Card>
