@@ -58,6 +58,7 @@ const prepareChartData = (expenses, incomes, workHours) => {
   const today = new Date();
   let ret = [];
   for (let i = 0; i < expenses.length; i++) {
+    if (expenses[i].length === 0) break;
     let currentDate = getMonday(expenses[i][expenses[i].length - 1][1]);
     for (let j = 0; j < 7; j++) {
       // TODO: group expense[i] by date first, then find sun where group key = currentDate
