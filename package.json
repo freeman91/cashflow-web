@@ -27,7 +27,7 @@
     "start": "env REACT_APP_API_HOST='http://localhost:3001' NODE_PATH=./src react-scripts start",
     "build": "NODE_PATH=./src react-scripts build",
     "build:dev": "env REACT_APP_API_HOST='http://localhost:3001' react-scripts build",
-    "build:jupiter": "env REACT_APP_API_HOST='http://192.168.2.42:3001' react-scripts build",
+    "build:jupiter": "env REACT_APP_API_HOST='http://192.168.0.42:3001' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
