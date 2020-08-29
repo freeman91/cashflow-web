@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
 import {
-  Legend,
-  Line,
-  LineChart,
+  Bar,
+  BarChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -29,6 +28,7 @@ import ExpenseNewModal from '../components/Expense/NewModal';
 import IncomeNewModal from '../components/Income/NewModal';
 import WorkHourNewModal from '../components/WorkHour/NewModal';
 import formatDateObject from '../helpers/format-date-object';
+import formatter from '../helpers/currency';
 
 const defaultState = {
   isLoaded: false,
@@ -54,37 +54,22 @@ const getMonday = (d) => {
   return new Date(d.setDate(diff));
 };
 
-const prepareChartData = (expenses, incomes, workHours) => {
+const prepareChartData = (expenses) => {
   const today = new Date();
   let ret = [];
   for (let i = 0; i < expenses.length; i++) {
     if (expenses[i].length === 0) break;
     let currentDate = getMonday(expenses[i][expenses[i].length - 1][1]);
     for (let j = 0; j < 7; j++) {
-      // TODO: group expense[i] by date first, then find sun where group key = currentDate
       let expenseSum = 0;
-      let incomeSum = 0;
-      let workHourSum = 0;
       expenses[i].forEach((expense) => {
         if (expense[1] === formatDateObject(currentDate)) {
           expenseSum += expense[0];
         }
       });
-      incomes[i].forEach((income) => {
-        if (income[1] === formatDateObject(currentDate)) {
-          incomeSum += income[0];
-        }
-      });
-      workHours[i].forEach((workHour) => {
-        if (workHour[1] === formatDateObject(currentDate)) {
-          workHourSum += workHour[0];
-        }
-      });
       ret.push({
-        date: formatDateObject(currentDate),
-        expense: expenseSum,
-        income: incomeSum,
-        workHour: workHourSum,
+        name: formatDateObject(currentDate),
+        expense: Math.round(expenseSum * 100) / 100,
       });
       currentDate.setDate(currentDate.getDate() + 1);
       if (currentDate > today) j = 10;
@@ -155,12 +140,12 @@ class Dashboard extends Component {
       // netIncomeMonth,
       reload,
       expenses,
-      incomes,
-      workHours,
+      // incomes,
+      // workHours,
     } = this.state;
     if (!isLoaded) return <Loader />;
 
-    const chartData = prepareChartData(expenses, incomes, workHours);
+    const chartData = prepareChartData(expenses);
     return (
       <>
         <div className="content">
@@ -217,40 +202,26 @@ class Dashboard extends Component {
                   }}
                 >
                   <ResponsiveContainer minHeight="250" minWidth="250">
-                    <LineChart
+                    <BarChart
                       height="500"
                       width="700"
                       data={chartData}
                       margin={{ top: 15, right: 30, left: 20, bottom: 5 }}
                     >
                       <XAxis
-                        dataKey="date"
+                        dataKey="name"
                         tickFormatter={(date) => {
                           return date.slice(5, 10).replace('-', '/');
                         }}
                       />
                       <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line
-                        dot={false}
-                        type="monotone"
-                        dataKey="expense"
-                        stroke="#8884d8"
+                      <Tooltip
+                        formatter={(value) => {
+                          return formatter.format(value);
+                        }}
                       />
-                      <Line
-                        dot={false}
-                        type="monotone"
-                        dataKey="income"
-                        stroke="#82ca9d"
-                      />
-                      <Line
-                        dot={false}
-                        type="monotone"
-                        dataKey="workHour"
-                        stroke="#ff6600"
-                      />
-                    </LineChart>
+                      <Bar dataKey="expense" fill="#8884d8" />
+                    </BarChart>
                   </ResponsiveContainer>
                 </CardBody>
               </Card>
