@@ -98,7 +98,7 @@ class IncomeTable extends Component {
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              Recent Incomes
+              Incomes
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">

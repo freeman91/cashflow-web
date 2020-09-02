@@ -90,7 +90,7 @@ class WorkHourTable extends Component {
         <Card>
           <CardHeader>
             <CardTitle className="card-title" tag="h2">
-              Recent Work Hours
+              Work Hours
             </CardTitle>
           </CardHeader>
           <CardBody className="card-body">
