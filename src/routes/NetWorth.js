@@ -67,10 +67,11 @@ class NetWorth extends Component {
     const { netWorthLast12 } = this.state;
     let ret = [];
     netWorthLast12.map((record) => {
-      ret.push({
-        name: `${month[record[0] - 1]} ${record[1].toString().slice(-2)}`,
-        netWorth: record[2],
-      });
+      if (record[2] !== 0)
+        ret.push({
+          name: `${month[record[0] - 1]} ${record[1].toString().slice(-2)}`,
+          netWorth: record[2],
+        });
       return null;
     });
     return ret.reverse();
