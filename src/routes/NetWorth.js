@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Col,
+  Container,
   InputGroup,
   Row,
   Table,
@@ -91,72 +92,74 @@ class NetWorth extends Component {
     return (
       <>
         <div className="content">
-          <Row>
-            <Col xs="2">
-              <Card style={cardDatePicker}>
-                <InputGroup style={{ margin: 'auto' }}>
-                  <DatePicker
-                    showMonthYearPicker
-                    selected={date}
-                    onChange={this.handleChange}
-                  />
-                </InputGroup>
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs="12">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="card-title" tag="h2">
-                    Net Worth over the past 6 months
-                  </CardTitle>
-                </CardHeader>
-                <CardBody className="card-body">
-                  <div className="table-full-width table-responsive">
-                    <Table>
-                      <thead className="text-primary">
-                        <tr>
-                          {months.slice(6, 12).map((month) => {
-                            return <th key={'header' + month}>{month}</th>;
-                          })}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          {netWorthData.slice(6, 12).map((row, idx) => {
-                            return (
-                              <td
-                                className="td-price"
-                                key={`${months[idx]}-net-worth`}
-                              >
-                                {row}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs="1"></Col>
-            <Col xs="5">
-              <AssetTable
-                user={user}
-                date={[date.getMonth(), date.getFullYear()]}
-              />
-            </Col>
-            <Col xs="5">
-              <LiabilityTable
-                user={user}
-                date={[date.getMonth(), date.getFullYear()]}
-              />
-            </Col>
-          </Row>
+          <Container>
+            <Row>
+              <Col xs="2">
+                <Card style={cardDatePicker}>
+                  <InputGroup style={{ margin: 'auto' }}>
+                    <DatePicker
+                      showMonthYearPicker
+                      selected={date}
+                      onChange={this.handleChange}
+                    />
+                  </InputGroup>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="card-title" tag="h2">
+                      Net Worth over the past 6 months
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody className="card-body">
+                    <div className="table-full-width table-responsive">
+                      <Table>
+                        <thead className="text-primary">
+                          <tr>
+                            {months.slice(6, 12).map((month) => {
+                              return <th key={'header' + month}>{month}</th>;
+                            })}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            {netWorthData.slice(6, 12).map((row, idx) => {
+                              return (
+                                <td
+                                  className="td-price"
+                                  key={`${months[idx]}-net-worth`}
+                                >
+                                  {row}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="1"></Col>
+              <Col xs="5">
+                <AssetTable
+                  user={user}
+                  date={[date.getMonth(), date.getFullYear()]}
+                />
+              </Col>
+              <Col xs="5">
+                <LiabilityTable
+                  user={user}
+                  date={[date.getMonth(), date.getFullYear()]}
+                />
+              </Col>
+            </Row>
+          </Container>
         </div>
       </>
     );

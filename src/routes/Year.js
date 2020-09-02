@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Col,
+  Container,
   InputGroup,
   Row,
   Table,
@@ -116,66 +117,68 @@ class Year extends Component {
     return (
       <>
         <div className="content">
-          <Row>
-            <Col xs="2">
-              <Card style={cardDatePicker}>
-                <InputGroup style={{ margin: 'auto' }}>
-                  <DatePicker
-                    showYearPicker
-                    selected={date}
-                    onChange={this.handleChange}
-                    format="yyyy"
-                  />
-                </InputGroup>
-              </Card>
-            </Col>
-            <Col xs="8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="card-title" tag="h2">
-                    {date.getFullYear() + ' breakdown'}
-                  </CardTitle>
-                </CardHeader>
-                <CardBody className="card-body">
-                  <div className="table-full-width table-responsive">
-                    <Table>
-                      <thead className="text-primary">
-                        <tr>
-                          <th>week</th>
-                          <th>net income</th>
-                          <th>expense total</th>
-                          <th>income total</th>
-                          <th>hours worked</th>
-                          <th>hourly wage</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {yearTableData.map((row, idx) => {
-                          return (
-                            <tr key={`${row[row.length - 1]}`}>
-                              {row.map((item, i) => {
-                                if (i !== row.length - 1) {
-                                  return (
-                                    <td
-                                      className="td-price"
-                                      key={`${row[row.length - 1]}-${i}`}
-                                    >
-                                      {item}
-                                    </td>
-                                  );
-                                } else return null;
-                              })}
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </Table>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col xs="2"></Col>
-          </Row>
+          <Container>
+            <Row>
+              <Col xs="2">
+                <Card style={cardDatePicker}>
+                  <InputGroup style={{ margin: 'auto' }}>
+                    <DatePicker
+                      showYearPicker
+                      selected={date}
+                      onChange={this.handleChange}
+                      format="yyyy"
+                    />
+                  </InputGroup>
+                </Card>
+              </Col>
+              <Col xs="8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="card-title" tag="h2">
+                      {date.getFullYear() + ' breakdown'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody className="card-body">
+                    <div className="table-full-width table-responsive">
+                      <Table>
+                        <thead className="text-primary">
+                          <tr>
+                            <th>week</th>
+                            <th>net income</th>
+                            <th>expense total</th>
+                            <th>income total</th>
+                            <th>hours worked</th>
+                            <th>hourly wage</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {yearTableData.map((row, idx) => {
+                            return (
+                              <tr key={`${row[row.length - 1]}`}>
+                                {row.map((item, i) => {
+                                  if (i !== row.length - 1) {
+                                    return (
+                                      <td
+                                        className="td-price"
+                                        key={`${row[row.length - 1]}-${i}`}
+                                      >
+                                        {item}
+                                      </td>
+                                    );
+                                  } else return null;
+                                })}
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col xs="2"></Col>
+            </Row>
+          </Container>
         </div>
       </>
     );

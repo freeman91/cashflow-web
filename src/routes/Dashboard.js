@@ -194,9 +194,6 @@ class Dashboard extends Component {
                     </Container>
                   </CardBody>
                 </Card>
-                <Card>
-                  <p />
-                </Card>
               </Col>
               <Col xs="10">
                 <Card>

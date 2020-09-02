@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
 import DatePicker from 'react-datepicker';
-import { Card, Col, InputGroup, Row } from 'reactstrap';
+import { Card, Col, Container, InputGroup, Row } from 'reactstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import '../assets/css/cashflow-styles.css';
@@ -120,38 +120,40 @@ class Month extends Component {
     return (
       <>
         <div className="content">
-          <Row>
-            <Col xs="2">
-              <Card style={cardDatePicker}>
-                <InputGroup style={{ margin: 'auto' }}>
-                  <DatePicker
-                    showMonthYearPicker
-                    selected={date}
-                    onChange={this.handleChange}
-                  />
-                </InputGroup>
-              </Card>
-            </Col>
-            <Col xs="8">
-              <StatsTable
-                data={monthTableData}
-                month={getMonth(date.getWeek())}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs="3"></Col>
-            <Col xs="6">
-              <BillTable
-                user={user}
-                reload={reloadBillState}
-                week={date.getWeek()}
-                year={date.getFullYear()}
-                getData={this.getMonthData}
-                stopReload={this.stopReload}
-              />
-            </Col>
-          </Row>
+          <Container>
+            <Row>
+              <Col xs="2">
+                <Card style={cardDatePicker}>
+                  <InputGroup style={{ margin: 'auto' }}>
+                    <DatePicker
+                      showMonthYearPicker
+                      selected={date}
+                      onChange={this.handleChange}
+                    />
+                  </InputGroup>
+                </Card>
+              </Col>
+              <Col xs="8">
+                <StatsTable
+                  data={monthTableData}
+                  month={getMonth(date.getWeek())}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="3"></Col>
+              <Col xs="6">
+                <BillTable
+                  user={user}
+                  reload={reloadBillState}
+                  week={date.getWeek()}
+                  year={date.getFullYear()}
+                  getData={this.getMonthData}
+                  stopReload={this.stopReload}
+                />
+              </Col>
+            </Row>
+          </Container>
         </div>
       </>
     );

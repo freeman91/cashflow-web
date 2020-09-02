@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Col,
+  Container,
   InputGroup,
   Row,
   Table,
@@ -145,78 +146,83 @@ class Week extends Component {
     return (
       <>
         <div className="content">
-          <Row>
-            <Col xs="2">
-              <Card style={cardDatePicker}>
-                <InputGroup style={{ margin: 'auto' }}>
-                  <DatePicker
-                    selected={date}
-                    onChange={this.handleChange}
-                    showWeekNumbers
-                  />
-                </InputGroup>
-              </Card>
-            </Col>
-            <Col xs="8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="card-title" tag="h2">
-                    {`Week ${cwdate.week} breakdown`}
-                  </CardTitle>
-                </CardHeader>
-                <CardBody className="card-body">
-                  <div className="table-full-width table-responsive">
-                    <Table>
-                      <thead className="text-primary">
-                        <tr>
-                          <th>net income</th>
-                          <th>expense total</th>
-                          <th>income total</th>
-                          <th>hours worked</th>
-                          <th>hourly wage</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          {weekTableData.map((row, idx) => {
-                            return (
-                              <td className="td-price" key={`week-data-${idx}`}>
-                                {row}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col xs="2"></Col>
-          </Row>
-          <Row>
-            <Col xs="4">
-              <ExpenseTable
-                user={user}
-                data={expenseTableData}
-                getData={this.getWeekData}
-              />
-            </Col>
-            <Col xs="4">
-              <IncomeTable
-                user={user}
-                data={incomeTableData}
-                getData={this.getWeekData}
-              />
-            </Col>
-            <Col xs="4">
-              <WorkHourTable
-                user={user}
-                data={workHourTableData}
-                getData={this.getWeekData}
-              />
-            </Col>
-          </Row>
+          <Container>
+            <Row>
+              <Col xs="2">
+                <Card style={cardDatePicker}>
+                  <InputGroup style={{ margin: 'auto' }}>
+                    <DatePicker
+                      selected={date}
+                      onChange={this.handleChange}
+                      showWeekNumbers
+                    />
+                  </InputGroup>
+                </Card>
+              </Col>
+              <Col xs="8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="card-title" tag="h2">
+                      {`Week ${cwdate.week} breakdown`}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody className="card-body">
+                    <div className="table-full-width table-responsive">
+                      <Table>
+                        <thead className="text-primary">
+                          <tr>
+                            <th>net income</th>
+                            <th>expense total</th>
+                            <th>income total</th>
+                            <th>hours worked</th>
+                            <th>hourly wage</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            {weekTableData.map((row, idx) => {
+                              return (
+                                <td
+                                  className="td-price"
+                                  key={`week-data-${idx}`}
+                                >
+                                  {row}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col xs="2"></Col>
+            </Row>
+            <Row>
+              <Col xs="4">
+                <ExpenseTable
+                  user={user}
+                  data={expenseTableData}
+                  getData={this.getWeekData}
+                />
+              </Col>
+              <Col xs="4">
+                <IncomeTable
+                  user={user}
+                  data={incomeTableData}
+                  getData={this.getWeekData}
+                />
+              </Col>
+              <Col xs="4">
+                <WorkHourTable
+                  user={user}
+                  data={workHourTableData}
+                  getData={this.getWeekData}
+                />
+              </Col>
+            </Row>
+          </Container>
         </div>
       </>
     );

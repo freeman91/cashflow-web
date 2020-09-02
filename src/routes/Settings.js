@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { isEqual } from 'lodash';
-import { Col, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import ExpenseGroupsTable from '../components/ExpenseGroups/ExpenseGroupsTable';
 import IncomeSourcesTable from '../components/IncomeSources/IncomeSourcesTable';
@@ -19,20 +19,22 @@ class Settings extends Component {
     return (
       <>
         <div className="content">
-          <Row>
-            <Col xs="3">
-              <ExpenseGroupsTable user={user} />
-            </Col>
-            <Col xs="3">
-              <IncomeSourcesTable user={user} />
-            </Col>
-            <Col xs="3">
-              <LiabilityGroupsTable user={user} />
-            </Col>
-            <Col xs="3">
-              <AssetSourcesTable user={user} />
-            </Col>
-          </Row>
+          <Container>
+            <Row>
+              <Col xs="3">
+                <ExpenseGroupsTable user={user} />
+              </Col>
+              <Col xs="3">
+                <IncomeSourcesTable user={user} />
+              </Col>
+              <Col xs="3">
+                <LiabilityGroupsTable user={user} />
+              </Col>
+              <Col xs="3">
+                <AssetSourcesTable user={user} />
+              </Col>
+            </Row>
+          </Container>
         </div>
       </>
     );
