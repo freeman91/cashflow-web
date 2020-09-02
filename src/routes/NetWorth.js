@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { isEqual } from 'lodash';
 import DatePicker from 'react-datepicker';
 import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import {
   Card,
   CardBody,
   CardHeader,
@@ -10,7 +18,6 @@ import {
   Container,
   InputGroup,
   Row,
-  Table,
 } from 'reactstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -58,14 +65,15 @@ class NetWorth extends Component {
 
   prepareTableData = () => {
     const { netWorthLast12 } = this.state;
-    var months = [];
-    var netWorthData = [];
+    let ret = [];
     netWorthLast12.map((record) => {
-      months.push(`${month[record[0] - 1]} ${record[1].toString().slice(-2)}`);
-      netWorthData.push(formatter.format(record[2]));
+      ret.push({
+        name: `${month[record[0] - 1]} ${record[1].toString().slice(-2)}`,
+        netWorth: record[2],
+      });
       return null;
     });
-    return [months.reverse(), netWorthData.reverse()];
+    return ret.reverse();
   };
 
   handleChange = (nextDate) => {
@@ -87,7 +95,7 @@ class NetWorth extends Component {
     const { isLoaded, date } = this.state;
     if (!isLoaded) return <Loader />;
 
-    const [months, netWorthData] = this.prepareTableData();
+    const chartData = this.prepareTableData();
     const { user } = this.props;
     return (
       <>
@@ -111,35 +119,30 @@ class NetWorth extends Component {
                 <Card>
                   <CardHeader>
                     <CardTitle className="card-title" tag="h2">
-                      Net Worth over the past 6 months
+                      Net Worth over the past 12 months
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className="card-body">
-                    <div className="table-full-width table-responsive">
-                      <Table>
-                        <thead className="text-primary">
-                          <tr>
-                            {months.slice(6, 12).map((month) => {
-                              return <th key={'header' + month}>{month}</th>;
-                            })}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            {netWorthData.slice(6, 12).map((row, idx) => {
-                              return (
-                                <td
-                                  className="td-price"
-                                  key={`${months[idx]}-net-worth`}
-                                >
-                                  {row}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </div>
+                  <CardBody className="card-body" style={{ height: '400px' }}>
+                    <ResponsiveContainer minHeight="250" minWidth="250">
+                      <LineChart width={500} height={300} data={chartData}>
+                        <XAxis dataKey="name" />
+                        <YAxis
+                          tickFormatter={(value) => {
+                            return `$ ${value}`;
+                          }}
+                        />
+                        <Tooltip
+                          formatter={(value, name) => {
+                            return [formatter.format(value), 'net worth'];
+                          }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="netWorth"
+                          stroke="#8884d8"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
                   </CardBody>
                 </Card>
               </Col>
