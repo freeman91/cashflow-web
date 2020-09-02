@@ -94,7 +94,7 @@ class NetWorth extends Component {
         <div className="content">
           <Container>
             <Row>
-              <Col xs="2">
+              <Col xs="2" style={{ marginBottom: '15px' }}>
                 <Card style={cardDatePicker}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
