@@ -100,10 +100,10 @@ class NetWorth extends Component {
     const { user } = this.props;
     return (
       <>
-        <div className="content">
+        <div className='content'>
           <Container>
             <Row>
-              <Col xs="2" style={{ marginBottom: '15px' }}>
+              <Col xs='2' style={{ marginBottom: '15px' }}>
                 <Card style={cardDatePicker}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
@@ -114,19 +114,28 @@ class NetWorth extends Component {
                   </InputGroup>
                 </Card>
               </Col>
+              <Col xs='4' style={{ marginBottom: '1px', textAlign: 'center' }}>
+                <Card style={cardDatePicker}>
+                  <p style={{ fontSize: 'x-large' }}>
+                    {chartData[chartData.length - 1].name}{' '}
+                    <span class='tab' style={{ paddingLeft: '2rem' }} />
+                    {formatter.format(chartData[chartData.length - 1].netWorth)}
+                  </p>
+                </Card>
+              </Col>
             </Row>
             <Row>
-              <Col xs="12">
+              <Col xs='12'>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="card-title" tag="h2">
+                    <CardTitle className='card-title' tag='h2'>
                       Net Worth over the past 12 months
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className="card-body" style={{ height: '400px' }}>
-                    <ResponsiveContainer minHeight="250" minWidth="250">
+                  <CardBody className='card-body' style={{ height: '400px' }}>
+                    <ResponsiveContainer minHeight='250' minWidth='250'>
                       <LineChart width={500} height={300} data={chartData}>
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey='name' />
                         <YAxis
                           tickFormatter={(value) => {
                             return `$ ${value}`;
@@ -138,9 +147,9 @@ class NetWorth extends Component {
                           }}
                         />
                         <Line
-                          type="monotone"
-                          dataKey="netWorth"
-                          stroke="#8884d8"
+                          type='monotone'
+                          dataKey='netWorth'
+                          stroke='#8884d8'
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -149,14 +158,14 @@ class NetWorth extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs="1"></Col>
-              <Col xs="5">
+              <Col xs='1'></Col>
+              <Col xs='5'>
                 <AssetTable
                   user={user}
                   date={[date.getMonth(), date.getFullYear()]}
                 />
               </Col>
-              <Col xs="5">
+              <Col xs='5'>
                 <LiabilityTable
                   user={user}
                   date={[date.getMonth(), date.getFullYear()]}
