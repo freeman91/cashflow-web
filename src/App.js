@@ -4,6 +4,7 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom';
 
 import Home from './routes/Home';
 import UserLayout from './layouts/User';
+import './assets/css/cashflow-styles.css';
 
 const hist = createBrowserHistory();
 
@@ -26,13 +27,13 @@ class App extends Component {
         <Router history={hist}>
           <Switch>
             <Route
-              path="/user"
+              path='/user'
               render={(props) => (
                 <UserLayout {...props} user={this.state.user} />
               )}
             />
             <Route
-              path="/"
+              path='/'
               render={(props) => (
                 <Home
                   {...props}
@@ -41,7 +42,7 @@ class App extends Component {
                 />
               )}
             />
-            <Redirect from="/" to="/auth/" />
+            <Redirect from='/' to='/auth/' />
           </Switch>
         </Router>
       </>
