@@ -21,7 +21,6 @@ import {
 } from 'reactstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import '../assets/css/cashflow-styles.css';
 
 import AssetTable from '../components/Asset/AssetTable';
 import LiabilityTable from '../components/Liability/LiabilityTable';

@@ -4,7 +4,6 @@ import DatePicker from 'react-datepicker';
 import { Card, Col, Container, InputGroup, Row } from 'reactstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import '../assets/css/cashflow-styles.css';
 
 import MonthService from '../service/MonthService';
 import formatter from '../helpers/currency';
@@ -119,10 +118,10 @@ class Month extends Component {
     const { user } = this.props;
     return (
       <>
-        <div className="content">
+        <div className='content'>
           <Container>
             <Row>
-              <Col xs="2">
+              <Col xs='2'>
                 <Card style={cardDatePicker}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
@@ -133,7 +132,7 @@ class Month extends Component {
                   </InputGroup>
                 </Card>
               </Col>
-              <Col xs="8">
+              <Col xs='8'>
                 <StatsTable
                   data={monthTableData}
                   month={getMonth(date.getWeek())}
@@ -141,8 +140,8 @@ class Month extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs="3"></Col>
-              <Col xs="6">
+              <Col xs='3'></Col>
+              <Col xs='6'>
                 <BillTable
                   user={user}
                   reload={reloadBillState}

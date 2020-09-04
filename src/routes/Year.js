@@ -14,7 +14,6 @@ import {
 } from 'reactstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import '../assets/css/cashflow-styles.css';
 
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
@@ -116,32 +115,32 @@ class Year extends Component {
 
     return (
       <>
-        <div className="content">
+        <div className='content'>
           <Container>
             <Row>
-              <Col xs="2">
+              <Col xs='2'>
                 <Card style={cardDatePicker}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       showYearPicker
                       selected={date}
                       onChange={this.handleChange}
-                      format="yyyy"
+                      format='yyyy'
                     />
                   </InputGroup>
                 </Card>
               </Col>
-              <Col xs="8">
+              <Col xs='8'>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="card-title" tag="h2">
+                    <CardTitle className='card-title' tag='h2'>
                       {date.getFullYear() + ' breakdown'}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className="card-body">
-                    <div className="table-full-width table-responsive">
+                  <CardBody className='card-body'>
+                    <div className='table-full-width table-responsive'>
                       <Table>
-                        <thead className="text-primary">
+                        <thead className='text-primary'>
                           <tr>
                             <th>week</th>
                             <th>net income</th>
@@ -159,7 +158,7 @@ class Year extends Component {
                                   if (i !== row.length - 1) {
                                     return (
                                       <td
-                                        className="td-price"
+                                        className='td-price'
                                         key={`${row[row.length - 1]}-${i}`}
                                       >
                                         {item}
@@ -176,7 +175,7 @@ class Year extends Component {
                   </CardBody>
                 </Card>
               </Col>
-              <Col xs="2"></Col>
+              <Col xs='2'></Col>
             </Row>
           </Container>
         </div>

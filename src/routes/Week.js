@@ -14,7 +14,6 @@ import {
 } from 'reactstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import '../assets/css/cashflow-styles.css';
 
 import formatter from '../helpers/currency';
 import ExpenseTable from '../components/Expense/ExpenseTableWeek';
@@ -145,10 +144,10 @@ class Week extends Component {
     const { user } = this.props;
     return (
       <>
-        <div className="content">
+        <div className='content'>
           <Container>
             <Row>
-              <Col xs="2">
+              <Col xs='2'>
                 <Card style={cardDatePicker}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
@@ -159,17 +158,17 @@ class Week extends Component {
                   </InputGroup>
                 </Card>
               </Col>
-              <Col xs="8">
+              <Col xs='8'>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="card-title" tag="h2">
+                    <CardTitle className='card-title' tag='h2'>
                       {`Week ${cwdate.week} breakdown`}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className="card-body">
-                    <div className="table-full-width table-responsive">
+                  <CardBody className='card-body'>
+                    <div className='table-full-width table-responsive'>
                       <Table>
-                        <thead className="text-primary">
+                        <thead className='text-primary'>
                           <tr>
                             <th>net income</th>
                             <th>expense total</th>
@@ -183,7 +182,7 @@ class Week extends Component {
                             {weekTableData.map((row, idx) => {
                               return (
                                 <td
-                                  className="td-price"
+                                  className='td-price'
                                   key={`week-data-${idx}`}
                                 >
                                   {row}
@@ -197,24 +196,24 @@ class Week extends Component {
                   </CardBody>
                 </Card>
               </Col>
-              <Col xs="2"></Col>
+              <Col xs='2'></Col>
             </Row>
             <Row>
-              <Col xs="4">
+              <Col xs='4'>
                 <ExpenseTable
                   user={user}
                   data={expenseTableData}
                   getData={this.getWeekData}
                 />
               </Col>
-              <Col xs="4">
+              <Col xs='4'>
                 <IncomeTable
                   user={user}
                   data={incomeTableData}
                   getData={this.getWeekData}
                 />
               </Col>
-              <Col xs="4">
+              <Col xs='4'>
                 <WorkHourTable
                   user={user}
                   data={workHourTableData}

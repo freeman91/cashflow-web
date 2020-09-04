@@ -89,26 +89,32 @@ class NewModal extends Component {
     const { sources, isLoaded } = this.state;
     if (!isLoaded) return null;
     return (
-      <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
+      <Modal isOpen={open} toggle={handleClose} modalClassName='modal-info'>
         <ModalHeader>New Income</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+            <InputGroupAddon
+              addonType='prepend'
+              className='input-text-transparent'
+            >
+              $
+            </InputGroupAddon>
             <Input
-              type="float"
-              name="amount"
-              id="amount"
+              type='float'
+              name='amount'
+              id='amount'
               placeholder={formatter_no$.format(0)}
               onChange={this.handleChange}
+              style={{ lineHeight: '1.9', height: '100%' }}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="select"
-              name="source"
-              id="source"
-              placeholder="source select"
+              type='select'
+              name='source'
+              id='source'
+              placeholder='source select'
               onChange={this.handleChange}
             >
               {sources.map((source) => {
@@ -117,30 +123,30 @@ class NewModal extends Component {
             </Input>
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="text"
-              name="description"
-              id="description"
-              placeholder="description"
+              type='text'
+              name='description'
+              id='description'
+              placeholder='description'
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="date"
-              name="date"
-              id="date"
+              type='date'
+              name='date'
+              id='date'
               defaultValue={formatDateObject(new Date())}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <Button onClick={handleClose} color="default">
+            <Button onClick={handleClose} color='default'>
               Cancel
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={this.handleSubmit} color='primary'>
               Submit
             </Button>
           </InputGroup>
