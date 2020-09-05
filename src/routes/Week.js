@@ -22,12 +22,7 @@ import WorkHourTable from '../components/WorkHour/WorkHourTableWeek';
 import Loader from '../components/Loader';
 import WeekService from '../service/WeekService';
 import '../helpers/Date';
-
-const cardDatePicker = {
-  padding: '0.5rem',
-  margin: '0',
-  width: '100%',
-};
+import { cardDatePickerRules } from '../helpers/css';
 
 class Week extends Component {
   state = {
@@ -148,7 +143,7 @@ class Week extends Component {
           <Container>
             <Row>
               <Col xs='2'>
-                <Card style={cardDatePicker}>
+                <Card style={cardDatePickerRules}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       selected={date}

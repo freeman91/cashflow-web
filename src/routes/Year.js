@@ -18,12 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import YearService from '../service/YearService';
-
-const cardDatePicker = {
-  padding: '0.5rem',
-  margin: '0',
-  width: '100%',
-};
+import { cardDatePickerRules } from '../helpers/css';
 
 class Year extends Component {
   state = {
@@ -119,7 +114,7 @@ class Year extends Component {
           <Container>
             <Row>
               <Col xs='2'>
-                <Card style={cardDatePicker}>
+                <Card style={cardDatePickerRules}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       showYearPicker

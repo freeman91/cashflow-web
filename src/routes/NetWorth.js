@@ -28,12 +28,7 @@ import NetWorthService from '../service/NetWorthService';
 import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import { month } from '../helpers/month-names';
-
-const cardDatePicker = {
-  padding: '0.5rem',
-  margin: '0',
-  width: '100%',
-};
+import { cardDatePickerRules } from '../helpers/css';
 
 class NetWorth extends Component {
   state = {
@@ -103,7 +98,7 @@ class NetWorth extends Component {
           <Container>
             <Row>
               <Col xs='2' style={{ marginBottom: '15px' }}>
-                <Card style={cardDatePicker}>
+                <Card style={cardDatePickerRules}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       showMonthYearPicker
@@ -114,7 +109,7 @@ class NetWorth extends Component {
                 </Card>
               </Col>
               <Col xs='4' style={{ marginBottom: '1px', textAlign: 'center' }}>
-                <Card style={cardDatePicker}>
+                <Card style={cardDatePickerRules}>
                   <p style={{ fontSize: 'x-large' }}>
                     {chartData[chartData.length - 1].name}{' '}
                     <span class='tab' style={{ paddingLeft: '2rem' }} />

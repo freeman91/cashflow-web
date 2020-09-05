@@ -12,12 +12,7 @@ import BillTable from '../components/Bill/BillTable';
 import StatsTable from '../components/Month/StatsTable';
 import { getMonth } from '../helpers/month-names';
 import '../helpers/Date';
-
-const cardDatePicker = {
-  padding: '0.5rem',
-  margin: '0',
-  width: '100%',
-};
+import { cardDatePickerRules } from '../helpers/css';
 
 class Month extends Component {
   state = {
@@ -122,7 +117,7 @@ class Month extends Component {
           <Container>
             <Row>
               <Col xs='2'>
-                <Card style={cardDatePicker}>
+                <Card style={cardDatePickerRules}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       showMonthYearPicker
