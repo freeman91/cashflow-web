@@ -120,7 +120,7 @@ class Year extends Component {
                       showYearPicker
                       selected={date}
                       onChange={this.handleChange}
-                      format='yyyy'
+                      dateFormat='yyyy'
                     />
                   </InputGroup>
                 </Card>

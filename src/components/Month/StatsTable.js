@@ -9,14 +9,14 @@ class StatsTable extends Component {
       <>
         <Card>
           <CardHeader>
-            <CardTitle className="card-title" tag="h2">
-              {this.props.month + ' breakdown'}
+            <CardTitle className='card-title' tag='h2'>
+              Breakdown
             </CardTitle>
           </CardHeader>
-          <CardBody className="card-body">
-            <div className="table-full-width table-responsive">
+          <CardBody className='card-body'>
+            <div className='table-full-width table-responsive'>
               <Table>
-                <thead className="text-primary">
+                <thead className='text-primary'>
                   <tr>
                     <th>week</th>
                     <th>net income</th>
@@ -34,7 +34,7 @@ class StatsTable extends Component {
                           if (i !== row.length - 1) {
                             return (
                               <td
-                                className="td-price"
+                                className='td-price'
                                 key={`${row[row.length - 1]}-${i}`}
                               >
                                 {item}

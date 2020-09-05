@@ -97,22 +97,21 @@ class NetWorth extends Component {
         <div className='content'>
           <Container>
             <Row>
-              <Col xs='2' style={{ marginBottom: '15px' }}>
+              <Col xs='3' style={{ marginBottom: '15px' }}>
                 <Card style={cardDatePickerRules}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       showMonthYearPicker
                       selected={date}
                       onChange={this.handleChange}
+                      dateFormat='MMMM yyyy'
                     />
                   </InputGroup>
                 </Card>
               </Col>
-              <Col xs='4' style={{ marginBottom: '1px', textAlign: 'center' }}>
+              <Col xs='2' style={{ marginBottom: '1px', textAlign: 'center' }}>
                 <Card style={cardDatePickerRules}>
                   <p style={{ fontSize: 'x-large' }}>
-                    {chartData[chartData.length - 1].name}{' '}
-                    <span class='tab' style={{ paddingLeft: '2rem' }} />
                     {formatter.format(chartData[chartData.length - 1].netWorth)}
                   </p>
                 </Card>

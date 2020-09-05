@@ -116,13 +116,14 @@ class Month extends Component {
         <div className='content'>
           <Container>
             <Row>
-              <Col xs='2'>
+              <Col xs='3'>
                 <Card style={cardDatePickerRules}>
                   <InputGroup style={{ margin: 'auto' }}>
                     <DatePicker
                       showMonthYearPicker
                       selected={date}
                       onChange={this.handleChange}
+                      dateFormat='MMMM yyyy'
                     />
                   </InputGroup>
                 </Card>
