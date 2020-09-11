@@ -149,23 +149,23 @@ class Dashboard extends Component {
     const { chartData, expenseTotal } = prepareChartData(expenses);
     return (
       <>
-        <div className="content">
+        <div className='content'>
           <Container>
             <Row>
-              <Col xs="2">
+              <Col xs='2'>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="card-title" tag="h3">
+                    <CardTitle className='card-title' tag='h3'>
                       Enter Data
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className="card-body">
+                  <CardBody className='card-body'>
                     <Container>
                       <Row>
                         <Button
                           block
-                          size="sm"
-                          color="primary"
+                          size='sm'
+                          color='primary'
                           onClick={this.handleCreateClickExpense}
                         >
                           New Expense
@@ -174,8 +174,8 @@ class Dashboard extends Component {
                       <Row>
                         <Button
                           block
-                          size="sm"
-                          color="primary"
+                          size='sm'
+                          color='primary'
                           onClick={this.handleCreateClickIncome}
                         >
                           New Income
@@ -184,8 +184,8 @@ class Dashboard extends Component {
                       <Row>
                         <Button
                           block
-                          size="sm"
-                          color="primary"
+                          size='sm'
+                          color='primary'
                           onClick={this.handleCreateClickWorkHour}
                         >
                           New Work Hour
@@ -195,13 +195,13 @@ class Dashboard extends Component {
                   </CardBody>
                 </Card>
               </Col>
-              <Col xs="10">
+              <Col xs='10'>
                 <Card>
                   <CardBody>
                     <Container>
                       <Row>
-                        <Col xs="3">
-                          <CardTitle className="card-title" tag="h3">
+                        <Col xs='3'>
+                          <CardTitle className='card-title' tag='h3'>
                             {`${renderDateMonthName(
                               chartData[0].name
                             )} - ${renderDateMonthName(
@@ -241,11 +241,11 @@ class Dashboard extends Component {
                             </tbody>
                           </Table>
                         </Col>
-                        <Col xs="9" style={{ height: '400px' }}>
-                          <ResponsiveContainer minHeight="250" minWidth="250">
+                        <Col xs='9' style={{ height: '400px' }}>
+                          <ResponsiveContainer minHeight='250' minWidth='250'>
                             <BarChart
-                              height="500"
-                              width="700"
+                              height='500'
+                              width='700'
                               data={chartData}
                               margin={{
                                 top: 15,
@@ -255,7 +255,7 @@ class Dashboard extends Component {
                               }}
                             >
                               <XAxis
-                                dataKey="name"
+                                dataKey='name'
                                 tickFormatter={(date) => {
                                   return date.slice(5, 10).replace('-', '/');
                                 }}
@@ -266,7 +266,7 @@ class Dashboard extends Component {
                                   return formatter.format(value);
                                 }}
                               />
-                              <Bar dataKey="expense" fill="#8884d8" />
+                              <Bar dataKey='expense' fill='#8884d8' />
                             </BarChart>
                           </ResponsiveContainer>
                         </Col>
@@ -277,7 +277,7 @@ class Dashboard extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs="5">
+              <Col xs='5'>
                 <ExpenseTable
                   user={user}
                   reload={reload.expense}
@@ -285,7 +285,7 @@ class Dashboard extends Component {
                   stopReload={this.stopReload}
                 />
               </Col>
-              <Col xs="4">
+              <Col xs='4'>
                 <IncomeTable
                   user={user}
                   reload={reload.income}
@@ -293,7 +293,7 @@ class Dashboard extends Component {
                   stopReload={this.stopReload}
                 />
               </Col>
-              <Col xs="3">
+              <Col xs='3'>
                 <WorkHourTable
                   user={user}
                   reload={reload.workHour}

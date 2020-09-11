@@ -13,7 +13,7 @@ import {
 
 import formatter from '../../helpers/currency';
 import { renderDate } from '../../helpers/render-date';
-import { getMonth } from '../../helpers/month-names';
+import { getMonthName } from '../../helpers/month-names';
 import EditModal from '../Expense/EditModal';
 import Month from '../../service/MonthService';
 
@@ -111,20 +111,20 @@ class BillTable extends Component {
         <Card>
           <CardHeader>
             <Row>
-              <Col xs="6">
-                <CardTitle className="card-title" tag="h2">
-                  {getMonth(week) + ' Bills'}
+              <Col xs='6'>
+                <CardTitle className='card-title' tag='h2'>
+                  {getMonthName(week) + ' Bills'}
                 </CardTitle>
               </Col>
-              <Col xs="6">
+              <Col xs='6'>
                 <h3>{'Total: ' + formatter.format(billTotal)}</h3>
               </Col>
             </Row>
           </CardHeader>
-          <CardBody className="card-body">
-            <div className="table-full-width table-responsive">
+          <CardBody className='card-body'>
+            <div className='table-full-width table-responsive'>
               <Table>
-                <thead className="text-primary">
+                <thead className='text-primary'>
                   <tr>
                     <th>date</th>
                     <th>amount</th>
@@ -140,20 +140,20 @@ class BillTable extends Component {
                         <td>{formatter.format(bill[1])}</td>
                         <td>{bill[2]}</td>
                         <td>{bill[3].substring(0, 10)}</td>
-                        <td className="td-actions text-right">
+                        <td className='td-actions text-right'>
                           <Button
-                            color="link"
+                            color='link'
                             id={`bill-table-tooltip_${idx}`}
-                            title=""
-                            type="button"
+                            title=''
+                            type='button'
                             onClick={() => this.handleClick(bill)}
                           >
-                            <i className="tim-icons icon-pencil" />
+                            <i className='tim-icons icon-pencil' />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
                             target={`bill-table-tooltip_${idx}`}
-                            placement="right"
+                            placement='right'
                           >
                             Edit Bill
                           </UncontrolledTooltip>
