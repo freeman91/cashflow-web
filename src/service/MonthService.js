@@ -30,7 +30,24 @@ const getBills = async function (auth_token, week, year) {
     })
     .catch((error) => console.error(error));
 };
+
+const getChartData = async function (auth_token, startDate, endDate) {
+  return axios
+    .get(API_HOST + '/month/pie-chart', {
+      headers: { Authorization: auth_token },
+      params: {
+        startDate,
+        endDate,
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => console.error(error));
+};
+
 export default {
   getData,
   getBills,
+  getChartData,
 };
