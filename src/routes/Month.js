@@ -10,9 +10,11 @@ import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import BillTable from '../components/Bill/BillTable';
 import StatsTable from '../components/Month/StatsTable';
-import { getMonth } from '../helpers/month-names';
+import { getMonthName } from '../helpers/month-names';
+import { getMonthRange } from '../helpers/render-date';
 import '../helpers/Date';
 import { cardDatePickerRules } from '../helpers/css';
+import ExpensesByGroupChart from '../components/Month/ExpensesByGroupChart';
 
 class Month extends Component {
   state = {
@@ -111,6 +113,7 @@ class Month extends Component {
 
     const monthTableData = this.prepareTableData();
     const { user } = this.props;
+    const range = getMonthRange(date);
     return (
       <>
         <div className='content'>
@@ -127,11 +130,16 @@ class Month extends Component {
                     />
                   </InputGroup>
                 </Card>
+                <ExpensesByGroupChart
+                  startDate={range.startDate}
+                  endDate={range.endDate}
+                  user={user}
+                />
               </Col>
               <Col xs='8'>
                 <StatsTable
                   data={monthTableData}
-                  month={getMonth(date.getWeek())}
+                  month={getMonthName(date.getWeek())}
                 />
               </Col>
             </Row>
