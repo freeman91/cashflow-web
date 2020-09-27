@@ -14,6 +14,8 @@ import formatter_no$ from '../../helpers/currency_no$';
 import Expense from '../../service/ExpenseService';
 import formatDateObject from '../../helpers/format-date-object';
 
+const inputTextPrepend = { lineHeight: '1.9', height: '100%' };
+
 const defaultValue = {
   open: false,
   value: {
@@ -126,25 +128,26 @@ class EditModal extends Component {
     const { groups, isLoaded, value } = this.state;
     if (!isLoaded) return null;
     return (
-      <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
+      <Modal isOpen={open} toggle={handleClose} modalClassName='modal-info'>
         <ModalHeader>Edit Expense</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+            <InputGroupAddon addonType='prepend'>$</InputGroupAddon>
             <Input
-              type="float"
-              name="amount"
-              id="amount"
+              type='float'
+              name='amount'
+              id='amount'
               defaultValue={formatter_no$.format(value.amount)}
               onChange={this.handleChange}
+              style={inputTextPrepend}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="select"
-              name="group"
-              id="group"
+              type='select'
+              name='group'
+              id='group'
               defaultValue={value.group}
               onChange={this.handleChange}
             >
@@ -154,59 +157,59 @@ class EditModal extends Component {
             </Input>
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="text"
-              name="vendor"
-              id="vendor"
-              placeholder="vendor"
+              type='text'
+              name='vendor'
+              id='vendor'
+              placeholder='vendor'
               defaultValue={value.vendor ? value.vendor : null}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="text"
-              name="description"
-              id="description"
-              placeholder="description"
+              type='text'
+              name='description'
+              id='description'
+              placeholder='description'
               defaultValue={value.description ? value.description : null}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="date"
-              name="date"
-              id="date"
+              type='date'
+              name='date'
+              id='date'
               defaultValue={value.date}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend">
+            <InputGroupAddon addonType='prepend'>
               <InputGroupText>
                 <Input
                   addon
-                  type="checkbox"
-                  id="bill"
+                  type='checkbox'
+                  id='bill'
                   onChange={this.handleCheckbox}
                   checked={value.bill}
                 />
               </InputGroupText>
             </InputGroupAddon>
-            <Input placeholder="Bill?" disabled />
+            <Input placeholder='Bill?' disabled />
           </InputGroup>
           <InputGroup>
-            <Button onClick={handleClose} color="default">
+            <Button onClick={handleClose} color='default'>
               Cancel
             </Button>
-            <Button onClick={this.handleDelete} color="warning">
+            <Button onClick={this.handleDelete} color='warning'>
               Delete
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={this.handleSubmit} color='primary'>
               Submit
             </Button>
           </InputGroup>

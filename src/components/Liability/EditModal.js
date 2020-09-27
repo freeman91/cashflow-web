@@ -15,6 +15,8 @@ import formatter_no$ from '../../helpers/currency_no$';
 import formatDateObject from '../../helpers/format-date-object';
 import Liability from '../../service/LiabilityService';
 
+const inputTextPrepend = { lineHeight: '1.9', height: '100%' };
+
 const defaultState = {
   open: false,
   value: {
@@ -114,25 +116,26 @@ class EditModal extends Component {
     const { groups, isLoaded, value } = this.state;
     if (!isLoaded) return null;
     return (
-      <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
+      <Modal isOpen={open} toggle={handleClose} modalClassName='modal-info'>
         <ModalHeader>Edit Liability</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+            <InputGroupAddon addonType='prepend'>$</InputGroupAddon>
             <Input
-              type="float"
-              name="amount"
-              id="amount"
+              type='float'
+              name='amount'
+              id='amount'
               defaultValue={formatter_no$.format(value.amount)}
               onChange={this.handleChange}
+              style={inputTextPrepend}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="select"
-              name="group"
-              id="group"
+              type='select'
+              name='group'
+              id='group'
               defaultValue={value.group}
               onChange={this.handleChange}
             >
@@ -142,33 +145,33 @@ class EditModal extends Component {
             </Input>
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="text"
-              name="description"
-              id="description"
+              type='text'
+              name='description'
+              id='description'
               defaultValue={value.description ? value.description : null}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="date"
-              name="date"
-              id="date"
+              type='date'
+              name='date'
+              id='date'
               defaultValue={value.date}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <Button onClick={handleClose} color="default">
+            <Button onClick={handleClose} color='default'>
               Cancel
             </Button>
-            <Button onClick={this.handleDelete} color="warning">
+            <Button onClick={this.handleDelete} color='warning'>
               Delete
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={this.handleSubmit} color='primary'>
               Submit
             </Button>
           </InputGroup>
