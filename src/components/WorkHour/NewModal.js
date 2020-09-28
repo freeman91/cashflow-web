@@ -13,8 +13,8 @@ import {
 
 import WorkHour from '../../service/WorkHourService';
 import Income from '../../service/IncomeService';
-import formatter_no$ from '../../helpers/currency_no$';
-import formatDateObject from '../../helpers/format-date-object';
+import { numberToCurrency_ } from '../../helpers/currency';
+import { dateToString } from '../../helpers/date-helper';
 
 const defaultState = {
   open: false,
@@ -70,7 +70,7 @@ class NewModal extends Component {
         {
           amount: Number(value.amount),
           source: value.source,
-          date: formatDateObject(value.date),
+          date: dateToString(value.date),
         },
         user.auth_token
       ).then((result) => {
@@ -90,26 +90,26 @@ class NewModal extends Component {
     const { sources, isLoaded } = this.state;
     if (!isLoaded) return null;
     return (
-      <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
+      <Modal isOpen={open} toggle={handleClose} modalClassName='modal-info'>
         <ModalHeader>New Work Hour</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="float"
-              name="amount"
-              id="amount"
-              placeholder={formatter_no$.format(0)}
+              type='float'
+              name='amount'
+              id='amount'
+              placeholder={numberToCurrency_.format(0)}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="select"
-              name="source"
-              id="source"
-              placeholder="source select"
+              type='select'
+              name='source'
+              id='source'
+              placeholder='source select'
               onChange={this.handleChange}
             >
               {sources.map((source) => {
@@ -118,20 +118,20 @@ class NewModal extends Component {
             </Input>
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="date"
-              name="date"
-              id="date"
-              defaultValue={formatDateObject(new Date())}
+              type='date'
+              name='date'
+              id='date'
+              defaultValue={dateToString(new Date())}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <Button onClick={handleClose} color="default">
+            <Button onClick={handleClose} color='default'>
               Cancel
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={this.handleSubmit} color='primary'>
               Submit
             </Button>
           </InputGroup>

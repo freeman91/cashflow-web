@@ -12,8 +12,8 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import formatter_no$ from '../../helpers/currency_no$';
-import formatDateObject from '../../helpers/format-date-object';
+import { numberToCurrency_ } from '../../helpers/currency';
+import { dateToString } from '../../helpers/date-helper';
 import Expense from '../../service/ExpenseService';
 
 const inputTextPrepend = { lineHeight: '1.9', height: '100%' };
@@ -87,7 +87,7 @@ class NewModal extends Component {
           vendor: value.vendor,
           description: value.description,
           bill: value.bill,
-          date: formatDateObject(value.date),
+          date: dateToString(value.date),
         },
         user.auth_token
       ).then((result) => {
@@ -115,7 +115,7 @@ class NewModal extends Component {
               type='float'
               name='amount'
               id='amount'
-              placeholder={formatter_no$.format(0)}
+              placeholder={numberToCurrency_.format(0)}
               onChange={this.handleChange}
               style={inputTextPrepend}
             />
@@ -160,7 +160,7 @@ class NewModal extends Component {
               type='date'
               name='date'
               id='date'
-              defaultValue={formatDateObject(new Date())}
+              defaultValue={dateToString(new Date())}
               onChange={this.handleChange}
             />
           </InputGroup>

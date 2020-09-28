@@ -41,7 +41,7 @@ const update = async function (incomeSource, auth_token) {
         description: incomeSource.description,
       },
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 export default {

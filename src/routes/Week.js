@@ -15,7 +15,7 @@ import {
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import formatter from '../helpers/currency';
+import { numberToCurrency } from '../helpers/currency';
 import ExpenseTable from '../components/Expense/ExpenseTableWeek';
 import IncomeTable from '../components/Income/IncomeTableWeek';
 import WorkHourTable from '../components/WorkHour/WorkHourTableWeek';
@@ -129,11 +129,11 @@ class Week extends Component {
     const incomeTableData = this.prepareIncomes();
     const workHourTableData = this.prepareWorkHours();
     const weekTableData = [
-      formatter.format(netincome),
-      formatter.format(expTotal),
-      formatter.format(incTotal),
+      numberToCurrency.format(netincome),
+      numberToCurrency.format(expTotal),
+      numberToCurrency.format(incTotal),
       wkhrTotal,
-      formatter.format(wkhrTotal === 0 ? 0 : incTotal / wkhrTotal),
+      numberToCurrency.format(wkhrTotal === 0 ? 0 : incTotal / wkhrTotal),
     ];
 
     const { user } = this.props;

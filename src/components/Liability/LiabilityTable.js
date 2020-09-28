@@ -11,8 +11,8 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../../helpers/currency';
-import { renderDate } from '../../helpers/render-date';
+import { numberToCurrency } from '../../helpers/currency';
+import { dateToStringShort } from '../../helpers/date-helper';
 import NewModal from './NewModal';
 import EditModal from './EditModal';
 import Loader from '../../components/Loader';
@@ -114,15 +114,15 @@ class LiabilityTable extends Component {
         <Card>
           <CardHeader>
             <Row>
-              <Col xs="8">
-                <CardTitle className="card-title" tag="h2">
+              <Col xs='8'>
+                <CardTitle className='card-title' tag='h2'>
                   Liabilities
                 </CardTitle>
               </Col>
-              <Col xs="3">
+              <Col xs='3'>
                 <Button
-                  size="sm"
-                  color="primary"
+                  size='sm'
+                  color='primary'
                   onClick={() => {
                     this.handleOpen('newOpen');
                   }}
@@ -132,10 +132,10 @@ class LiabilityTable extends Component {
               </Col>
             </Row>
           </CardHeader>
-          <CardBody className="card-body">
-            <div className="table-full-width table-responsive">
+          <CardBody className='card-body'>
+            <div className='table-full-width table-responsive'>
               <Table>
-                <thead className="text-primary">
+                <thead className='text-primary'>
                   <tr>
                     <th>date</th>
                     <th>amount</th>
@@ -146,24 +146,24 @@ class LiabilityTable extends Component {
                   {liabilitiesData.map((asset, i) => {
                     return (
                       <tr key={`asset-${i}`}>
-                        <td>{renderDate(asset[4])}</td>
-                        <td>{formatter.format(asset[1])}</td>
+                        <td>{dateToStringShort(asset[4])}</td>
+                        <td>{numberToCurrency.format(asset[1])}</td>
                         <td>{asset[2]}</td>
                         <td>{asset[3].substring(0, 10)}</td>
-                        <td className="td-actions text-right">
+                        <td className='td-actions text-right'>
                           <Button
-                            color="link"
+                            color='link'
                             id={`liability-table-tooltip-${i}`}
-                            title=""
-                            type="button"
+                            title=''
+                            type='button'
                             onClick={() => this.handleClick(asset)}
                           >
-                            <i className="tim-icons icon-pencil" />
+                            <i className='tim-icons icon-pencil' />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
                             target={`liability-table-tooltip-${i}`}
-                            placement="right"
+                            placement='right'
                           >
                             Edit Liability
                           </UncontrolledTooltip>

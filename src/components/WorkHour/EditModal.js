@@ -11,8 +11,8 @@ import {
 
 import WorkHour from '../../service/WorkHourService';
 import Income from '../../service/IncomeService';
-import formatDateObject from '../../helpers/format-date-object';
-import formatter_no$ from '../../helpers/currency_no$';
+import { dateToString } from '../../helpers/date-helper';
+import { numberToCurrency_ } from '../../helpers/currency';
 
 const defaultState = {
   open: false,
@@ -80,7 +80,7 @@ class EditModal extends Component {
           id: value.id,
           amount: amount,
           source: value.source,
-          date: formatDateObject(value.date),
+          date: dateToString(value.date),
         },
         user.auth_token
       ).then(() => {
@@ -109,25 +109,25 @@ class EditModal extends Component {
     if (!isLoaded) return null;
 
     return (
-      <Modal isOpen={open} toggle={handleClose} modalClassName="modal-info">
+      <Modal isOpen={open} toggle={handleClose} modalClassName='modal-info'>
         <ModalHeader>Edit Work Hour</ModalHeader>
         <ModalBody>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="float"
-              name="amount"
-              id="amount"
-              defaultValue={formatter_no$.format(value.amount)}
+              type='float'
+              name='amount'
+              id='amount'
+              defaultValue={numberToCurrency_.format(value.amount)}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="select"
-              name="source"
-              id="source"
+              type='select'
+              name='source'
+              id='source'
               defaultValue={value.source}
               onChange={this.handleChange}
             >
@@ -137,23 +137,23 @@ class EditModal extends Component {
             </Input>
           </InputGroup>
           <InputGroup>
-            <InputGroupAddon addonType="prepend"> </InputGroupAddon>
+            <InputGroupAddon addonType='prepend'> </InputGroupAddon>
             <Input
-              type="date"
-              name="date"
-              id="date"
+              type='date'
+              name='date'
+              id='date'
               defaultValue={value.date}
               onChange={this.handleChange}
             />
           </InputGroup>
           <InputGroup>
-            <Button onClick={handleClose} color="default">
+            <Button onClick={handleClose} color='default'>
               Cancel
             </Button>
-            <Button onClick={this.handleDelete} color="warning">
+            <Button onClick={this.handleDelete} color='warning'>
               Delete
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={this.handleSubmit} color='primary'>
               Submit
             </Button>
           </InputGroup>

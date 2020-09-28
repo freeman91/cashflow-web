@@ -41,7 +41,7 @@ const update = async function (debtGroup, auth_token) {
         description: debtGroup.description,
       },
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 export default {

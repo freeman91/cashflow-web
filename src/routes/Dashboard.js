@@ -20,7 +20,6 @@ import {
   Row,
 } from 'reactstrap';
 
-// import formatter from '../helpers/currency';
 import Loader from '../components/Loader';
 import ExpenseTable from '../components/Expense/ExpenseTableRecent';
 import WorkHourTable from '../components/WorkHour/WorkHourTable';
@@ -29,9 +28,8 @@ import DashboardService from '../service/DashboardService';
 import ExpenseNewModal from '../components/Expense/NewModal';
 import IncomeNewModal from '../components/Income/NewModal';
 import WorkHourNewModal from '../components/WorkHour/NewModal';
-import formatDateObject from '../helpers/format-date-object';
-import formatter from '../helpers/currency';
-import { renderDateMonthName } from '../helpers/render-date';
+import { dateToString, dateToMonthString } from '../helpers/date-helper';
+import { numberToCurrency } from '../helpers/currency';
 
 const defaultState = {
   isLoaded: false,
@@ -67,12 +65,12 @@ const prepareChartData = (expenses) => {
     for (let j = 0; j < 7; j++) {
       let expenseSum = 0;
       expenses[i].forEach((expense) => {
-        if (expense[1] === formatDateObject(currentDate)) {
+        if (expense[1] === dateToString(currentDate)) {
           expenseSum += expense[0];
         }
       });
       chartData.push({
-        name: formatDateObject(currentDate),
+        name: dateToString(currentDate),
         expense: Math.round(expenseSum * 100) / 100,
       });
       expenseTotal += expenseSum;
@@ -202,9 +200,9 @@ class Dashboard extends Component {
                       <Row>
                         <Col xs='3'>
                           <CardTitle className='card-title' tag='h3'>
-                            {`${renderDateMonthName(
+                            {`${dateToMonthString(
                               chartData[0].name
-                            )} - ${renderDateMonthName(
+                            )} - ${dateToMonthString(
                               chartData[chartData.length - 1].name
                             )}`}
                           </CardTitle>
@@ -212,16 +210,18 @@ class Dashboard extends Component {
                             <tbody>
                               <tr>
                                 <th>Expenses</th>
-                                <td>{formatter.format(expenseTotal)}</td>
+                                <td>{numberToCurrency.format(expenseTotal)}</td>
                               </tr>
                               <tr>
                                 <th>Incomes</th>
-                                <td>{formatter.format(incomeTotal)}</td>
+                                <td>{numberToCurrency.format(incomeTotal)}</td>
                               </tr>
                               <tr>
                                 <th>Net Income</th>
                                 <td>
-                                  {formatter.format(incomeTotal - expenseTotal)}
+                                  {numberToCurrency.format(
+                                    incomeTotal - expenseTotal
+                                  )}
                                 </td>
                               </tr>
                               <tr>
@@ -231,7 +231,7 @@ class Dashboard extends Component {
                               <tr>
                                 <th>Hourly Wage</th>
                                 <td>
-                                  {formatter.format(
+                                  {numberToCurrency.format(
                                     workHourTotal === 0
                                       ? 0
                                       : incomeTotal / workHourTotal
@@ -263,7 +263,7 @@ class Dashboard extends Component {
                               <YAxis />
                               <Tooltip
                                 formatter={(value) => {
-                                  return formatter.format(value);
+                                  return numberToCurrency.format(value);
                                 }}
                               />
                               <Bar dataKey='expense' fill='#8884d8' />

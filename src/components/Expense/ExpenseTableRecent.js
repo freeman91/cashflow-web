@@ -9,8 +9,8 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../../helpers/currency';
-import { renderDate } from '../../helpers/render-date';
+import { numberToCurrency } from '../../helpers/currency';
+import { dateToStringShort } from '../../helpers/date-helper';
 import Loader from '../Loader';
 import EditModal from './EditModal';
 import Dashboard from '../../service/DashboardService';
@@ -98,14 +98,14 @@ class ExpenseTableRecent extends Component {
       <>
         <Card>
           <CardHeader>
-            <CardTitle className="card-title" tag="h2">
+            <CardTitle className='card-title' tag='h2'>
               Recent Expenses
             </CardTitle>
           </CardHeader>
-          <CardBody className="card-body">
-            <div className="table-full-width table-responsive">
+          <CardBody className='card-body'>
+            <div className='table-full-width table-responsive'>
               <Table>
-                <thead className="text-primary">
+                <thead className='text-primary'>
                   <tr>
                     <th>date</th>
                     <th>amount</th>
@@ -117,24 +117,24 @@ class ExpenseTableRecent extends Component {
                   {expensesData.map((expense, idx) => {
                     return (
                       <tr key={`expense-item ${idx}`}>
-                        <td>{renderDate(expense[6])}</td>
-                        <td>{formatter.format(expense[1])}</td>
+                        <td>{dateToStringShort(expense[6])}</td>
+                        <td>{numberToCurrency.format(expense[1])}</td>
                         <td>{expense[2]}</td>
                         <td>{expense[3].substring(0, 10)}</td>
-                        <td className="td-actions text-right">
+                        <td className='td-actions text-right'>
                           <Button
-                            color="link"
+                            color='link'
                             id={`expense-table-tooltip-${idx}`}
-                            title=""
-                            type="button"
+                            title=''
+                            type='button'
                             onClick={() => this.handleClick(expense)}
                           >
-                            <i className="tim-icons icon-pencil" />
+                            <i className='tim-icons icon-pencil' />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
                             target={`expense-table-tooltip-${idx}`}
-                            placement="right"
+                            placement='right'
                           >
                             Edit Expense
                           </UncontrolledTooltip>

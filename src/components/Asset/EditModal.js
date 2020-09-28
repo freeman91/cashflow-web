@@ -11,8 +11,8 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
-import formatter_no$ from '../../helpers/currency_no$';
-import formatDateObject from '../../helpers/format-date-object';
+import { numberToCurrency_ } from '../../helpers/currency';
+import { dateToString } from '../../helpers/date-helper';
 import Asset from '../../service/AssetService';
 
 const inputTextPrepend = { lineHeight: '1.9', height: '100%' };
@@ -99,7 +99,7 @@ class EditModal extends Component {
           amount: Number(amount),
           source: value.source,
           description: value.description,
-          date: formatDateObject(value.date),
+          date: dateToString(value.date),
         },
         user.auth_token
       ).then((response) => {
@@ -126,7 +126,7 @@ class EditModal extends Component {
               type='float'
               name='amount'
               id='amount'
-              defaultValue={formatter_no$.format(value.amount)}
+              defaultValue={numberToCurrency_.format(value.amount)}
               onChange={this.handleChange}
               style={inputTextPrepend}
             />

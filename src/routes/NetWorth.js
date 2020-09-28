@@ -25,9 +25,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import AssetTable from '../components/Asset/AssetTable';
 import LiabilityTable from '../components/Liability/LiabilityTable';
 import NetWorthService from '../service/NetWorthService';
-import formatter from '../helpers/currency';
+import { numberToCurrency } from '../helpers/currency';
 import Loader from '../components/Loader';
-import { month } from '../helpers/month-names';
+import { monthToString } from '../helpers/date-helper';
 import { cardDatePickerRules } from '../helpers/css';
 
 class NetWorth extends Component {
@@ -63,7 +63,7 @@ class NetWorth extends Component {
     netWorthLast12.map((record) => {
       if (record[2] !== 0)
         ret.push({
-          name: `${month[record[0] - 1]} ${record[1].toString().slice(-2)}`,
+          name: `${monthToString(record[0])} ${record[1].toString().slice(-2)}`,
           netWorth: record[2],
         });
       return null;
@@ -112,7 +112,9 @@ class NetWorth extends Component {
               <Col xs='2' style={{ marginBottom: '1px', textAlign: 'center' }}>
                 <Card style={cardDatePickerRules}>
                   <p style={{ fontSize: 'x-large' }}>
-                    {formatter.format(chartData[chartData.length - 1].netWorth)}
+                    {numberToCurrency.format(
+                      chartData[chartData.length - 1].netWorth
+                    )}
                   </p>
                 </Card>
               </Col>
@@ -136,7 +138,10 @@ class NetWorth extends Component {
                         />
                         <Tooltip
                           formatter={(value, name) => {
-                            return [formatter.format(value), 'net worth'];
+                            return [
+                              numberToCurrency.format(value),
+                              'net worth',
+                            ];
                           }}
                         />
                         <Line

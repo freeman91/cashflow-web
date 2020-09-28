@@ -9,8 +9,8 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter_no$ from '../../helpers/currency_no$';
-import { renderDate } from '../../helpers/render-date';
+import { numberToCurrency_ } from '../../helpers/currency';
+import { dateToStringShort } from '../../helpers/date-helper';
 import EditModal from './EditModal';
 import Dashboard from '../../service/DashboardService';
 
@@ -89,14 +89,14 @@ class WorkHourTable extends Component {
       <>
         <Card>
           <CardHeader>
-            <CardTitle className="card-title" tag="h2">
+            <CardTitle className='card-title' tag='h2'>
               Work Hours
             </CardTitle>
           </CardHeader>
-          <CardBody className="card-body">
-            <div className="table-full-width table-responsive">
+          <CardBody className='card-body'>
+            <div className='table-full-width table-responsive'>
               <Table>
-                <thead className="text-primary">
+                <thead className='text-primary'>
                   <tr>
                     <th>date</th>
                     <th>amount</th>
@@ -107,23 +107,23 @@ class WorkHourTable extends Component {
                   {workHoursData.map((workHour, idx) => {
                     return (
                       <tr key={`workHour-item ${idx}`}>
-                        <td>{renderDate(workHour[3])}</td>
-                        <td>{formatter_no$.format(workHour[1])}</td>
+                        <td>{dateToStringShort(workHour[3])}</td>
+                        <td>{numberToCurrency_.format(workHour[1])}</td>
                         <td>{workHour[2]}</td>
-                        <td className="td-actions text-right">
+                        <td className='td-actions text-right'>
                           <Button
-                            color="link"
+                            color='link'
                             id={`workHour-table-tooltip-${idx}`}
-                            title=""
-                            type="button"
+                            title=''
+                            type='button'
                             onClick={() => this.handleClick(workHour)}
                           >
-                            <i className="tim-icons icon-pencil" />
+                            <i className='tim-icons icon-pencil' />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
                             target={`workHour-table-tooltip-${idx}`}
-                            placement="right"
+                            placement='right'
                           >
                             Edit Work Hour
                           </UncontrolledTooltip>

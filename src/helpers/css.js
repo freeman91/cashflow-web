@@ -3,3 +3,5 @@ export const cardDatePickerRules = {
   margin: '0',
   width: '100%',
 };
+
+// const inputTextPrepend = { lineHeight: '1.9', height: '100%' };

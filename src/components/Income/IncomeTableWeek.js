@@ -9,8 +9,8 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../../helpers/currency';
-import { renderDate } from '../../helpers/render-date';
+import { numberToCurrency } from '../../helpers/currency';
+import { dateToStringShort } from '../../helpers/date-helper';
 import EditModal from './EditModal';
 
 const defaultState = {
@@ -54,14 +54,14 @@ class IncomeTableWeek extends Component {
       <>
         <Card>
           <CardHeader>
-            <CardTitle className="card-title" tag="h2">
+            <CardTitle className='card-title' tag='h2'>
               {`Incomes`}
             </CardTitle>
           </CardHeader>
-          <CardBody className="card-body">
-            <div className="table-full-width table-responsive">
+          <CardBody className='card-body'>
+            <div className='table-full-width table-responsive'>
               <Table>
-                <thead className="text-primary">
+                <thead className='text-primary'>
                   <tr>
                     <th>date</th>
                     <th>amount</th>
@@ -72,23 +72,23 @@ class IncomeTableWeek extends Component {
                   {data.map((income, idx) => {
                     return (
                       <tr key={`income-record-${income[0]}`}>
-                        <td>{renderDate(income[4])}</td>
-                        <td>{formatter.format(income[1])}</td>
+                        <td>{dateToStringShort(income[4])}</td>
+                        <td>{numberToCurrency.format(income[1])}</td>
                         <td>{income[2]}</td>
-                        <td className="td-actions text-right">
+                        <td className='td-actions text-right'>
                           <Button
-                            color="link"
+                            color='link'
                             id={`week-income-table-tooltip-${idx}`}
-                            title=""
-                            type="button"
+                            title=''
+                            type='button'
                             onClick={() => this.handleClick(income)}
                           >
-                            <i className="tim-icons icon-pencil" />
+                            <i className='tim-icons icon-pencil' />
                           </Button>
                           <UncontrolledTooltip
                             delay={0}
                             target={`week-income-table-tooltip-${idx}`}
-                            placement="right"
+                            placement='right'
                           >
                             Edit Income
                           </UncontrolledTooltip>

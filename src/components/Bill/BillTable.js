@@ -11,9 +11,11 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 
-import formatter from '../../helpers/currency';
-import { renderDate } from '../../helpers/render-date';
-import { getMonthName } from '../../helpers/month-names';
+import { numberToCurrency } from '../../helpers/currency';
+import {
+  weekToMonthString,
+  dateToStringShort,
+} from '../../helpers/date-helper';
 import EditModal from '../Expense/EditModal';
 import Month from '../../service/MonthService';
 
@@ -113,11 +115,11 @@ class BillTable extends Component {
             <Row>
               <Col xs='6'>
                 <CardTitle className='card-title' tag='h2'>
-                  {getMonthName(week) + ' Bills'}
+                  {weekToMonthString(week) + ' Bills'}
                 </CardTitle>
               </Col>
               <Col xs='6'>
-                <h3>{'Total: ' + formatter.format(billTotal)}</h3>
+                <h3>{'Total: ' + numberToCurrency.format(billTotal)}</h3>
               </Col>
             </Row>
           </CardHeader>
@@ -136,8 +138,8 @@ class BillTable extends Component {
                   {billsData.map((bill, idx) => {
                     return (
                       <tr key={`bill-item ${idx}`}>
-                        <td>{renderDate(bill[6])}</td>
-                        <td>{formatter.format(bill[1])}</td>
+                        <td>{dateToStringShort(bill[6])}</td>
+                        <td>{numberToCurrency.format(bill[1])}</td>
                         <td>{bill[2]}</td>
                         <td>{bill[3].substring(0, 10)}</td>
                         <td className='td-actions text-right'>

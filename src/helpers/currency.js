@@ -1,7 +1,11 @@
-const formatter = new Intl.NumberFormat('en-US', {
+const numberToCurrency = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
   minimumFractionDigits: 2,
 });
 
-export default formatter;
+const numberToCurrency_ = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2,
+});
+
+export { numberToCurrency, numberToCurrency_ };

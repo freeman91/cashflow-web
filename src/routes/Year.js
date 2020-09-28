@@ -15,7 +15,7 @@ import {
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import formatter from '../helpers/currency';
+import { numberToCurrency } from '../helpers/currency';
 import Loader from '../components/Loader';
 import YearService from '../service/YearService';
 import { cardDatePickerRules } from '../helpers/css';
@@ -65,11 +65,11 @@ class Year extends Component {
         ) {
           yearStatsArr.push([
             month,
-            formatter.format(yearStats[month].net),
-            formatter.format(yearStats[month].expense),
-            formatter.format(yearStats[month].income),
+            numberToCurrency.format(yearStats[month].net),
+            numberToCurrency.format(yearStats[month].expense),
+            numberToCurrency.format(yearStats[month].income),
             yearStats[month].work_hours,
-            formatter.format(yearStats[month].wage),
+            numberToCurrency.format(yearStats[month].wage),
             `month-${month}`,
           ]);
         }
@@ -77,11 +77,11 @@ class Year extends Component {
 
     yearStatsArr.push([
       null,
-      formatter.format(netincome),
-      formatter.format(expTotal),
-      formatter.format(incTotal),
+      numberToCurrency.format(netincome),
+      numberToCurrency.format(expTotal),
+      numberToCurrency.format(incTotal),
       wkhrTotal,
-      formatter.format(incTotal / wkhrTotal),
+      numberToCurrency.format(incTotal / wkhrTotal),
       'year-stats-total',
     ]);
     return yearStatsArr;

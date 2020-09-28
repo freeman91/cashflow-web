@@ -4,7 +4,7 @@ import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import Loader from '../../components/Loader';
 
 import MonthService from '../../service/MonthService';
-import formatter from '../../helpers/currency';
+import { numberToCurrency } from '../../helpers/currency';
 import { colors } from '../../helpers/colors';
 
 const cardStyle = {
@@ -63,7 +63,7 @@ class ExpensesByGroupChart extends Component {
               </Pie>
               <Tooltip
                 formatter={(value) => {
-                  return formatter.format(value);
+                  return numberToCurrency.format(value);
                 }}
               />
             </PieChart>
