@@ -12,7 +12,7 @@ import {
 } from 'reactstrap';
 
 import { numberToCurrency } from '../../helpers/currency';
-import { dateToStringShort, monthToString } from '../../helpers/date-helper';
+import { dateStringShort, monthToString } from '../../helpers/date-helper';
 import NewModal from './NewModal';
 import EditModal from './EditModal';
 import Loader from '../../components/Loader';
@@ -145,7 +145,7 @@ class AssetTable extends Component {
                   {assetsData.map((asset, i) => {
                     return (
                       <tr key={`asset-${i}`}>
-                        <td>{dateToStringShort(asset[4])}</td>
+                        <td>{dateStringShort(asset[4])}</td>
                         <td>{numberToCurrency.format(asset[1])}</td>
                         <td>{asset[2]}</td>
                         <td>{asset[3].substring(0, 10)}</td>

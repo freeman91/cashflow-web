@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 
 import { numberToCurrency } from '../../helpers/currency';
-import { dateToStringShort } from '../../helpers/date-helper';
+import { dateStringShort } from '../../helpers/date-helper';
 import EditModal from './EditModal';
 
 const defaultState = {
@@ -72,7 +72,7 @@ class IncomeTableWeek extends Component {
                   {data.map((income, idx) => {
                     return (
                       <tr key={`income-record-${income[0]}`}>
-                        <td>{dateToStringShort(income[4])}</td>
+                        <td>{dateStringShort(income[4])}</td>
                         <td>{numberToCurrency.format(income[1])}</td>
                         <td>{income[2]}</td>
                         <td className='td-actions text-right'>

@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 
 import { numberToCurrency_ } from '../../helpers/currency';
-import { dateToStringShort } from '../../helpers/date-helper';
+import { dateStringShort } from '../../helpers/date-helper';
 import EditModal from './EditModal';
 
 const defaultState = {
@@ -70,7 +70,7 @@ class WorkHourTableWeek extends Component {
                   {data.map((workHour, idx) => {
                     return (
                       <tr key={`workHour-record-${workHour[0]}`}>
-                        <td>{dateToStringShort(workHour[3])}</td>
+                        <td>{dateStringShort(workHour[3])}</td>
                         <td>{numberToCurrency_.format(workHour[1])}</td>
                         <td>{workHour[2]}</td>
                         <td className='td-actions text-right'>

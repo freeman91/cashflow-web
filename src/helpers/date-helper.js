@@ -13,7 +13,7 @@ const dateToString = (date) => {
   return [year, month, day].join('-');
 };
 
-const dateToStringShort = (date) => {
+const dateStringShort = (date) => {
   return Number(date.slice(5, 7)) + '/' + Number(date.slice(8, 10));
 };
 
@@ -256,7 +256,7 @@ const weekToMonthNumber = (week) => {
 
 export {
   dateToString,
-  dateToStringShort,
+  dateStringShort,
   dateToMonthString,
   dateToMonthRange,
   monthToString,

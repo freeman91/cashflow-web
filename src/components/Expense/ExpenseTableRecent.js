@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 
 import { numberToCurrency } from '../../helpers/currency';
-import { dateToStringShort } from '../../helpers/date-helper';
+import { dateStringShort } from '../../helpers/date-helper';
 import Loader from '../Loader';
 import EditModal from './EditModal';
 import Dashboard from '../../service/DashboardService';
@@ -117,7 +117,7 @@ class ExpenseTableRecent extends Component {
                   {expensesData.map((expense, idx) => {
                     return (
                       <tr key={`expense-item ${idx}`}>
-                        <td>{dateToStringShort(expense[6])}</td>
+                        <td>{dateStringShort(expense[6])}</td>
                         <td>{numberToCurrency.format(expense[1])}</td>
                         <td>{expense[2]}</td>
                         <td>{expense[3].substring(0, 10)}</td>

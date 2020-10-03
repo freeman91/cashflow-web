@@ -12,10 +12,7 @@ import {
 } from 'reactstrap';
 
 import { numberToCurrency } from '../../helpers/currency';
-import {
-  weekToMonthString,
-  dateToStringShort,
-} from '../../helpers/date-helper';
+import { weekToMonthString, dateStringShort } from '../../helpers/date-helper';
 import EditModal from '../Expense/EditModal';
 import Month from '../../service/MonthService';
 
@@ -138,7 +135,7 @@ class BillTable extends Component {
                   {billsData.map((bill, idx) => {
                     return (
                       <tr key={`bill-item ${idx}`}>
-                        <td>{dateToStringShort(bill[6])}</td>
+                        <td>{dateStringShort(bill[6])}</td>
                         <td>{numberToCurrency.format(bill[1])}</td>
                         <td>{bill[2]}</td>
                         <td>{bill[3].substring(0, 10)}</td>
