@@ -6,6 +6,7 @@ const numberToCurrency = new Intl.NumberFormat('en-US', {
 
 const numberToCurrency_ = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
 export { numberToCurrency, numberToCurrency_ };
