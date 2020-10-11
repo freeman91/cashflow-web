@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { isEqual } from 'lodash';
-import DatePicker from 'react-datepicker';
+import React, { Component } from "react";
+import { isEqual } from "lodash";
+import DatePicker from "react-datepicker";
 import {
   Card,
   CardBody,
@@ -11,14 +11,14 @@ import {
   InputGroup,
   Row,
   Table,
-} from 'reactstrap';
+} from "reactstrap";
 
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 
-import { numberToCurrency } from '../helpers/currency';
-import Loader from '../components/Loader';
-import YearService from '../service/YearService';
-import { cardDatePickerRules } from '../helpers/css';
+import { numberToCurrency } from "../helpers/currency";
+import Loader from "../components/Loader";
+import YearService from "../service/YearService";
+import { cardDatePickerRules } from "../helpers/css";
 
 class Year extends Component {
   state = {
@@ -28,7 +28,7 @@ class Year extends Component {
 
   componentDidMount() {
     if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
+      this.props.history.push("/");
     } else {
       this.getYearData(this.state.date.getFullYear());
     }
@@ -82,7 +82,7 @@ class Year extends Component {
       numberToCurrency.format(incTotal),
       wkhrTotal,
       numberToCurrency.format(incTotal / wkhrTotal),
-      'year-stats-total',
+      "year-stats-total",
     ]);
     return yearStatsArr;
   };
@@ -110,34 +110,34 @@ class Year extends Component {
 
     return (
       <>
-        <div className='content'>
+        <div className="content">
           <Container>
             <Row>
-              <Col xs='2'>
+              <Col xs="2">
                 <Card style={cardDatePickerRules}>
-                  <InputGroup style={{ margin: 'auto' }}>
+                  <InputGroup style={{ margin: "auto" }}>
                     <DatePicker
                       showYearPicker
                       selected={date}
                       onChange={this.handleChange}
-                      dateFormat='yyyy'
+                      dateFormat="yyyy"
                     />
                   </InputGroup>
                 </Card>
               </Col>
-              <Col xs='8'>
+              <Col xs="8">
                 <Card>
                   <CardHeader>
-                    <CardTitle className='card-title' tag='h2'>
-                      {date.getFullYear() + ' breakdown'}
+                    <CardTitle className="card-title" tag="h2">
+                      {date.getFullYear() + " breakdown"}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className='card-body'>
-                    <div className='table-full-width table-responsive'>
+                  <CardBody className="card-body">
+                    <div className="table-full-width table-responsive">
                       <Table>
-                        <thead className='text-primary'>
+                        <thead className="text-primary">
                           <tr>
-                            <th>week</th>
+                            <th>month</th>
                             <th>net income</th>
                             <th>expense total</th>
                             <th>income total</th>
@@ -153,7 +153,7 @@ class Year extends Component {
                                   if (i !== row.length - 1) {
                                     return (
                                       <td
-                                        className='td-price'
+                                        className="td-price"
                                         key={`${row[row.length - 1]}-${i}`}
                                       >
                                         {item}
@@ -170,7 +170,7 @@ class Year extends Component {
                   </CardBody>
                 </Card>
               </Col>
-              <Col xs='2'></Col>
+              <Col xs="2"></Col>
             </Row>
           </Container>
         </div>
