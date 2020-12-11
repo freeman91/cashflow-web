@@ -12,11 +12,12 @@ $ yarn start
 Clone repo then:
 ```
 # install npm dependencies 
-$ npm install
+$ yarn install
 
 
 # execute build script (optimized production build)
-$ npm run build:jupiter
+$ yarn run build:jupiter
 
 # spin up the frontend server
 $ serve -s build -l 3000
+```

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import Home from './routes/Home';
+import Login from './routes/Login';
 import UserLayout from './layouts/User';
 import './assets/css/cashflow-styles.css';
 
@@ -35,7 +35,7 @@ class App extends Component {
             <Route
               path='/'
               render={(props) => (
-                <Home
+                <Login
                   {...props}
                   user={this.state.user}
                   handleLogin={this.handleLogin}
