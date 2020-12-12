@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { isEqual } from "lodash";
 import DatePicker from "react-datepicker";
 import {
   Card,
@@ -27,11 +26,7 @@ class Year extends Component {
   };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push("/");
-    } else {
-      this.getYearData(this.state.date.getFullYear());
-    }
+    this.getYearData(this.state.date.getFullYear());
   }
 
   async getYearData(year) {

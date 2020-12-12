@@ -12,7 +12,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
+import { updateUser } from "../store";
 import Session from "../service/SessionService";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,16 +52,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props) {
+export function Login(props) {
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
+  const { updateUser, history } = props;
 
   const onSubmit = handleSubmit(async (data) => {
     Session.create(data.email, data.password)
       .then((response) => {
         if (response.data.email) {
-          props.handleLogin(response.data);
-          props.history.push("/user");
+          updateUser(response.data);
+          history.push("/user");
         }
       })
       .catch((error) => {
@@ -143,3 +147,13 @@ export default function Login(props) {
     </Grid>
   );
 }
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      updateUser,
+    },
+    dispatch
+  );
+
+export default connect(null, mapDispatchToProps)(Login);

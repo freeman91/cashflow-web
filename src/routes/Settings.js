@@ -1,19 +1,12 @@
-import React, { Component } from 'react';
-import { isEqual } from 'lodash';
-import { Col, Container, Row } from 'reactstrap';
+import React, { Component } from "react";
+import { Col, Container, Row } from "reactstrap";
 
-import ExpenseGroupsTable from '../components/ExpenseGroups/ExpenseGroupsTable';
-import IncomeSourcesTable from '../components/IncomeSources/IncomeSourcesTable';
-import LiabilityGroupsTable from '../components/LiabilityGroups/LiabilityGroupsTable';
-import AssetSourcesTable from '../components/AssetSources/AssetSourcesTable';
+import ExpenseGroupsTable from "../components/ExpenseGroups/ExpenseGroupsTable";
+import IncomeSourcesTable from "../components/IncomeSources/IncomeSourcesTable";
+import LiabilityGroupsTable from "../components/LiabilityGroups/LiabilityGroupsTable";
+import AssetSourcesTable from "../components/AssetSources/AssetSourcesTable";
 
 class Settings extends Component {
-  componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    }
-  }
-
   render() {
     const { user } = this.props;
     return (

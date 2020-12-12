@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import DatePicker from 'react-datepicker';
-import { isEqual } from 'lodash';
+import React, { Component } from "react";
+import DatePicker from "react-datepicker";
 import {
   Card,
   CardBody,
@@ -11,18 +10,18 @@ import {
   InputGroup,
   Row,
   Table,
-} from 'reactstrap';
+} from "reactstrap";
 
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 
-import { numberToCurrency } from '../helpers/currency';
-import ExpenseTable from '../components/Expense/ExpenseTableWeek';
-import IncomeTable from '../components/Income/IncomeTableWeek';
-import WorkHourTable from '../components/WorkHour/WorkHourTableWeek';
-import Loader from '../components/Loader';
-import WeekService from '../service/WeekService';
-import '../helpers/Date';
-import { cardDatePickerRules } from '../helpers/css';
+import { numberToCurrency } from "../helpers/currency";
+import ExpenseTable from "../components/Expense/ExpenseTableWeek";
+import IncomeTable from "../components/Income/IncomeTableWeek";
+import WorkHourTable from "../components/WorkHour/WorkHourTableWeek";
+import Loader from "../components/Loader";
+import WeekService from "../service/WeekService";
+import "../helpers/Date";
+import { cardDatePickerRules } from "../helpers/css";
 
 class Week extends Component {
   state = {
@@ -31,14 +30,7 @@ class Week extends Component {
   };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getWeekData(
-        this.state.date.getWeek(),
-        this.state.date.getFullYear()
-      );
-    }
+    this.getWeekData(this.state.date.getWeek(), this.state.date.getFullYear());
   }
 
   handleChange = (nextDate) => {
@@ -139,12 +131,12 @@ class Week extends Component {
     const { user } = this.props;
     return (
       <>
-        <div className='content'>
+        <div className="content">
           <Container>
             <Row>
-              <Col xs='2'>
+              <Col xs="2">
                 <Card style={cardDatePickerRules}>
-                  <InputGroup style={{ margin: 'auto' }}>
+                  <InputGroup style={{ margin: "auto" }}>
                     <DatePicker
                       selected={date}
                       onChange={this.handleChange}
@@ -153,17 +145,17 @@ class Week extends Component {
                   </InputGroup>
                 </Card>
               </Col>
-              <Col xs='8'>
+              <Col xs="8">
                 <Card>
                   <CardHeader>
-                    <CardTitle className='card-title' tag='h2'>
+                    <CardTitle className="card-title" tag="h2">
                       {`Week ${cwdate.week} breakdown`}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody className='card-body'>
-                    <div className='table-full-width table-responsive'>
+                  <CardBody className="card-body">
+                    <div className="table-full-width table-responsive">
                       <Table>
-                        <thead className='text-primary'>
+                        <thead className="text-primary">
                           <tr>
                             <th>net income</th>
                             <th>expense total</th>
@@ -177,7 +169,7 @@ class Week extends Component {
                             {weekTableData.map((row, idx) => {
                               return (
                                 <td
-                                  className='td-price'
+                                  className="td-price"
                                   key={`week-data-${idx}`}
                                 >
                                   {row}
@@ -191,24 +183,24 @@ class Week extends Component {
                   </CardBody>
                 </Card>
               </Col>
-              <Col xs='2'></Col>
+              <Col xs="2"></Col>
             </Row>
             <Row>
-              <Col xs='4'>
+              <Col xs="4">
                 <ExpenseTable
                   user={user}
                   data={expenseTableData}
                   getData={this.getWeekData}
                 />
               </Col>
-              <Col xs='4'>
+              <Col xs="4">
                 <IncomeTable
                   user={user}
                   data={incomeTableData}
                   getData={this.getWeekData}
                 />
               </Col>
-              <Col xs='4'>
+              <Col xs="4">
                 <WorkHourTable
                   user={user}
                   data={workHourTableData}

@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { isEqual } from 'lodash';
-import DatePicker from 'react-datepicker';
-import { Card, Col, Container, InputGroup, Row } from 'reactstrap';
+import React, { Component } from "react";
+import DatePicker from "react-datepicker";
+import { Card, Col, Container, InputGroup, Row } from "reactstrap";
 
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 
-import MonthService from '../service/MonthService';
-import Loader from '../components/Loader';
-import BillTable from '../components/Bill/BillTable';
-import StatsTable from '../components/Month/StatsTable';
-import ExpensesByGroupChart from '../components/Month/ExpensesByGroupChart';
+import MonthService from "../service/MonthService";
+import Loader from "../components/Loader";
+import BillTable from "../components/Bill/BillTable";
+import StatsTable from "../components/Month/StatsTable";
+import ExpensesByGroupChart from "../components/Month/ExpensesByGroupChart";
 
-import { numberToCurrency } from '../helpers/currency';
-import { weekToMonthString, dateToMonthRange } from '../helpers/date-helper';
-import '../helpers/Date';
-import { cardDatePickerRules } from '../helpers/css';
+import { numberToCurrency } from "../helpers/currency";
+import { weekToMonthString, dateToMonthRange } from "../helpers/date-helper";
+import "../helpers/Date";
+import { cardDatePickerRules } from "../helpers/css";
 
 class Month extends Component {
   state = {
@@ -24,14 +23,7 @@ class Month extends Component {
   };
 
   componentDidMount() {
-    if (isEqual(this.props.user, {})) {
-      this.props.history.push('/');
-    } else {
-      this.getMonthData(
-        this.state.date.getWeek(),
-        this.state.date.getFullYear()
-      );
-    }
+    this.getMonthData(this.state.date.getWeek(), this.state.date.getFullYear());
   }
 
   getMonthData = async (week, year) => {
@@ -80,7 +72,7 @@ class Month extends Component {
       numberToCurrency.format(incTotal),
       wkhrTotal,
       numberToCurrency.format(wkhrTotal !== 0 ? incTotal / wkhrTotal : 0),
-      'month-stats-totals',
+      "month-stats-totals",
     ]);
     return monthStatsArr;
   };
@@ -116,17 +108,17 @@ class Month extends Component {
     const range = dateToMonthRange(date);
     return (
       <>
-        <div className='content'>
+        <div className="content">
           <Container>
             <Row>
-              <Col xs='3'>
+              <Col xs="3">
                 <Card style={cardDatePickerRules}>
-                  <InputGroup style={{ margin: 'auto' }}>
+                  <InputGroup style={{ margin: "auto" }}>
                     <DatePicker
                       showMonthYearPicker
                       selected={date}
                       onChange={this.handleChange}
-                      dateFormat='MMMM yyyy'
+                      dateFormat="MMMM yyyy"
                     />
                   </InputGroup>
                 </Card>
@@ -136,7 +128,7 @@ class Month extends Component {
                   user={user}
                 />
               </Col>
-              <Col xs='8'>
+              <Col xs="8">
                 <StatsTable
                   data={monthTableData}
                   month={weekToMonthString(date.getWeek())}
@@ -144,8 +136,8 @@ class Month extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs='3'></Col>
-              <Col xs='6'>
+              <Col xs="3"></Col>
+              <Col xs="6">
                 <BillTable
                   user={user}
                   reload={reloadBillState}
