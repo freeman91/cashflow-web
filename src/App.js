@@ -1,51 +1,29 @@
-import React, { Component } from 'react';
-import { createBrowserHistory } from 'history';
-import { Router, Route, Switch, Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 
-import Login from './routes/Login';
-import UserLayout from './layouts/User';
-import './assets/css/cashflow-styles.css';
+import { Reducer } from "./store";
+import Login from "./routes/Login";
+import UserLayout from "./layouts/User";
+import "./assets/css/cashflow-styles.css";
 
-const hist = createBrowserHistory();
+const store = createStore(Reducer);
+const history = createBrowserHistory();
 
 class App extends Component {
-  state = {
-    user: {},
-    loggedIn: false,
-  };
-
-  handleLogin = (data) => {
-    this.setState({
-      loggedIn: true,
-      user: data,
-    });
-  };
-
   render() {
     return (
-      <>
-        <Router history={hist}>
+      <Provider store={store}>
+        <Router history={history}>
           <Switch>
-            <Route
-              path='/user'
-              render={(props) => (
-                <UserLayout {...props} user={this.state.user} />
-              )}
-            />
-            <Route
-              path='/'
-              render={(props) => (
-                <Login
-                  {...props}
-                  user={this.state.user}
-                  handleLogin={this.handleLogin}
-                />
-              )}
-            />
-            <Redirect from='/' to='/auth/' />
+            <Route path="/user" render={(props) => <UserLayout {...props} />} />
+            <Route path="/" render={(props) => <Login {...props} />} />
+            <Redirect from="/" to="/auth/" />
           </Switch>
         </Router>
-      </>
+      </Provider>
     );
   }
 }
