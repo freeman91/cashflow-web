@@ -1,0 +1,15 @@
+html {
+  background-color: black;
+  height: 98%;
+  width: 99%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}

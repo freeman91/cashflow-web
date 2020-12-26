@@ -1,31 +1,24 @@
-import React, { Component } from "react";
-import { createBrowserHistory } from "history";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import React from "react";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import { useRoutes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
+import { ThemeProvider } from "@material-ui/core";
 
 import { Reducer } from "./store";
-import Login from "./routes/Login";
-import UserLayout from "./layouts/User";
-import "./assets/css/cashflow-styles.css";
+import theme from "./theme";
+import routes from "./routes";
 
 const store = createStore(Reducer);
-const history = createBrowserHistory();
 
-class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <Router history={history}>
-          <Switch>
-            <Route path="/user" render={(props) => <UserLayout {...props} />} />
-            <Route path="/" render={(props) => <Login {...props} />} />
-            <Redirect from="/" to="/auth/" />
-          </Switch>
-        </Router>
-      </Provider>
-    );
-  }
-}
+const App = () => {
+  const routing = useRoutes(routes);
+
+  return (
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>{routing}</ThemeProvider>
+    </Provider>
+  );
+};
 
 export default App;
