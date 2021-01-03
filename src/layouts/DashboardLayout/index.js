@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import { connect } from "react-redux";
+
 import NavBar from "./NavBar";
 import TopBar from "./TopBar";
 
@@ -25,19 +27,22 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flex: "1 1 auto",
     overflow: "hidden",
-    // width: "100%",
   },
   content: {
     flex: "1 1 auto",
     height: "100%",
     overflow: "auto",
-    // width: "100%",
   },
 }));
 
-const DashboardLayout = () => {
+const DashboardLayout = (props) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    if (!props.user.auth_token) return navigate("/login");
+  }, [props.user.auth_token, navigate]);
 
   return (
     <div className={classes.root}>
@@ -57,4 +62,10 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(DashboardLayout);

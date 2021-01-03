@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import MainLayout from "./layouts/MainLayout";
-import DashboardView from "./views/account/DashboardView";
+import DashboardView from "./views/main/DashboardView";
 import LoginView from "./views/auth/LoginView";
 import NotFoundView from "./views/errors/NotFoundView";
 

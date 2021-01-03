@@ -19,7 +19,7 @@ import Session from "../../service/SessionService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh",
+    height: "100%",
   },
   image: {
     backgroundImage: "url(https://source.unsplash.com/8peGuud5cEw/1200x1200)",
@@ -52,12 +52,12 @@ const useStyles = makeStyles((theme) => ({
     "&$cssFocused $notchedOutline": {
       borderColor: `${theme.palette.primary.main} !important`,
     },
-    color: "gray",
+    color: `${theme.palette.gray}`,
   },
   cssFocused: {},
   notchedOutline: {
     borderWidth: "1px",
-    borderColor: "gray !important",
+    borderColor: `${theme.palette.gray} !important`,
   },
 }));
 
@@ -96,7 +96,7 @@ export function Login(props) {
       >
         <div className={classes.paper}>
           <Typography component="h1" variant="h1" color="primary" align="left">
-            Cashflow - Login
+            CashFlow - Login
           </Typography>
           <form className={classes.form} noValidate onSubmit={onSubmit}>
             <TextField
