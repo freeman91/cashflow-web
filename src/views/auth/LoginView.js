@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 import { updateUser } from "../../store";
 import Session from "../../service/SessionService";
@@ -63,14 +64,26 @@ const useStyles = makeStyles((theme) => ({
 
 export function Login(props) {
   const classes = useStyles();
+  const [cookie, setCookie] = useCookies(["email", "token"]);
   const { handleSubmit, register } = useForm();
   const { updateUser } = props;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (cookie.email && cookie.token) {
+      Session.tokenValid(cookie.token).then((response) => {
+        updateUser({ email: cookie.email, auth_token: cookie.token });
+        navigate("/app/dashboard", { replace: true });
+      });
+    }
+  }, [navigate, updateUser, cookie]);
 
   const onSubmit = handleSubmit(async (data) => {
     Session.create(data.email, data.password)
       .then((response) => {
         if (response.data.email) {
+          setCookie("email", response.data.email, "/");
+          setCookie("token", response.data.auth_token, "/");
           updateUser(response.data);
           navigate("/app/dashboard", { replace: true });
         }

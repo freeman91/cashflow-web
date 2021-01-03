@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 const API_HOST = process.env.REACT_APP_API_HOST;
 
 const create = async function (email, password) {
   return axios
-    .post(API_HOST + '/sessions', {
+    .post(API_HOST + "/sessions", {
       email: email,
       password: password,
       timeout: 10000,
@@ -14,18 +14,18 @@ const create = async function (email, password) {
     .catch((error) => console.error(error));
 };
 
-const destroy = async function (auth_token) {
+const tokenValid = async function (token) {
   return axios
-    .get(API_HOST + '/sessions', {
-      headers: { Authorization: auth_token },
+    .get(API_HOST + "/sessions", {
+      headers: { Authorization: token },
     })
-    .then((response) => {
-      console.log('Session ended');
+    .then((_) => {
+      console.log("Token is valid");
     })
     .catch((error) => console.error(error));
 };
 
 export default {
   create,
-  destroy,
+  tokenValid,
 };
