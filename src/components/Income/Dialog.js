@@ -21,7 +21,6 @@ import TodayIcon from "@material-ui/icons/Today";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import { updateIncomes } from "../../store";
-import DashboardService from "../../service/DashboardService";
 import IncomeService from "../../service/IncomeService";
 
 const useStyles = makeStyles((theme) => ({
@@ -138,9 +137,7 @@ const IncomeDialog = (props) => {
           props.user.auth_token
         );
       }
-      DashboardService.getIncomes(props.user.auth_token).then((result) => {
-        if (result) props.updateIncomes({ recent: result.incomes });
-      });
+      props.update();
       handleClose();
     }
   };

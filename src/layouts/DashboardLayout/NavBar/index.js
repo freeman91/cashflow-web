@@ -13,14 +13,10 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import {
-  // AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
-  // Lock as LockIcon,
-  // Settings as SettingsIcon,
-  // ShoppingBag as ShoppingBagIcon,
-  // User as UserIcon,
-  // UserPlus as UserPlusIcon,
-  // Users as UsersIcon,
+  Calendar as CalendarIcon,
+  DollarSign as DollarSignIcon,
+  Settings as SettingsIcon,
 } from "react-feather";
 import { connect } from "react-redux";
 
@@ -31,6 +27,26 @@ const items = [
     href: "/app/dashboard",
     icon: BarChartIcon,
     title: "Dashboard",
+  },
+  {
+    href: "/app/month",
+    icon: CalendarIcon,
+    title: "Month",
+  },
+  {
+    href: "/app/year",
+    icon: CalendarIcon,
+    title: "Year",
+  },
+  {
+    href: "/app/networth",
+    icon: DollarSignIcon,
+    title: "Net Worth",
+  },
+  {
+    href: "/app/settings",
+    icon: SettingsIcon,
+    title: "Settings",
   },
 ];
 

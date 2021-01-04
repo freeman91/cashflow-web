@@ -3,6 +3,10 @@ import { Navigate } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import MainLayout from "./layouts/MainLayout";
 import DashboardView from "./views/main/DashboardView";
+import MonthView from "./views/main/MonthView";
+import YearView from "./views/main/YearView";
+import NetWorthView from "./views/main/NetWorthView";
+import SettingsView from "./views/main/SettingsView";
 import LoginView from "./views/auth/LoginView";
 import NotFoundView from "./views/errors/NotFoundView";
 
@@ -12,10 +16,10 @@ const routes = [
     element: <DashboardLayout />,
     children: [
       { path: "dashboard", element: <DashboardView /> },
-      //   { path: 'customers', element: <CustomerListView /> },
-      //   { path: 'dashboard', element: <DashboardView /> },
-      //   { path: 'products', element: <ProductListView /> },
-      //   { path: 'settings', element: <SettingsView /> },
+      { path: "month", element: <MonthView /> },
+      { path: "year", element: <YearView /> },
+      { path: "networth", element: <NetWorthView /> },
+      { path: "settings", element: <SettingsView /> },
       { path: "*", element: <Navigate to="/404" /> },
     ],
   },

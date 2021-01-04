@@ -1,4 +1,4 @@
-export const EXPENSE_INITIAL_STATE = { recent: [] };
+export const EXPENSE_INITIAL_STATE = { list: [] };
 
 export const expenseReducer = (state = EXPENSE_INITIAL_STATE, action) => {
   switch (action.type) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -13,17 +13,14 @@ import {
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import AddIcon from "@material-ui/icons/AddCircle";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { updateWorkHours } from "../../store";
-import WorkHourDialog from "./Dialog";
-import { numberToCurrency_ } from "../../helpers/currency";
+import IncomeDialog from "./Dialog";
+import { numberToCurrency } from "../../helpers/currency";
 import { dateStringShort } from "../../helpers/date-helper";
-import DashboardService from "../../service/DashboardService";
-import WorkHourService from "../../service/WorkHourService";
+import IncomeService from "../../service/IncomeService";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,46 +42,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RecentWorkHours = (props) => {
+const IncomeTable = (props) => {
   const classes = useStyles();
-  const [isLoaded, setIsLoaded] = useState(false);
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { updateWorkHours } = props;
-
-  const getRecentWorkHours = useCallback(() => {
-    DashboardService.getWorkHours(props.user.auth_token).then((result) => {
-      if (result) updateWorkHours({ list: result.workHours });
-      setIsLoaded(true);
-    });
-  }, [props.user.auth_token, updateWorkHours]);
-
-  useEffect(() => {
-    getRecentWorkHours();
-  }, [getRecentWorkHours]);
 
   const openModal = () => {
     setShow(true);
   };
 
-  const handleEdit = (workHour) => {
-    setValue(workHour);
+  const handleEdit = (income) => {
+    setValue(income);
     setShow(true);
   };
 
-  const handleDelete = (workHour) => {
-    WorkHourService.destroy(workHour.id, props.user.auth_token).then(() => {
-      getRecentWorkHours();
+  const handleDelete = (income) => {
+    IncomeService.destroy(income.id, props.user.auth_token).then(() => {
+      props.update();
     });
   };
-
-  if (!isLoaded) return null;
 
   return (
     <>
       <Card className={classes.card}>
         <CardHeader
-          title="Recent Work Hours"
+          title={props.title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -98,26 +80,26 @@ const RecentWorkHours = (props) => {
                 <TableRow>
                   <TableCell className={classes.header}>Date</TableCell>
                   <TableCell className={classes.header}>Amount</TableCell>
-                  <TableCell className={classes.header}>Source</TableCell>
+                  <TableCell className={classes.header}>Vendor</TableCell>
                   <TableCell className={classes.header}>Edit</TableCell>
                   <TableCell className={classes.header}>Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.workHours.map((workHour) => (
-                  <TableRow hover key={workHour.id}>
+                {props.incomes.map((income) => (
+                  <TableRow hover key={income.id}>
                     <TableCell className={classes.cell}>
-                      {dateStringShort(workHour.date)}
+                      {dateStringShort(income.date)}
                     </TableCell>
                     <TableCell className={classes.cell}>
-                      {numberToCurrency_.format(workHour.amount)}
+                      {numberToCurrency.format(income.amount)}
                     </TableCell>
                     <TableCell className={classes.cell}>
-                      {workHour.source}
+                      {income.source}
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton
-                        onClick={() => handleEdit(workHour)}
+                        onClick={() => handleEdit(income)}
                         className={classes.editIcon}
                       >
                         <EditIcon />
@@ -126,7 +108,7 @@ const RecentWorkHours = (props) => {
                     <TableCell className={classes.cell}>
                       <IconButton
                         className={classes.deleteIcon}
-                        onClick={() => handleDelete(workHour)}
+                        onClick={() => handleDelete(income)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -138,11 +120,12 @@ const RecentWorkHours = (props) => {
           </Box>
         </PerfectScrollbar>
       </Card>
-      <WorkHourDialog
+      <IncomeDialog
         show={show}
         setShow={setShow}
         value={value}
         setValue={setValue}
+        update={props.update}
       />
     </>
   );
@@ -151,16 +134,8 @@ const RecentWorkHours = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    workHours: state.workHours.list,
+    incomes: state.incomes.list,
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      updateWorkHours,
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecentWorkHours);
+export default connect(mapStateToProps, null)(IncomeTable);

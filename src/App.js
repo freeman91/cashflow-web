@@ -4,6 +4,8 @@ import { useRoutes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { ThemeProvider } from "@material-ui/core";
+import DateFnsUtils from "@date-io/date-fns"; // choose your lib
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import { Reducer } from "./store";
 import theme from "./theme";
@@ -16,7 +18,9 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>{routing}</ThemeProvider>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <ThemeProvider theme={theme}>{routing}</ThemeProvider>
+      </MuiPickersUtilsProvider>
     </Provider>
   );
 };

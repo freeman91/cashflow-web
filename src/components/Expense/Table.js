@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -13,17 +13,14 @@ import {
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import AddIcon from "@material-ui/icons/AddCircle";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { updateIncomes } from "../../store";
-import IncomeDialog from "./Dialog";
+import ExpenseDialog from "./Dialog";
 import { numberToCurrency } from "../../helpers/currency";
 import { dateStringShort } from "../../helpers/date-helper";
-import DashboardService from "../../service/DashboardService";
-import IncomeService from "../../service/IncomeService";
+import ExpenseService from "../../service/ExpenseService";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,46 +42,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RecentIncomes = (props) => {
+const ExpenseTable = (props) => {
   const classes = useStyles();
-  const [isLoaded, setIsLoaded] = useState(false);
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { updateIncomes } = props;
-
-  const getRecentIncomes = useCallback(() => {
-    DashboardService.getIncomes(props.user.auth_token).then((result) => {
-      if (result) updateIncomes({ recent: result.incomes });
-      setIsLoaded(true);
-    });
-  }, [props.user.auth_token, updateIncomes]);
-
-  useEffect(() => {
-    getRecentIncomes();
-  }, [getRecentIncomes]);
 
   const openModal = () => {
     setShow(true);
   };
 
-  const handleEdit = (income) => {
-    setValue(income);
+  const handleEdit = (expense) => {
+    setValue(expense);
     setShow(true);
   };
 
-  const handleDelete = (income) => {
-    IncomeService.destroy(income.id, props.user.auth_token).then(() => {
-      getRecentIncomes();
+  const handleDelete = (expense) => {
+    ExpenseService.destroy(expense.id, props.user.auth_token).then(() => {
+      props.update();
     });
   };
-
-  if (!isLoaded) return null;
 
   return (
     <>
       <Card className={classes.card}>
         <CardHeader
-          title="Recent Incomes"
+          title={props.title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -98,26 +80,26 @@ const RecentIncomes = (props) => {
                 <TableRow>
                   <TableCell className={classes.header}>Date</TableCell>
                   <TableCell className={classes.header}>Amount</TableCell>
-                  <TableCell className={classes.header}>Source</TableCell>
+                  <TableCell className={classes.header}>Vendor</TableCell>
                   <TableCell className={classes.header}>Edit</TableCell>
                   <TableCell className={classes.header}>Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.incomes.recent.map((income) => (
-                  <TableRow hover key={income.id}>
+                {props.expenses.map((expense) => (
+                  <TableRow hover key={expense.id}>
                     <TableCell className={classes.cell}>
-                      {dateStringShort(income.date)}
+                      {dateStringShort(expense.date)}
                     </TableCell>
                     <TableCell className={classes.cell}>
-                      {numberToCurrency.format(income.amount)}
+                      {numberToCurrency.format(expense.amount)}
                     </TableCell>
                     <TableCell className={classes.cell}>
-                      {income.source}
+                      {expense.vendor}
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton
-                        onClick={() => handleEdit(income)}
+                        onClick={() => handleEdit(expense)}
                         className={classes.editIcon}
                       >
                         <EditIcon />
@@ -126,7 +108,7 @@ const RecentIncomes = (props) => {
                     <TableCell className={classes.cell}>
                       <IconButton
                         className={classes.deleteIcon}
-                        onClick={() => handleDelete(income)}
+                        onClick={() => handleDelete(expense)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -138,11 +120,12 @@ const RecentIncomes = (props) => {
           </Box>
         </PerfectScrollbar>
       </Card>
-      <IncomeDialog
+      <ExpenseDialog
         show={show}
         setShow={setShow}
         value={value}
         setValue={setValue}
+        update={props.update}
       />
     </>
   );
@@ -151,16 +134,8 @@ const RecentIncomes = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    incomes: state.incomes,
+    expenses: state.expenses.list,
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      updateIncomes,
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecentIncomes);
+export default connect(mapStateToProps, null)(ExpenseTable);

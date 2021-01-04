@@ -21,7 +21,6 @@ import TodayIcon from "@material-ui/icons/Today";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import { updateWorkHours } from "../../store";
-import DashboardService from "../../service/DashboardService";
 import IncomeService from "../../service/IncomeService";
 import WorkHourService from "../../service/WorkHourService";
 
@@ -139,9 +138,7 @@ const WorkHourDialog = (props) => {
           props.user.auth_token
         );
       }
-      DashboardService.getWorkHours(props.user.auth_token).then((result) => {
-        if (result) props.updateWorkHours({ recent: result.workHours });
-      });
+      props.update();
       handleClose();
     }
   };
@@ -171,7 +168,7 @@ const WorkHourDialog = (props) => {
             <Grid item xs={12} sm={12}>
               <TextField
                 id="amount"
-                label="amount"
+                label="number of hours"
                 variant="outlined"
                 placeholder="0.00"
                 required
@@ -179,9 +176,6 @@ const WorkHourDialog = (props) => {
                 onChange={handleChange("amount")}
                 fullWidth={true}
                 InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">$</InputAdornment>
-                  ),
                   classes: {
                     root: classes.cssOutlinedInput,
                     focused: classes.cssFocused,

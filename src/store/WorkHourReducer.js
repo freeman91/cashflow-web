@@ -1,4 +1,4 @@
-export const WORK_HOUR_INITIAL_STATE = { recent: [] };
+export const WORK_HOUR_INITIAL_STATE = { list: [] };
 
 export const workHourReducer = (state = WORK_HOUR_INITIAL_STATE, action) => {
   switch (action.type) {

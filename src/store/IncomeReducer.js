@@ -1,4 +1,4 @@
-export const INCOME_INITIAL_STATE = { recent: [] };
+export const INCOME_INITIAL_STATE = { list: [] };
 
 export const incomeReducer = (state = INCOME_INITIAL_STATE, action) => {
   switch (action.type) {

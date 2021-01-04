@@ -22,7 +22,6 @@ import BusinessIcon from "@material-ui/icons/Business";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import { updateExpenses } from "../../store";
-import DashboardService from "../../service/DashboardService";
 import ExpenseService from "../../service/ExpenseService";
 
 const useStyles = makeStyles((theme) => ({
@@ -145,9 +144,7 @@ const ExpenseDialog = (props) => {
           props.user.auth_token
         );
       }
-      DashboardService.getExpenses(props.user.auth_token).then((result) => {
-        if (result) props.updateExpenses({ recent: result.expenses });
-      });
+      props.update();
       handleClose();
     }
   };
