@@ -198,7 +198,7 @@ const YearView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={1} xs={0}></Grid>
+          <Grid item xl={2} lg={2} sm={1} xs={0} />
           <Grid item xl={8} lg={8} sm={10} xs={12}>
             <Card className={classes.card}>
               <CardHeader title="Stats by Month" />

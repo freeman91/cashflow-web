@@ -275,6 +275,7 @@ const mapStateToProps = (state) => {
     workHours: state.workHours.list,
   };
 };
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
