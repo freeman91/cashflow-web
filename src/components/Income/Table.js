@@ -14,7 +14,6 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import IncomeDialog from "./Dialog";
@@ -81,13 +80,16 @@ const IncomeTable = (props) => {
                   <TableCell className={classes.header}>date</TableCell>
                   <TableCell className={classes.header}>amount</TableCell>
                   <TableCell className={classes.header}>vendor</TableCell>
-                  <TableCell className={classes.header}>edit</TableCell>
                   <TableCell className={classes.header}>delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {props.incomes.map((income) => (
-                  <TableRow hover key={income.id}>
+                  <TableRow
+                    onDoubleClick={() => handleEdit(income)}
+                    hover
+                    key={income.id}
+                  >
                     <TableCell className={classes.cell}>
                       {dateStringShort(income.date)}
                     </TableCell>
@@ -96,14 +98,6 @@ const IncomeTable = (props) => {
                     </TableCell>
                     <TableCell className={classes.cell}>
                       {income.source}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        onClick={() => handleEdit(income)}
-                        className={classes.editIcon}
-                      >
-                        <EditIcon />
-                      </IconButton>
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton

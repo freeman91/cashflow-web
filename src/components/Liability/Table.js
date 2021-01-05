@@ -14,7 +14,6 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import LiabilityDialog from "./Dialog";
@@ -81,13 +80,16 @@ const LiabilityTable = (props) => {
                   <TableCell className={classes.header}>date</TableCell>
                   <TableCell className={classes.header}>amount</TableCell>
                   <TableCell className={classes.header}>group</TableCell>
-                  <TableCell className={classes.header}>edit</TableCell>
                   <TableCell className={classes.header}>delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {props.liabilities.map((liability) => (
-                  <TableRow hover key={liability.id}>
+                  <TableRow
+                    onDoubleClick={() => handleEdit(liability)}
+                    hover
+                    key={liability.id}
+                  >
                     <TableCell className={classes.cell}>
                       {dateStringShort(liability.date)}
                     </TableCell>
@@ -96,14 +98,6 @@ const LiabilityTable = (props) => {
                     </TableCell>
                     <TableCell className={classes.cell}>
                       {liability.group}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        onClick={() => handleEdit(liability)}
-                        className={classes.editIcon}
-                      >
-                        <EditIcon />
-                      </IconButton>
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton

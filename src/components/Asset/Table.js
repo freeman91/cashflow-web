@@ -14,7 +14,6 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import AssetDialog from "./Dialog";
@@ -81,13 +80,16 @@ const AssetTable = (props) => {
                   <TableCell className={classes.header}>date</TableCell>
                   <TableCell className={classes.header}>amount</TableCell>
                   <TableCell className={classes.header}>source</TableCell>
-                  <TableCell className={classes.header}>edit</TableCell>
                   <TableCell className={classes.header}>delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {props.assets.map((asset) => (
-                  <TableRow hover key={asset.id}>
+                  <TableRow
+                    onDoubleClick={() => handleEdit(asset)}
+                    hover
+                    key={asset.id}
+                  >
                     <TableCell className={classes.cell}>
                       {dateStringShort(asset.date)}
                     </TableCell>
@@ -96,14 +98,6 @@ const AssetTable = (props) => {
                     </TableCell>
                     <TableCell className={classes.cell}>
                       {asset.source}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        onClick={() => handleEdit(asset)}
-                        className={classes.editIcon}
-                      >
-                        <EditIcon />
-                      </IconButton>
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton

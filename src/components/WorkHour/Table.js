@@ -14,7 +14,6 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import WorkHourDialog from "./Dialog";
@@ -81,13 +80,16 @@ const WorkHourTable = (props) => {
                   <TableCell className={classes.header}>date</TableCell>
                   <TableCell className={classes.header}>amount</TableCell>
                   <TableCell className={classes.header}>vendor</TableCell>
-                  <TableCell className={classes.header}>edit</TableCell>
                   <TableCell className={classes.header}>delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {props.workHours.map((workHour) => (
-                  <TableRow hover key={workHour.id}>
+                  <TableRow
+                    onDoubleClick={() => handleEdit(workHour)}
+                    hover
+                    key={workHour.id}
+                  >
                     <TableCell className={classes.cell}>
                       {dateStringShort(workHour.date)}
                     </TableCell>
@@ -96,14 +98,6 @@ const WorkHourTable = (props) => {
                     </TableCell>
                     <TableCell className={classes.cell}>
                       {workHour.source}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        onClick={() => handleEdit(workHour)}
-                        className={classes.editIcon}
-                      >
-                        <EditIcon />
-                      </IconButton>
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton
