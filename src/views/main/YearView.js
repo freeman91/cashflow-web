@@ -3,18 +3,25 @@ import { connect } from "react-redux";
 import Loader from "react-loader-spinner";
 import { DatePicker } from "@material-ui/pickers";
 import {
-  //   Box,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
   Container,
   Grid,
   makeStyles,
-  //   Typography,
-  Card,
-  CardContent,
-  //   Avatar,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
 } from "@material-ui/core";
 
 import Page from "../../components/Page";
 import YearService from "../../service/YearService";
+import { numberToCurrency, numberToCurrency_ } from "../../helpers/currency";
+import { monthToString } from "../../helpers/date-helper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +46,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  header: {
+    borderBottom: `1px solid ${theme.palette.gray}`,
+    color: `${theme.palette.gray}`,
+  },
+  cell: {
+    borderBottom: `1px solid ${theme.palette.gray}`,
+  },
 }));
 
 const YearView = (props) => {
@@ -47,6 +61,7 @@ const YearView = (props) => {
   const [stats, setStats] = useState();
   const [expenseTotal, setExpenseTotal] = useState();
   const [incomeTotal, setIncomeTotal] = useState();
+  const [workHourTotal, setWorkHourTotal] = useState();
   const [netIncome, setNetIncome] = useState();
   const [selectedDate, handleDateChange] = useState(new Date());
 
@@ -60,6 +75,7 @@ const YearView = (props) => {
           setStats(JSON.parse(result.yearStats));
           setExpenseTotal(result.expenseTotal);
           setIncomeTotal(result.incomeTotal);
+          setWorkHourTotal(result.workHourTotal);
           setNetIncome(result.netIncome);
           setIsLoaded(true);
         }
@@ -77,20 +93,16 @@ const YearView = (props) => {
       </Page>
     );
 
-  console.log("stats: ", stats);
-  console.log("expenseTotal: ", expenseTotal);
-  console.log("incomeTotal: ", incomeTotal);
-  console.log("netIncome: ", netIncome);
-
   return (
     <Page className={classes.root} title="Year">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item lg={4} sm={6} xl={4} xs={12}>
+          <Grid item xl={2} lg={2} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <DatePicker
                   variant="dialog"
+                  inputVariant="outlined"
                   openTo="year"
                   views={["year"]}
                   autoOk={true}
@@ -100,6 +112,140 @@ const YearView = (props) => {
                   className={classes.datePicker}
                 />
               </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} sm={6} xs={12}>
+            <Card className={classes.card}>
+              <CardContent>
+                <Grid container justify="space-between" spacing={3}>
+                  <Grid item>
+                    <Typography color="textSecondary" gutterBottom variant="h4">
+                      Net Income
+                    </Typography>
+                    <Typography color="textPrimary" variant="h2">
+                      {numberToCurrency.format(netIncome)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} sm={6} xs={12}>
+            <Card className={classes.card}>
+              <CardContent>
+                <Grid container justify="space-between" spacing={3}>
+                  <Grid item>
+                    <Typography color="textSecondary" gutterBottom variant="h4">
+                      Expense Total
+                    </Typography>
+                    <Typography color="textPrimary" variant="h2">
+                      {numberToCurrency.format(expenseTotal)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} sm={6} xs={12}>
+            <Card className={classes.card}>
+              <CardContent>
+                <Grid container justify="space-between" spacing={3}>
+                  <Grid item>
+                    <Typography color="textSecondary" gutterBottom variant="h4">
+                      Income Total
+                    </Typography>
+                    <Typography color="textPrimary" variant="h2">
+                      {numberToCurrency.format(incomeTotal)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} sm={6} xs={12}>
+            <Card className={classes.card}>
+              <CardContent>
+                <Grid container justify="space-between" spacing={3}>
+                  <Grid item>
+                    <Typography color="textSecondary" gutterBottom variant="h4">
+                      Total Work Hours
+                    </Typography>
+                    <Typography color="textPrimary" variant="h2">
+                      {numberToCurrency_.format(workHourTotal)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} sm={6} xs={12}>
+            <Card className={classes.card}>
+              <CardContent>
+                <Grid container justify="space-between" spacing={3}>
+                  <Grid item>
+                    <Typography color="textSecondary" gutterBottom variant="h4">
+                      Income per Work Hour
+                    </Typography>
+                    <Typography color="textPrimary" variant="h2">
+                      {numberToCurrency.format(
+                        workHourTotal === 0 || incomeTotal === 0
+                          ? 0
+                          : incomeTotal / workHourTotal
+                      )}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} sm={1} xs={0}></Grid>
+          <Grid item xl={8} lg={8} sm={10} xs={12}>
+            <Card className={classes.card}>
+              <CardHeader title="Stats by Month" />
+              <Box minWidth={800}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell className={classes.header}>month</TableCell>
+                      <TableCell className={classes.header}>
+                        net income
+                      </TableCell>
+                      <TableCell className={classes.header}>expenses</TableCell>
+                      <TableCell className={classes.header}>incomes</TableCell>
+                      <TableCell className={classes.header}>
+                        work hours
+                      </TableCell>
+                      <TableCell className={classes.header}>wage</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {stats.map((month, idx) =>
+                      month.net === 0 ? null : (
+                        <TableRow hover key={idx}>
+                          <TableCell className={classes.cell}>
+                            {monthToString(idx + 1)}
+                          </TableCell>
+                          <TableCell className={classes.cell}>
+                            {numberToCurrency.format(month.net)}
+                          </TableCell>
+                          <TableCell className={classes.cell}>
+                            {numberToCurrency.format(month.expense)}
+                          </TableCell>
+                          <TableCell className={classes.cell}>
+                            {numberToCurrency.format(month.income)}
+                          </TableCell>
+                          <TableCell className={classes.cell}>
+                            {numberToCurrency_.format(month.work_hours)}
+                          </TableCell>
+                          <TableCell className={classes.cell}>
+                            {numberToCurrency.format(month.wage)}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </Box>
             </Card>
           </Grid>
         </Grid>

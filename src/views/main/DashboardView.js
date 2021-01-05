@@ -238,7 +238,7 @@ const DashboardView = (props) => {
           <Grid item lg={12} sm={12} xl={12} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Box height={400} position="relative">
+                <Box height={100} position="relative">
                   {/* <Bar data={chartData} options={options} /> */}
                 </Box>
               </CardContent>
