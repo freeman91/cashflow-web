@@ -152,7 +152,7 @@ const DashboardView = (props) => {
         }
       });
     }
-    getDashData();
+    if (props.user.auth_token) getDashData();
   }, [props.user.auth_token, updateExpenses, updateIncomes, updateWorkHours]);
 
   if (!isLoaded)

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 import { updateUser } from "../../store";
-import Session from "../../service/SessionService";
+import SessionService from "../../service/SessionService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,7 +71,7 @@ export function Login(props) {
 
   useEffect(() => {
     if (cookie.email && cookie.token) {
-      Session.tokenValid(cookie.token).then((response) => {
+      SessionService.tokenValid(cookie.token).then((response) => {
         updateUser({ email: cookie.email, auth_token: cookie.token });
         navigate("/app/dashboard", { replace: true });
       });
@@ -79,7 +79,7 @@ export function Login(props) {
   }, [navigate, updateUser, cookie]);
 
   const onSubmit = handleSubmit(async (data) => {
-    Session.create(data.email, data.password)
+    SessionService.create(data.email, data.password)
       .then((response) => {
         if (response.data.email) {
           setCookie("email", response.data.email, "/");

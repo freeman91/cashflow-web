@@ -209,8 +209,12 @@ const ExpenseDialog = (props) => {
                   fullWidth={true}
                   className={classes.select}
                 >
-                  {groups.map((group) => {
-                    return <MenuItem value={group}>{group}</MenuItem>;
+                  {groups.map((group, idx) => {
+                    return (
+                      <MenuItem key={`${group}-${idx}`} value={group}>
+                        {group}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>

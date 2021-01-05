@@ -200,8 +200,12 @@ const WorkHourDialog = (props) => {
                   fullWidth={true}
                   className={classes.select}
                 >
-                  {sources.map((source) => {
-                    return <MenuItem value={source}>{source}</MenuItem>;
+                  {sources.map((source, idx) => {
+                    return (
+                      <MenuItem key={`${source}-${idx}`} value={source}>
+                        {source}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
