@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -21,7 +20,6 @@ import TodayIcon from "@material-ui/icons/Today";
 import BusinessIcon from "@material-ui/icons/Business";
 import DescriptionIcon from "@material-ui/icons/Description";
 
-import { updateExpenses } from "../../store";
 import ExpenseService from "../../service/ExpenseService";
 
 const useStyles = makeStyles((theme) => ({
@@ -314,16 +312,7 @@ const ExpenseDialog = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    expenses: state.expenses,
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      updateExpenses,
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(ExpenseDialog);
+export default connect(mapStateToProps, null)(ExpenseDialog);

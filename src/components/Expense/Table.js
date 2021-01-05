@@ -78,11 +78,11 @@ const ExpenseTable = (props) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.header}>Date</TableCell>
-                  <TableCell className={classes.header}>Amount</TableCell>
-                  <TableCell className={classes.header}>Vendor</TableCell>
-                  <TableCell className={classes.header}>Edit</TableCell>
-                  <TableCell className={classes.header}>Delete</TableCell>
+                  <TableCell className={classes.header}>date</TableCell>
+                  <TableCell className={classes.header}>amount</TableCell>
+                  <TableCell className={classes.header}>vendor</TableCell>
+                  <TableCell className={classes.header}>edit</TableCell>
+                  <TableCell className={classes.header}>delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

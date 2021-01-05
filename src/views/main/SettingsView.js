@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import Loader from "react-loader-spinner";
-import {
-  // Box,
-  // Container,
-  // Grid,
-  makeStyles,
-  // Typography,
-  // Card,
-  // CardContent,
-  // Avatar,
-} from "@material-ui/core";
+import { Container, Grid, makeStyles, Card } from "@material-ui/core";
 
 import Page from "../../components/Page";
-// import SettingsService from "../../service/SettingsService";
+import ExpenseGroupTable from "../../components/ExpenseGroup/Table";
+import IncomeSourceTable from "../../components/IncomeSource/Table";
+import LiabilityGroupTable from "../../components/LiabilityGroup/Table";
+import AssetSourceTable from "../../components/AssetSource/Table";
+
+import ExpenseGroupService from "../../service/ExpenseGroupService";
+import IncomeSourceService from "../../service/IncomeSourceService";
+import LiabilityGroupService from "../../service/LiabilityGroupService";
+import AssetSourceService from "../../service/AssetSourceService";
+import {
+  updateExpenseGroups,
+  updateIncomeSources,
+  updateLiabilityGroups,
+  updateAssetSources,
+} from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,17 +41,38 @@ const SettingsView = (props) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const {
+    updateExpenseGroups,
+    updateIncomeSources,
+    updateLiabilityGroups,
+    updateAssetSources,
+  } = props;
+
   useEffect(() => {
-    // function getSettingsData() {
-    //   SettingsService.getData(props.user.auth_token).then((result) => {
-    //     if (result) {
-    //       console.log("result: ", result);
-    setIsLoaded(true);
-    //     }
-    //   });
-    // }
-    // getSettingsData();
-  }, [props.user.auth_token]);
+    function getSettingsData() {
+      Promise.all([
+        ExpenseGroupService.getGroups(props.user.auth_token),
+        IncomeSourceService.getSources(props.user.auth_token),
+        LiabilityGroupService.getGroups(props.user.auth_token),
+        AssetSourceService.getSources(props.user.auth_token),
+      ]).then((results) => {
+        if (results[0]) {
+          updateExpenseGroups({ list: results[0].expense_groups });
+          updateIncomeSources({ list: results[1].income_sources });
+          updateLiabilityGroups({ list: results[2].groups });
+          updateAssetSources({ list: results[3].sources });
+          setIsLoaded(true);
+        }
+      });
+    }
+    getSettingsData();
+  }, [
+    props.user.auth_token,
+    updateExpenseGroups,
+    updateIncomeSources,
+    updateLiabilityGroups,
+    updateAssetSources,
+  ]);
 
   if (!isLoaded)
     return (
@@ -56,13 +83,90 @@ const SettingsView = (props) => {
       </Page>
     );
 
-  return <Page className={classes.root} title="Settings"></Page>;
+  return (
+    <Page className={classes.root} title="Settings">
+      <Container maxWidth={false}>
+        <Grid container spacing={3}>
+          <Grid item xl={2} lg={1} md={6} xs={12} />
+          <Grid item xl={2} lg={2} md={6} xs={12}>
+            <ExpenseGroupTable
+              title="Expense Groups"
+              update={() =>
+                ExpenseGroupService.getGroups(props.user.auth_token).then(
+                  (result) => {
+                    updateExpenseGroups({ list: result.expense_groups });
+                  }
+                )
+              }
+            />
+          </Grid>
+          <Grid item xl={2} lg={2} md={6} xs={12}>
+            <Card className={classes.card}>
+              <IncomeSourceTable
+                title="Income Sources"
+                update={() =>
+                  IncomeSourceService.getSources(props.user.auth_token).then(
+                    (result) => {
+                      updateIncomeSources({ list: result.income_sources });
+                    }
+                  )
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} md={6} xs={12}>
+            <Card className={classes.card}>
+              <LiabilityGroupTable
+                title="Liability Groups"
+                update={() =>
+                  LiabilityGroupService.getGroups(props.user.auth_token).then(
+                    (result) => {
+                      updateLiabilityGroups({ list: result.groups });
+                    }
+                  )
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xl={2} lg={2} md={6} xs={12}>
+            <Card className={classes.card}>
+              <AssetSourceTable
+                title="Asset Sources"
+                update={() =>
+                  AssetSourceService.getSources(props.user.auth_token).then(
+                    (result) => {
+                      updateAssetSources({ list: result.sources });
+                    }
+                  )
+                }
+              />
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
+    </Page>
+  );
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    expenseGroups: state.expenseGroups.list,
+    incomeSources: state.incomeSources.list,
+    liabilityGroups: state.liabilityGroups.list,
+    assetSources: state.assetSources.list,
   };
 };
 
-export default connect(mapStateToProps, null)(SettingsView);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      updateExpenseGroups,
+      updateIncomeSources,
+      updateLiabilityGroups,
+      updateAssetSources,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsView);

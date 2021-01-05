@@ -281,7 +281,6 @@ const LiabilityDialog = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    liabilities: state.liabilities,
   };
 };
 

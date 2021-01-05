@@ -281,7 +281,6 @@ const AssetDialog = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    assets: state.assets,
   };
 };
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -20,7 +19,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import TodayIcon from "@material-ui/icons/Today";
 import DescriptionIcon from "@material-ui/icons/Description";
 
-import { updateWorkHours } from "../../store";
 import IncomeService from "../../service/IncomeService";
 import WorkHourService from "../../service/WorkHourService";
 
@@ -281,16 +279,7 @@ const WorkHourDialog = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    workHours: state.workHours,
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      updateWorkHours,
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(WorkHourDialog);
+export default connect(mapStateToProps, null)(WorkHourDialog);

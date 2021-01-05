@@ -14,13 +14,10 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import IncomeDialog from "./Dialog";
-import { numberToCurrency } from "../../helpers/currency";
-import { dateStringShort } from "../../helpers/date-helper";
-import IncomeService from "../../service/IncomeService";
+import LiabilityGroupDialog from "./Dialog";
+import LiabilityGroupService from "../../service/LiabilityGroupService";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -42,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncomeTable = (props) => {
+const LiabilityGroupTable = (props) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
@@ -51,13 +48,16 @@ const IncomeTable = (props) => {
     setShow(true);
   };
 
-  const handleEdit = (income) => {
-    setValue(income);
+  const handleEdit = (expense) => {
+    setValue(expense);
     setShow(true);
   };
 
-  const handleDelete = (income) => {
-    IncomeService.destroy(income.id, props.user.auth_token).then(() => {
+  const handleDelete = (liabilityGroup) => {
+    LiabilityGroupService.destroy(
+      liabilityGroup.id,
+      props.user.auth_token
+    ).then(() => {
       props.update();
     });
   };
@@ -74,41 +74,28 @@ const IncomeTable = (props) => {
           }
         />
         <PerfectScrollbar>
-          <Box minWidth={400}>
+          <Box minWidth={200}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.header}>date</TableCell>
-                  <TableCell className={classes.header}>amount</TableCell>
-                  <TableCell className={classes.header}>vendor</TableCell>
-                  <TableCell className={classes.header}>edit</TableCell>
+                  <TableCell className={classes.header}>name</TableCell>
                   <TableCell className={classes.header}>delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.incomes.map((income) => (
-                  <TableRow hover key={income.id}>
+                {props.liabilityGroups.map((liabilityGroup) => (
+                  <TableRow
+                    hover
+                    key={liabilityGroup.id}
+                    onDoubleClick={() => handleEdit(liabilityGroup)}
+                  >
                     <TableCell className={classes.cell}>
-                      {dateStringShort(income.date)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      {numberToCurrency.format(income.amount)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      {income.source}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        onClick={() => handleEdit(income)}
-                        className={classes.editIcon}
-                      >
-                        <EditIcon />
-                      </IconButton>
+                      {liabilityGroup.name}
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton
                         className={classes.deleteIcon}
-                        onClick={() => handleDelete(income)}
+                        onClick={() => handleDelete(liabilityGroup)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -120,7 +107,7 @@ const IncomeTable = (props) => {
           </Box>
         </PerfectScrollbar>
       </Card>
-      <IncomeDialog
+      <LiabilityGroupDialog
         show={show}
         setShow={setShow}
         value={value}
@@ -134,8 +121,8 @@ const IncomeTable = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    incomes: state.incomes.list,
+    liabilityGroups: state.liabilityGroups.list,
   };
 };
 
-export default connect(mapStateToProps, null)(IncomeTable);
+export default connect(mapStateToProps, null)(LiabilityGroupTable);
