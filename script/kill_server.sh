@@ -2,6 +2,7 @@
 
 yellow="\033[33m"
 green="\033[32m"
+endColor="\033[97m"
 
 servePID=$(ps -c | grep node | xargs)
 if [[ ${#servePID} -gt 0 ]]; then
@@ -11,8 +12,4 @@ if [[ ${#servePID} -gt 0 ]]; then
     kill $(echo $servePID)
 fi
 
-if [[ -f 'tmp/pids/server.pid' ]]; then
-    echo -e "${yellow}\tShutting down cashflow rails server${endColor}"
-    # if the rails server is running kill it
-    kill $(cat tmp/pids/server.pid)
-fi
+echo -e "${green}\t${check}Node server is shut down${endColor}"
