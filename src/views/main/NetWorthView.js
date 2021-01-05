@@ -49,7 +49,7 @@ const NetWorthView = (props) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
-  const [stats, setStats] = useState();
+  // const [stats, setStats] = useState();
 
   const { updateAssets, updateLiabilities } = props;
 
@@ -73,7 +73,7 @@ const NetWorthView = (props) => {
         ),
       ]).then((results) => {
         if (results[0]) {
-          setStats(results[0].netWorthData);
+          // setStats(results[0].netWorthData);
           updateAssets({ list: results[1].properties });
           updateLiabilities({ list: results[2].debts });
           setIsLoaded(true);
@@ -102,7 +102,7 @@ const NetWorthView = (props) => {
     return (liabilityTotal += Number(liability.amount));
   });
 
-  console.log("stats: ", stats);
+  // console.log("stats: ", stats);
 
   return (
     <Page className={classes.root} title="NetWorth">
