@@ -49,6 +49,9 @@ import {
   clearSnackbar,
 } from "./SnackbarAction";
 
+import { dashboardReducer } from "./DashboardReducer";
+import { updateDashboardData } from "./DashboardAction";
+
 export const Reducer = combineReducers({
   user: userReducer,
   expenses: expenseReducer,
@@ -61,6 +64,7 @@ export const Reducer = combineReducers({
   liabilityGroups: liabilityGroupReducer,
   assetSources: assetSourceReducer,
   snackbar: snackbarReducer,
+  dashboardData: dashboardReducer,
 });
 
 export {
@@ -87,4 +91,5 @@ export {
   showSuccessSnackbar,
   showErrorSnackbar,
   clearSnackbar,
+  updateDashboardData,
 };

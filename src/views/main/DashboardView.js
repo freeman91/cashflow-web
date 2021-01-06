@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Loader from "react-loader-spinner";
 import MoneyIcon from "@material-ui/icons/Money";
-// import { Bar } from "react-chartjs-2";
 import {
   Box,
   Container,
@@ -19,79 +18,15 @@ import Page from "../../components/Page";
 import ExpenseTable from "../../components/Expense/Table";
 import IncomeTable from "../../components/Income/Table";
 import WorkHourTable from "../../components/WorkHour/Table";
+import Dashboard90Day from "../../components/90DayComponent";
 import DashboardService from "../../service/DashboardService";
 import { numberToCurrency } from "../../helpers/currency";
-import { updateExpenses, updateIncomes, updateWorkHours } from "../../store";
-
-// const options = {
-//   animation: false,
-//   cornerRadius: 20,
-//   layout: { padding: 0 },
-//   legend: { display: false },
-//   maintainAspectRatio: false,
-//   responsive: true,
-//   scales: {
-//     xAxes: [
-//       {
-//         barThickness: 12,
-//         maxBarThickness: 10,
-//         barPercentage: 0.5,
-//         categoryPercentage: 0.5,
-//         ticks: {
-//           fontColor: "#FFFFFF",
-//         },
-//         gridLines: {
-//           display: false,
-//           drawBorder: false,
-//         },
-//       },
-//     ],
-//     yAxes: [
-//       {
-//         ticks: {
-//           fontColor: "#FFFFFF",
-//           beginAtZero: true,
-//           min: 0,
-//         },
-//         gridLines: {
-//           borderDash: [2],
-//           borderDashOffset: [2],
-//           color: "#e1e1e1",
-//           drawBorder: false,
-//           zeroLineBorderDash: [2],
-//           zeroLineBorderDashOffset: [2],
-//           zeroLineColor: "#e1e1e1",
-//         },
-//       },
-//     ],
-//   },
-//   tooltips: {
-//     backgroundColor: "#444444",
-//     bodyFontColor: "#FFFFFF",
-//     borderColor: "#e1e1e1",
-//     borderWidth: 1,
-//     enabled: true,
-//     footerFontColor: "#FFFFFF",
-//     intersect: false,
-//     mode: "index",
-//     titleFontColor: "#232323",
-//   },
-// };
-
-// const prepareExpenseChartData = (expenseTotals, incomeTotals) => {
-//   let datasets = [
-//     { backgroundColor: "#343333", data: [], label: "Expense" },
-//     { backgroundColor: "#e1e1e1", data: [], label: "Income" },
-//   ];
-//   let labels = [];
-
-//   for (let idx = 0; idx < expenseTotals.length; idx++) {
-//     datasets[0].data.push(Math.round(expenseTotals[idx] * 100) / 100);
-//     datasets[1].data.push(Math.round(incomeTotals[idx] * 100) / 100);
-//     labels.push(monthToString(idx + 1));
-//   }
-//   return { datasets, labels };
-// };
+import {
+  updateExpenses,
+  updateIncomes,
+  updateWorkHours,
+  updateDashboardData,
+} from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
   differenceValue: {
     marginRight: theme.spacing(1),
   },
+  cell: {
+    borderBottom: `1px solid ${theme.palette.gray}`,
+  },
 }));
 
 const DashboardView = (props) => {
@@ -127,7 +65,12 @@ const DashboardView = (props) => {
   const [expenseSum, setExpenseSum] = useState(0);
   const [incomeSum, setIncomeSum] = useState(0);
   const [workHourSum, setWorkHourSum] = useState(0);
-  const { updateExpenses, updateIncomes, updateWorkHours } = props;
+  const {
+    updateExpenses,
+    updateIncomes,
+    updateWorkHours,
+    updateDashboardData,
+  } = props;
 
   const date = new Date();
 
@@ -163,8 +106,6 @@ const DashboardView = (props) => {
         </div>
       </Page>
     );
-
-  // const chartData = prepareExpenseChartData(expenseTotals, incomeTotals);
 
   return (
     <Page className={classes.root} title="Dashboard">
@@ -235,12 +176,13 @@ const DashboardView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item lg={12} sm={12} xl={12} xs={12}>
+          <Grid item xl={6} lg={6} sm={12} xs={12}>
+            <Dashboard90Day />
+          </Grid>
+          <Grid item xl={6} lg={6} sm={12} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Box height={100} position="relative">
-                  {/* <Bar data={chartData} options={options} /> */}
-                </Box>
+                <Box height={100} position="relative"></Box>
               </CardContent>
             </Card>
           </Grid>
@@ -251,10 +193,17 @@ const DashboardView = (props) => {
                 Promise.all([
                   DashboardService.getExpenses(props.user.auth_token),
                   DashboardService.getExpenseSum(props.user.auth_token),
+                  DashboardService.getData(props.user.auth_token),
                 ]).then((result) => {
                   if (result[0]) {
                     props.updateExpenses({ list: result[0].expenses });
                     setExpenseSum(result[1].expense_sum);
+                    updateDashboardData({
+                      groupedExpenses: result[2].data,
+                      expenseSum: result[2].expense_sum,
+                      incomeSum: result[2].income_sum,
+                      workHourSum: result[2].work_hour_sum,
+                    });
                   }
                 })
               }
@@ -268,10 +217,17 @@ const DashboardView = (props) => {
                   Promise.all([
                     DashboardService.getIncomes(props.user.auth_token),
                     DashboardService.getIncomeSum(props.user.auth_token),
+                    DashboardService.getData(props.user.auth_token),
                   ]).then((result) => {
                     if (result[0]) {
                       props.updateIncomes({ list: result[0].incomes });
                       setIncomeSum(result[1].income_sum);
+                      updateDashboardData({
+                        groupedExpenses: result[2].data,
+                        expenseSum: result[2].expense_sum,
+                        incomeSum: result[2].income_sum,
+                        workHourSum: result[2].work_hour_sum,
+                      });
                     }
                   })
                 }
@@ -286,10 +242,17 @@ const DashboardView = (props) => {
                   Promise.all([
                     DashboardService.getWorkHours(props.user.auth_token),
                     DashboardService.getWorkHourSum(props.user.auth_token),
+                    DashboardService.getData(props.user.auth_token),
                   ]).then((result) => {
                     if (result[0]) {
                       props.updateWorkHours({ list: result[0].workHours });
                       setWorkHourSum(result[1].work_hour_sum);
+                      updateDashboardData({
+                        groupedExpenses: result[2].data,
+                        expenseSum: result[2].expense_sum,
+                        incomeSum: result[2].income_sum,
+                        workHourSum: result[2].work_hour_sum,
+                      });
                     }
                   })
                 }
@@ -314,6 +277,7 @@ const mapDispatchToProps = (dispatch) =>
       updateExpenses,
       updateIncomes,
       updateWorkHours,
+      updateDashboardData,
     },
     dispatch
   );

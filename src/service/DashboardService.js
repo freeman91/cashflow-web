@@ -1,6 +1,17 @@
 import axios from "axios";
 const API_HOST = process.env.REACT_APP_API_HOST;
 
+const getData = async function (auth_token) {
+  return axios
+    .get(API_HOST + "/dashboard/data", {
+      headers: { Authorization: auth_token },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => console.error(error));
+};
+
 const getExpenseSum = async function (auth_token) {
   return axios
     .get(API_HOST + "/dashboard/expense_sum", {
@@ -68,6 +79,7 @@ const getWorkHours = async function (auth_token) {
 };
 
 export default {
+  getData,
   getExpenseSum,
   getIncomeSum,
   getWorkHourSum,
