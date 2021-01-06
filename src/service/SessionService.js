@@ -20,9 +20,12 @@ const tokenValid = async function (token) {
       headers: { Authorization: token },
     })
     .then((_) => {
-      console.log("Token is valid");
+      return "VALID";
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error);
+      return "INVALID";
+    });
 };
 
 export default {

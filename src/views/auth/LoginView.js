@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -64,19 +64,11 @@ const useStyles = makeStyles((theme) => ({
 
 export function Login(props) {
   const classes = useStyles();
+  // eslint-disable-next-line
   const [cookie, setCookie] = useCookies(["email", "token"]);
   const { handleSubmit, register } = useForm();
   const { updateUser } = props;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (cookie.email && cookie.token) {
-      SessionService.tokenValid(cookie.token).then((response) => {
-        updateUser({ email: cookie.email, auth_token: cookie.token });
-        navigate("/app/dashboard", { replace: true });
-      });
-    }
-  }, [navigate, updateUser, cookie]);
 
   const onSubmit = handleSubmit(async (data) => {
     SessionService.create(data.email, data.password)
