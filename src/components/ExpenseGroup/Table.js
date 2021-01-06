@@ -74,7 +74,7 @@ const ExpenseGroupTable = (props) => {
         />
         <PerfectScrollbar>
           <Box minWidth={200}>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.header}>name</TableCell>

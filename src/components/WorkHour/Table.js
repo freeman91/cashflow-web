@@ -74,7 +74,7 @@ const WorkHourTable = (props) => {
         />
         <PerfectScrollbar>
           <Box minWidth={400}>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.header}>date</TableCell>

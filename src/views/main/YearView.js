@@ -203,7 +203,7 @@ const YearView = (props) => {
             <Card className={classes.card}>
               <CardHeader title="Stats by Month" />
               <Box minWidth={800}>
-                <Table>
+                <Table size="small">
                   <TableHead>
                     <TableRow>
                       <TableCell className={classes.header}>month</TableCell>
