@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Card,
   CardHeader,
@@ -12,12 +14,12 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import ExpenseGroupDialog from "./Dialog";
 import ExpenseGroupService from "../../service/ExpenseGroupService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -43,6 +45,7 @@ const ExpenseGroupTable = (props) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -54,11 +57,14 @@ const ExpenseGroupTable = (props) => {
   };
 
   const handleDelete = (expenseGroup) => {
-    ExpenseGroupService.destroy(expenseGroup.id, props.user.auth_token).then(
-      () => {
+    ExpenseGroupService.destroy(expenseGroup.id, props.user.auth_token)
+      .then(() => {
+        showSuccessSnackbar("Group deleted");
         props.update();
-      }
-    );
+      })
+      .catch(() => {
+        showErrorSnackbar("Error: Group was not deleted");
+      });
   };
 
   return (
@@ -124,4 +130,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(ExpenseGroupTable);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExpenseGroupTable);

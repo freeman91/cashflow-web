@@ -307,6 +307,7 @@ const mapStateToProps = (state) => {
     user: state.user,
   };
 };
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {

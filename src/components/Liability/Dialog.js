@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -20,6 +21,7 @@ import TodayIcon from "@material-ui/icons/Today";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import LiabilityService from "../../service/LiabilityService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -77,6 +79,7 @@ const LiabilityDialog = (props) => {
   const [groups, setGroups] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getLiabilityGroups() {
@@ -109,12 +112,12 @@ const LiabilityDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (isNaN(values.amount) || values.group === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await LiabilityService.update(
+        LiabilityService.update(
           {
             id: props.value.id,
             amount: Number(values.amount),
@@ -123,9 +126,17 @@ const LiabilityDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Liability saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Liability not saved");
+          });
       } else {
-        await LiabilityService.create(
+        LiabilityService.create(
           {
             amount: Number(values.amount),
             group: values.group,
@@ -133,10 +144,16 @@ const LiabilityDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("New Liability created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Liability not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -284,4 +301,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(LiabilityDialog);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(LiabilityDialog);

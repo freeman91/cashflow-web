@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -21,6 +22,7 @@ import BusinessIcon from "@material-ui/icons/Business";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import ExpenseService from "../../service/ExpenseService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -79,6 +81,7 @@ const ExpenseDialog = (props) => {
   const [groups, setGroups] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getExpenseGroups() {
@@ -112,12 +115,12 @@ const ExpenseDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (isNaN(values.amount) || values.group === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await ExpenseService.edit(
+        ExpenseService.edit(
           {
             id: props.value.id,
             amount: Number(values.amount),
@@ -128,9 +131,17 @@ const ExpenseDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Expense saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Expense not saved");
+          });
       } else {
-        await ExpenseService.create(
+        ExpenseService.create(
           {
             amount: Number(values.amount),
             group: values.group,
@@ -140,10 +151,16 @@ const ExpenseDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("New Expense created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Expense not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -319,4 +336,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(ExpenseDialog);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExpenseDialog);

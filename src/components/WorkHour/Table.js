@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Card,
   CardHeader,
@@ -12,7 +14,6 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -20,6 +21,7 @@ import WorkHourDialog from "./Dialog";
 import { numberToCurrency_ } from "../../helpers/currency";
 import { dateStringShort } from "../../helpers/date-helper";
 import WorkHourService from "../../service/WorkHourService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,6 +47,7 @@ const WorkHourTable = (props) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -56,9 +59,14 @@ const WorkHourTable = (props) => {
   };
 
   const handleDelete = (workHour) => {
-    WorkHourService.destroy(workHour.id, props.user.auth_token).then(() => {
-      props.update();
-    });
+    WorkHourService.destroy(workHour.id, props.user.auth_token)
+      .then(() => {
+        showSuccessSnackbar("Work Hour deleted");
+        props.update();
+      })
+      .catch(() => {
+        showErrorSnackbar("Error: Work Hour was not deleted");
+      });
   };
 
   return (
@@ -132,4 +140,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(WorkHourTable);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkHourTable);

@@ -60,6 +60,8 @@ const DashboardLayout = (props) => {
               navigate("/login", { replace: true });
             }
           });
+        } else {
+          navigate("/login", { replace: true });
         }
       }
     }

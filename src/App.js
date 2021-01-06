@@ -7,6 +7,7 @@ import { ThemeProvider } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
+import Snackbar from "./components/Snackbar";
 import { Reducer } from "./store";
 import theme from "./theme";
 import routes from "./routes";
@@ -18,6 +19,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <Snackbar />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <ThemeProvider theme={theme}>{routing}</ThemeProvider>
       </MuiPickersUtilsProvider>

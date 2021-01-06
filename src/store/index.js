@@ -42,6 +42,13 @@ import {
 } from "./AssetSourceReducer";
 import { updateAssetSources } from "./AssetSourceAction";
 
+import { snackbarReducer } from "./SnackbarReducer";
+import {
+  showSuccessSnackbar,
+  showErrorSnackbar,
+  clearSnackbar,
+} from "./SnackbarAction";
+
 export const Reducer = combineReducers({
   user: userReducer,
   expenses: expenseReducer,
@@ -53,6 +60,7 @@ export const Reducer = combineReducers({
   incomeSources: incomeSourceReducer,
   liabilityGroups: liabilityGroupReducer,
   assetSources: assetSourceReducer,
+  snackbar: snackbarReducer,
 });
 
 export {
@@ -76,4 +84,7 @@ export {
   updateIncomeSources,
   updateLiabilityGroups,
   updateAssetSources,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+  clearSnackbar,
 };

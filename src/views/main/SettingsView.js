@@ -87,6 +87,7 @@ const SettingsView = (props) => {
     <Page className={classes.root} title="Settings">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
+          <Grid item xl={2} lg={0} md={0} xs={0} />
           <Grid item xl={2} lg={3} md={6} xs={12}>
             <ExpenseGroupTable
               title="Expense Groups"

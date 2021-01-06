@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -21,6 +22,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 
 import IncomeService from "../../service/IncomeService";
 import WorkHourService from "../../service/WorkHourService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -78,6 +80,7 @@ const WorkHourDialog = (props) => {
   const [sources, setSources] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getIncomeSources() {
@@ -110,12 +113,12 @@ const WorkHourDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (isNaN(values.amount) || values.source === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await WorkHourService.edit(
+        WorkHourService.edit(
           {
             id: props.value.id,
             amount: Number(values.amount),
@@ -124,9 +127,17 @@ const WorkHourDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Work Hour saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Work Hour not saved");
+          });
       } else {
-        await WorkHourService.create(
+        WorkHourService.create(
           {
             amount: Number(values.amount),
             source: values.source,
@@ -134,10 +145,16 @@ const WorkHourDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("New Work Hour created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Work Hour not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -286,4 +303,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(WorkHourDialog);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkHourDialog);

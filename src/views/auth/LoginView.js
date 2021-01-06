@@ -5,9 +5,7 @@ import TextField from "@material-ui/core/TextField";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Checkbox from "@material-ui/core/Checkbox";
 // import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import { Paper, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -15,7 +13,11 @@ import { bindActionCreators } from "redux";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
-import { updateUser } from "../../store";
+import {
+  updateUser,
+  showErrorSnackbar,
+  showSuccessSnackbar,
+} from "../../store";
 import SessionService from "../../service/SessionService";
 
 const useStyles = makeStyles((theme) => ({
@@ -67,13 +69,14 @@ export function Login(props) {
   // eslint-disable-next-line
   const [cookie, setCookie] = useCookies(["email", "token"]);
   const { handleSubmit, register } = useForm();
-  const { updateUser } = props;
+  const { updateUser, showErrorSnackbar, showSuccessSnackbar } = props;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (data) => {
     SessionService.create(data.email, data.password)
       .then((response) => {
         if (response.data.email) {
+          showSuccessSnackbar("Successful Login");
           setCookie("email", response.data.email, "/");
           setCookie("token", response.data.auth_token, "/");
           updateUser(response.data);
@@ -81,7 +84,7 @@ export function Login(props) {
         }
       })
       .catch((error) => {
-        console.error("login error", error);
+        showErrorSnackbar("Login Error");
       });
   });
 
@@ -178,6 +181,8 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       updateUser,
+      showErrorSnackbar,
+      showSuccessSnackbar,
     },
     dispatch
   );

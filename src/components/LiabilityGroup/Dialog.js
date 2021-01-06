@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -16,6 +17,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import CategoryIcon from "@material-ui/icons/Category";
 
 import LiabilityGroupService from "../../service/LiabilityGroupService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -63,6 +65,7 @@ const LiabilityGroupDialog = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     if (props.value) {
@@ -86,30 +89,44 @@ const LiabilityGroupDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (values.name === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await LiabilityGroupService.update(
+        LiabilityGroupService.update(
           {
             id: props.value.id,
             name: values.name,
             description: values.description,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Group saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Group not saved");
+          });
       } else {
-        await LiabilityGroupService.create(
+        LiabilityGroupService.create(
           {
             name: values.name,
             description: values.description,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("New Group created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Group not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -202,4 +219,16 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(LiabilityGroupDialog);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LiabilityGroupDialog);

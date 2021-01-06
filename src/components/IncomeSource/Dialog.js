@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -16,6 +17,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import CategoryIcon from "@material-ui/icons/Category";
 
 import IncomeSourceService from "../../service/IncomeSourceService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -63,6 +65,7 @@ const IncomeSourceDialog = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     if (props.value) {
@@ -86,30 +89,44 @@ const IncomeSourceDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (values.name === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await IncomeSourceService.update(
+        IncomeSourceService.update(
           {
             id: props.value.id,
             name: values.name,
             description: values.description,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Source saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Source not saved");
+          });
       } else {
-        await IncomeSourceService.create(
+        IncomeSourceService.create(
           {
             name: values.name,
             description: values.description,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("New Source created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Source not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -201,5 +218,13 @@ const mapStateToProps = (state) => {
     user: state.user,
   };
 };
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
 
-export default connect(mapStateToProps, null)(IncomeSourceDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(IncomeSourceDialog);

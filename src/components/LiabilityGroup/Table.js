@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Card,
   CardHeader,
@@ -12,12 +14,12 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { connect } from "react-redux";
 import AddIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import LiabilityGroupDialog from "./Dialog";
 import LiabilityGroupService from "../../service/LiabilityGroupService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -43,6 +45,7 @@ const LiabilityGroupTable = (props) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -54,12 +57,14 @@ const LiabilityGroupTable = (props) => {
   };
 
   const handleDelete = (liabilityGroup) => {
-    LiabilityGroupService.destroy(
-      liabilityGroup.id,
-      props.user.auth_token
-    ).then(() => {
-      props.update();
-    });
+    LiabilityGroupService.destroy(liabilityGroup.id, props.user.auth_token)
+      .then(() => {
+        showSuccessSnackbar("Group deleted");
+        props.update();
+      })
+      .catch(() => {
+        showErrorSnackbar("Error: Group was not deleted");
+      });
   };
 
   return (
@@ -125,4 +130,16 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(LiabilityGroupTable);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LiabilityGroupTable);

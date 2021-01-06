@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -20,6 +21,7 @@ import TodayIcon from "@material-ui/icons/Today";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import IncomeService from "../../service/IncomeService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -77,6 +79,7 @@ const IncomeDialog = (props) => {
   const [sources, setSources] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getIncomeSources() {
@@ -109,12 +112,12 @@ const IncomeDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (isNaN(values.amount) || values.source === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await IncomeService.edit(
+        IncomeService.edit(
           {
             id: props.value.id,
             amount: Number(values.amount),
@@ -123,9 +126,17 @@ const IncomeDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Income saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Income not saved");
+          });
       } else {
-        await IncomeService.create(
+        IncomeService.create(
           {
             amount: Number(values.amount),
             source: values.source,
@@ -133,10 +144,16 @@ const IncomeDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("New Income created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Income not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -288,4 +305,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(IncomeDialog);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(IncomeDialog);

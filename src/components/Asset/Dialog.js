@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Dialog,
   DialogTitle,
@@ -20,6 +21,7 @@ import TodayIcon from "@material-ui/icons/Today";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 import AssetService from "../../service/AssetService";
+import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -77,6 +79,7 @@ const AssetDialog = (props) => {
   const [sources, setSources] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
+  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getAssetSources() {
@@ -109,12 +112,12 @@ const AssetDialog = (props) => {
     return props.setShow(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (isNaN(values.amount) || values.source === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
       if (props.value) {
-        await AssetService.update(
+        AssetService.update(
           {
             id: props.value.id,
             amount: Number(values.amount),
@@ -123,9 +126,17 @@ const AssetDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Asset saved");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Asset not saved");
+          });
       } else {
-        await AssetService.create(
+        AssetService.create(
           {
             amount: Number(values.amount),
             source: values.source,
@@ -133,10 +144,16 @@ const AssetDialog = (props) => {
             date: values.date,
           },
           props.user.auth_token
-        );
+        )
+          .then(() => {
+            showSuccessSnackbar("Asset created");
+            props.update();
+            handleClose();
+          })
+          .catch(() => {
+            showErrorSnackbar("Error: Asset not created");
+          });
       }
-      props.update();
-      handleClose();
     }
   };
 
@@ -284,4 +301,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(AssetDialog);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(AssetDialog);
