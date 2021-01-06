@@ -73,7 +73,7 @@ const IncomeTable = (props) => {
           }
         />
         <PerfectScrollbar>
-          <Box minWidth={400}>
+          <Box minWidth={300}>
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -97,7 +97,7 @@ const IncomeTable = (props) => {
                       {numberToCurrency.format(income.amount)}
                     </TableCell>
                     <TableCell className={classes.cell}>
-                      {income.source}
+                      {income.source.substring(0, 6)}
                     </TableCell>
                     <TableCell className={classes.cell}>
                       <IconButton

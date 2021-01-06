@@ -73,7 +73,7 @@ const AssetTable = (props) => {
           }
         />
         <PerfectScrollbar>
-          <Box minWidth={400}>
+          <Box minWidth={300}>
             <Table size="small">
               <TableHead>
                 <TableRow>
