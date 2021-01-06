@@ -1,27 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 const API_HOST = process.env.REACT_APP_API_HOST;
 
-const getData = async function (auth_token, week, year) {
+const getData = async function (auth_token, month, year) {
   return axios
-    .get(API_HOST + '/month/data', {
+    .get(API_HOST + "/month/data", {
       headers: { Authorization: auth_token },
       params: {
-        week,
-        year,
-      },
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => console.error(error));
-};
-
-const getBills = async function (auth_token, week, year) {
-  return axios
-    .get(API_HOST + '/month/bills', {
-      headers: { Authorization: auth_token },
-      params: {
-        week,
+        month,
         year,
       },
     })
@@ -33,7 +18,7 @@ const getBills = async function (auth_token, week, year) {
 
 const getChartData = async function (auth_token, startDate, endDate) {
   return axios
-    .get(API_HOST + '/month/pie-chart', {
+    .get(API_HOST + "/month/pie-chart", {
       headers: { Authorization: auth_token },
       params: {
         startDate,
@@ -48,6 +33,5 @@ const getChartData = async function (auth_token, startDate, endDate) {
 
 export default {
   getData,
-  getBills,
   getChartData,
 };

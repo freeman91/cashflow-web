@@ -1,0 +1,23 @@
+html {
+  background-color: black;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.MuiPickersMonth-monthSelected {
+  color: whitesmoke !important;
+}
+
+.MuiButton-textPrimary {
+  color: black !important;
+}
