@@ -14,6 +14,17 @@ const create = async function (email, password) {
     .catch((error) => console.error(error));
 };
 
+const destroy = async function (token) {
+  return axios
+    .delete(API_HOST + "/sessions", {
+      headers: { Authorization: token },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => console.error(error));
+};
+
 const tokenValid = async function (token) {
   return axios
     .get(API_HOST + "/sessions", {
@@ -30,5 +41,6 @@ const tokenValid = async function (token) {
 
 export default {
   create,
+  destroy,
   tokenValid,
 };

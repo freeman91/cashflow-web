@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import {
   Avatar,
   Box,
-  // Button,
+  Button,
   Divider,
   Drawer,
   Hidden,
@@ -18,9 +22,14 @@ import {
   DollarSign as DollarSignIcon,
   Settings as SettingsIcon,
 } from "react-feather";
-import { connect } from "react-redux";
 
 import NavItem from "./NavItem";
+import SessionService from "../../../service/SessionService";
+import {
+  updateUser,
+  showErrorSnackbar,
+  showSuccessSnackbar,
+} from "../../../store";
 
 const items = [
   {
@@ -73,9 +82,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({ onMobileClose, openMobile, user }) => {
+const NavBar = ({
+  onMobileClose,
+  openMobile,
+  user,
+  updateUser,
+  showErrorSnackbar,
+  showSuccessSnackbar,
+}) => {
   const classes = useStyles();
   const location = useLocation();
+  // eslint-disable-next-line
+  const [cookie, setCookie, removeCookie] = useCookies(["email", "token"]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -83,6 +102,20 @@ const NavBar = ({ onMobileClose, openMobile, user }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    SessionService.destroy(user.auth_token)
+      .then(() => {
+        showSuccessSnackbar("Successfully Logged out");
+        removeCookie("email");
+        removeCookie("token");
+        updateUser({ email: "", auth_token: "" });
+        navigate("/login", { replace: true });
+      })
+      .catch(() => {
+        showErrorSnackbar("Error: logging out");
+      });
+  };
 
   const content = (
     <Box height="100%" display="flex" flexDirection="column">
@@ -96,6 +129,14 @@ const NavBar = ({ onMobileClose, openMobile, user }) => {
         <Typography className={classes.email} variant="h5">
           {user.email}
         </Typography>
+        <Button
+          size="small"
+          className={classes.logoutButton}
+          fullWidth={true}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
       </Box>
       <Divider />
       <Box p={2}>
@@ -151,9 +192,18 @@ NavBar.defaultProps = {
   openMobile: false,
 };
 
-export default connect(
-  (state) => ({
-    user: state.user,
-  }),
-  null
-)(NavBar);
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      updateUser,
+      showErrorSnackbar,
+      showSuccessSnackbar,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
