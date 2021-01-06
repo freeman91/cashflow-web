@@ -1,20 +1,27 @@
-## Dev Env setup
+## Environment setup
 
-## spin up the frontend
+## install yarn dependencies
+
 ```
-$ yarn start
+brew install yarn
+yarn install
+```
+
+## spin up development server
+
+```
+yarn start
 ```
 
 ## Jupiter deployment
 
-Clone repo then:
 ```
-# install npm dependencies 
-$ yarn install
-
-# execute build script (optimized production build)
-$ yarn run build:jupiter
+# execute build script
+yarn run build:jupiter
 
 # spin up the frontend server
-$ serve -s build -l 3000
+serve -s build -l 3000
+
+# detachted
+nohup serve -s build -l 3000 >> tmp/log/frontend.log &
 ```
