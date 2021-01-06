@@ -113,7 +113,7 @@ const MonthView = (props) => {
       <Container maxWidth={false}>
         {/* First Row */}
         <Grid container spacing={3}>
-          <Grid item xl={2} lg={2} sm={6} xs={12}>
+          <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <DatePicker
@@ -130,7 +130,7 @@ const MonthView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={6} xs={12}>
+          <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container justify="space-between" spacing={3}>
@@ -146,7 +146,7 @@ const MonthView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={6} xs={12}>
+          <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container justify="space-between" spacing={3}>
@@ -162,7 +162,7 @@ const MonthView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={6} xs={12}>
+          <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container justify="space-between" spacing={3}>
@@ -178,7 +178,7 @@ const MonthView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={6} xs={12}>
+          <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container justify="space-between" spacing={3}>
@@ -194,7 +194,7 @@ const MonthView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={6} xs={12}>
+          <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container justify="space-between" spacing={3}>

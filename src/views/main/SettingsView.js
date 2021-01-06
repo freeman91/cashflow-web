@@ -87,8 +87,7 @@ const SettingsView = (props) => {
     <Page className={classes.root} title="Settings">
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item xl={2} lg={1} md={6} xs={12} />
-          <Grid item xl={2} lg={2} md={6} xs={12}>
+          <Grid item xl={2} lg={3} md={6} xs={12}>
             <ExpenseGroupTable
               title="Expense Groups"
               update={() =>
@@ -100,7 +99,7 @@ const SettingsView = (props) => {
               }
             />
           </Grid>
-          <Grid item xl={2} lg={2} md={6} xs={12}>
+          <Grid item xl={2} lg={3} md={6} xs={12}>
             <Card className={classes.card}>
               <IncomeSourceTable
                 title="Income Sources"
@@ -114,7 +113,7 @@ const SettingsView = (props) => {
               />
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} md={6} xs={12}>
+          <Grid item xl={2} lg={3} md={6} xs={12}>
             <Card className={classes.card}>
               <LiabilityGroupTable
                 title="Liability Groups"
@@ -128,7 +127,7 @@ const SettingsView = (props) => {
               />
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} md={6} xs={12}>
+          <Grid item xl={2} lg={3} md={6} xs={12}>
             <Card className={classes.card}>
               <AssetSourceTable
                 title="Asset Sources"
