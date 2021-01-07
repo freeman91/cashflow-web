@@ -43,11 +43,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExpenseTable = (props) => {
+const ExpenseTable = ({
+  user,
+  title,
+  update,
+  expenses,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -59,10 +65,10 @@ const ExpenseTable = (props) => {
   };
 
   const handleDelete = (expense) => {
-    ExpenseService.destroy(expense.id, props.user.auth_token)
+    ExpenseService.destroy(expense.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Expense deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Expense was not deleted");
@@ -73,7 +79,7 @@ const ExpenseTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -92,7 +98,7 @@ const ExpenseTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.expenses.map((expense) => (
+                {expenses.map((expense) => (
                   <TableRow
                     onDoubleClick={() => handleEdit(expense)}
                     hover
@@ -127,7 +133,7 @@ const ExpenseTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

@@ -41,11 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LiabilityGroupTable = (props) => {
+const LiabilityGroupTable = ({
+  user,
+  title,
+  update,
+  liabilityGroups,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -57,10 +63,10 @@ const LiabilityGroupTable = (props) => {
   };
 
   const handleDelete = (liabilityGroup) => {
-    LiabilityGroupService.destroy(liabilityGroup.id, props.user.auth_token)
+    LiabilityGroupService.destroy(liabilityGroup.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Group deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Group was not deleted");
@@ -71,7 +77,7 @@ const LiabilityGroupTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -88,7 +94,7 @@ const LiabilityGroupTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.liabilityGroups.map((liabilityGroup) => (
+                {liabilityGroups.map((liabilityGroup) => (
                   <TableRow
                     hover
                     key={liabilityGroup.id}
@@ -117,7 +123,7 @@ const LiabilityGroupTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

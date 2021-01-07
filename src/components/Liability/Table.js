@@ -43,11 +43,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LiabilityTable = (props) => {
+const LiabilityTable = ({
+  user,
+  title,
+  update,
+  liabilities,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -59,10 +65,10 @@ const LiabilityTable = (props) => {
   };
 
   const handleDelete = (liability) => {
-    LiabilityService.destroy(liability.id, props.user.auth_token)
+    LiabilityService.destroy(liability.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Liability deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Liability was not deleted");
@@ -73,7 +79,7 @@ const LiabilityTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -92,7 +98,7 @@ const LiabilityTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.liabilities.map((liability) => (
+                {liabilities.map((liability) => (
                   <TableRow
                     onDoubleClick={() => handleEdit(liability)}
                     hover
@@ -127,7 +133,7 @@ const LiabilityTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

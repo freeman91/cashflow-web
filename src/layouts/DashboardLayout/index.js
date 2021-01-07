@@ -39,17 +39,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DashboardLayout = (props) => {
+const DashboardLayout = ({ user, updateUser }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   // eslint-disable-next-line
   const [cookie, setCookie, removeCookie] = useCookies(["email", "token"]);
-  const { updateUser } = props;
 
   useEffect(() => {
     function checkForValidToken() {
-      if (!props.user.auth_token) {
+      if (!user.auth_token) {
         if (cookie.email && cookie.token) {
           SessionService.tokenValid(cookie.token).then((response) => {
             if (response === "VALID") {
@@ -67,7 +66,7 @@ const DashboardLayout = (props) => {
     }
     checkForValidToken();
   }, [
-    props.user.auth_token,
+    user.auth_token,
     navigate,
     cookie.email,
     cookie.token,

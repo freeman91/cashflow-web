@@ -9,9 +9,9 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const CFSnackbar = (props) => {
+const CFSnackbar = ({ snackbar, clearSnackbar }) => {
   function handleClose() {
-    props.clearSnackbar();
+    clearSnackbar();
   }
 
   return (
@@ -20,12 +20,12 @@ const CFSnackbar = (props) => {
         vertical: "bottom",
         horizontal: "left",
       }}
-      open={props.snackbar.open}
+      open={snackbar.open}
       autoHideDuration={4000}
       onClose={handleClose}
     >
-      <Alert onClose={handleClose} severity={props.snackbar.severity}>
-        {props.snackbar.message}
+      <Alert onClose={handleClose} severity={snackbar.severity}>
+        {snackbar.message}
       </Alert>
     </Snackbar>
   );

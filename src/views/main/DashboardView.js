@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import Loader from "react-loader-spinner";
 import MoneyIcon from "@material-ui/icons/Money";
 import {
-  Box,
+  // Box,
   Container,
   Grid,
   makeStyles,
@@ -59,30 +59,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DashboardView = (props) => {
+const DashboardView = ({
+  user,
+  updateExpenses,
+  updateIncomes,
+  updateWorkHours,
+  updateDashboardData,
+}) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [expenseSum, setExpenseSum] = useState(0);
   const [incomeSum, setIncomeSum] = useState(0);
   const [workHourSum, setWorkHourSum] = useState(0);
-  const {
-    updateExpenses,
-    updateIncomes,
-    updateWorkHours,
-    updateDashboardData,
-  } = props;
 
   const date = new Date();
 
   useEffect(() => {
     function getDashData() {
       Promise.all([
-        DashboardService.getExpenseSum(props.user.auth_token),
-        DashboardService.getIncomeSum(props.user.auth_token),
-        DashboardService.getWorkHourSum(props.user.auth_token),
-        DashboardService.getExpenses(props.user.auth_token),
-        DashboardService.getIncomes(props.user.auth_token),
-        DashboardService.getWorkHours(props.user.auth_token),
+        DashboardService.getExpenseSum(user.auth_token),
+        DashboardService.getIncomeSum(user.auth_token),
+        DashboardService.getWorkHourSum(user.auth_token),
+        DashboardService.getExpenses(user.auth_token),
+        DashboardService.getIncomes(user.auth_token),
+        DashboardService.getWorkHours(user.auth_token),
       ]).then((result) => {
         if (result[0]) {
           setExpenseSum(result[0].expense_sum);
@@ -95,8 +95,8 @@ const DashboardView = (props) => {
         }
       });
     }
-    if (props.user.auth_token) getDashData();
-  }, [props.user.auth_token, updateExpenses, updateIncomes, updateWorkHours]);
+    if (user.auth_token) getDashData();
+  }, [user.auth_token, updateExpenses, updateIncomes, updateWorkHours]);
 
   if (!isLoaded)
     return (
@@ -176,27 +176,27 @@ const DashboardView = (props) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={6} lg={6} sm={12} xs={12}>
+          <Grid item xl={6} lg={8} sm={12} xs={12}>
             <Dashboard90Day />
           </Grid>
-          <Grid item xl={6} lg={6} sm={12} xs={12}>
-            <Card className={classes.card}>
+          <Grid item xl={6} lg={0} sm={0} xs={0}>
+            {/* <Card className={classes.card}>
               <CardContent>
                 <Box height={100} position="relative"></Box>
               </CardContent>
-            </Card>
+            </Card> */}
           </Grid>
           <Grid item xl={4} lg={4} md={6} xs={12}>
             <ExpenseTable
               title="Recent Expenses"
               update={() =>
                 Promise.all([
-                  DashboardService.getExpenses(props.user.auth_token),
-                  DashboardService.getExpenseSum(props.user.auth_token),
-                  DashboardService.getData(props.user.auth_token),
+                  DashboardService.getExpenses(user.auth_token),
+                  DashboardService.getExpenseSum(user.auth_token),
+                  DashboardService.getData(user.auth_token),
                 ]).then((result) => {
                   if (result[0]) {
-                    props.updateExpenses({ list: result[0].expenses });
+                    updateExpenses({ list: result[0].expenses });
                     setExpenseSum(result[1].expense_sum);
                     updateDashboardData({
                       groupedExpenses: result[2].data,
@@ -215,12 +215,12 @@ const DashboardView = (props) => {
                 title="Recent Incomes"
                 update={() =>
                   Promise.all([
-                    DashboardService.getIncomes(props.user.auth_token),
-                    DashboardService.getIncomeSum(props.user.auth_token),
-                    DashboardService.getData(props.user.auth_token),
+                    DashboardService.getIncomes(user.auth_token),
+                    DashboardService.getIncomeSum(user.auth_token),
+                    DashboardService.getData(user.auth_token),
                   ]).then((result) => {
                     if (result[0]) {
-                      props.updateIncomes({ list: result[0].incomes });
+                      updateIncomes({ list: result[0].incomes });
                       setIncomeSum(result[1].income_sum);
                       updateDashboardData({
                         groupedExpenses: result[2].data,
@@ -240,12 +240,12 @@ const DashboardView = (props) => {
                 title="Recent Work Hours"
                 update={() =>
                   Promise.all([
-                    DashboardService.getWorkHours(props.user.auth_token),
-                    DashboardService.getWorkHourSum(props.user.auth_token),
-                    DashboardService.getData(props.user.auth_token),
+                    DashboardService.getWorkHours(user.auth_token),
+                    DashboardService.getWorkHourSum(user.auth_token),
+                    DashboardService.getData(user.auth_token),
                   ]).then((result) => {
                     if (result[0]) {
-                      props.updateWorkHours({ list: result[0].workHours });
+                      updateWorkHours({ list: result[0].workHours });
                       setWorkHourSum(result[1].work_hour_sum);
                       updateDashboardData({
                         groupedExpenses: result[2].data,

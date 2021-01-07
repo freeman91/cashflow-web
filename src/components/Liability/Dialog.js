@@ -72,32 +72,40 @@ const defaultState = {
     ("0" + today.getDate()).slice(-2),
 };
 
-const LiabilityDialog = (props) => {
+const LiabilityDialog = ({
+  user,
+  update,
+  value,
+  setValue,
+  show,
+  setShow,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [groups, setGroups] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getLiabilityGroups() {
-      LiabilityService.getGroups(props.user.auth_token).then((result) => {
+      LiabilityService.getGroups(user.auth_token).then((result) => {
         setGroups(result.groups);
         setIsLoaded(true);
       });
     }
     getLiabilityGroups();
-    if (props.value) {
+    if (value) {
       setValues({
-        amount: props.value.amount,
-        description: props.value.description,
-        date: props.value.date,
-        group: props.value.group,
+        amount: value.amount,
+        description: value.description,
+        date: value.date,
+        group: value.group,
       });
     }
-  }, [props.user.auth_token, props.value]);
+  }, [user.auth_token, value]);
 
   const handleChange = (prop) => (event) => {
     setValues({
@@ -107,29 +115,29 @@ const LiabilityDialog = (props) => {
   };
 
   const handleClose = () => {
-    props.setValue();
+    setValue();
     setValues({ ...defaultState });
-    return props.setShow(false);
+    return setShow(false);
   };
 
   const onSubmit = () => {
     if (isNaN(values.amount) || values.group === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
-      if (props.value) {
+      if (value) {
         LiabilityService.update(
           {
-            id: props.value.id,
+            id: value.id,
             amount: Number(values.amount),
             group: values.group,
             description: values.description,
             date: values.date,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("Liability saved");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -143,11 +151,11 @@ const LiabilityDialog = (props) => {
             description: values.description,
             date: values.date,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("New Liability created");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -165,7 +173,7 @@ const LiabilityDialog = (props) => {
       fullWidth
       fullScreen={fullScreen}
       maxWidth="sm"
-      open={props.show}
+      open={show}
       onClose={handleClose}
       PaperProps={{
         style: {
@@ -174,7 +182,7 @@ const LiabilityDialog = (props) => {
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {props.value ? "Edit Liability" : "Create Liability"}
+        {value ? "Edit Liability" : "Create Liability"}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>

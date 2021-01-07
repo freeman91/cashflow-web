@@ -19,20 +19,20 @@ import DashboardService from "../service/DashboardService";
 import { numberToCurrency, numberToCurrency_ } from "../helpers/currency";
 import { updateDashboardData } from "../store";
 
-const renderActiveShape = (props) => {
+const renderActiveShape = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  startAngle,
+  endAngle,
+  fill,
+  payload,
+  value,
+}) => {
   const RADIAN = Math.PI / 180;
-  const {
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-    value,
-  } = props;
+
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const sx = cx + (outerRadius + 10) * cos;
@@ -113,15 +113,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard90Day = (props) => {
+const Dashboard90Day = ({ updateDashboardData, user, data }) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
-  const { updateDashboardData } = props;
 
   useEffect(() => {
     function getChartData() {
-      DashboardService.getData(props.user.auth_token).then((result) => {
+      DashboardService.getData(user.auth_token).then((result) => {
         if (result) {
           updateDashboardData({
             groupedExpenses: result.data,
@@ -133,8 +132,8 @@ const Dashboard90Day = (props) => {
         }
       });
     }
-    if (props.user.auth_token) getChartData();
-  }, [props.user.auth_token, updateDashboardData]);
+    if (user.auth_token) getChartData();
+  }, [user.auth_token, updateDashboardData]);
 
   const onPieEnter = (data, index) => {
     setActiveIndex(index);
@@ -142,8 +141,8 @@ const Dashboard90Day = (props) => {
 
   if (!isLoaded) return null;
 
-  const chartData = Object.keys(props.data.groupedExpenses).map((group) => {
-    return { name: group, value: props.data.groupedExpenses[group] };
+  const chartData = Object.keys(data.groupedExpenses).map((group) => {
+    return { name: group, value: data.groupedExpenses[group] };
   });
 
   return (
@@ -176,35 +175,31 @@ const Dashboard90Day = (props) => {
                 <TableRow>
                   <TableCell className={classes.cell}>Net Income</TableCell>
                   <TableCell className={classes.cell}>
-                    {numberToCurrency.format(
-                      props.data.incomeSum - props.data.expenseSum
-                    )}
+                    {numberToCurrency.format(data.incomeSum - data.expenseSum)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.cell}>Expenses</TableCell>
                   <TableCell className={classes.cell}>
-                    {numberToCurrency.format(props.data.expenseSum)}
+                    {numberToCurrency.format(data.expenseSum)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.cell}>Incomes</TableCell>
                   <TableCell className={classes.cell}>
-                    {numberToCurrency.format(props.data.incomeSum)}
+                    {numberToCurrency.format(data.incomeSum)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.cell}>Work Hours</TableCell>
                   <TableCell className={classes.cell}>
-                    {numberToCurrency_.format(props.data.workHourSum)}
+                    {numberToCurrency_.format(data.workHourSum)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.cell}>Pay Rate</TableCell>
                   <TableCell className={classes.cell}>
-                    {numberToCurrency.format(
-                      props.data.incomeSum / props.data.workHourSum
-                    )}
+                    {numberToCurrency.format(data.incomeSum / data.workHourSum)}
                   </TableCell>
                 </TableRow>
               </TableBody>

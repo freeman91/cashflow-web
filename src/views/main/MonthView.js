@@ -47,27 +47,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MonthView = (props) => {
+const MonthView = ({
+  user,
+  expenses,
+  incomes,
+  workHours,
+  updateExpenses,
+  updateIncomes,
+  updateWorkHours,
+}) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
-  const { updateExpenses, updateIncomes, updateWorkHours } = props;
 
   useEffect(() => {
     function getMonthData() {
       Promise.all([
         ExpenseService.getMonthData(
-          props.user.auth_token,
+          user.auth_token,
           selectedDate.getMonth() + 1,
           selectedDate.getFullYear()
         ),
         IncomeService.getMonthData(
-          props.user.auth_token,
+          user.auth_token,
           selectedDate.getMonth() + 1,
           selectedDate.getFullYear()
         ),
         WorkHourService.getMonthData(
-          props.user.auth_token,
+          user.auth_token,
           selectedDate.getMonth() + 1,
           selectedDate.getFullYear()
         ),
@@ -82,7 +89,7 @@ const MonthView = (props) => {
     }
     getMonthData();
   }, [
-    props.user.auth_token,
+    user.auth_token,
     selectedDate,
     updateExpenses,
     updateIncomes,
@@ -98,13 +105,13 @@ const MonthView = (props) => {
       </Page>
     );
 
-  const expenseSum = props.expenses.reduce((total, expense) => {
+  const expenseSum = expenses.reduce((total, expense) => {
     return total + Number(expense.amount);
   }, 0);
-  const incomeSum = props.incomes.reduce((total, income) => {
+  const incomeSum = incomes.reduce((total, income) => {
     return total + Number(income.amount);
   }, 0);
-  const workHourSum = props.workHours.reduce((total, workHour) => {
+  const workHourSum = workHours.reduce((total, workHour) => {
     return total + Number(workHour.amount);
   }, 0);
 
@@ -219,11 +226,11 @@ const MonthView = (props) => {
               title="Expenses"
               update={() =>
                 ExpenseService.getMonthData(
-                  props.user.auth_token,
+                  user.auth_token,
                   selectedDate.getMonth() + 1,
                   selectedDate.getFullYear()
                 ).then((result) => {
-                  if (result) props.updateExpenses({ list: result.expenses });
+                  if (result) updateExpenses({ list: result.expenses });
                 })
               }
             />
@@ -234,11 +241,11 @@ const MonthView = (props) => {
                 title="Incomes"
                 update={() =>
                   IncomeService.getMonthData(
-                    props.user.auth_token,
+                    user.auth_token,
                     selectedDate.getMonth() + 1,
                     selectedDate.getFullYear()
                   ).then((result) => {
-                    if (result) props.updateIncomes({ list: result.incomes });
+                    if (result) updateIncomes({ list: result.incomes });
                   })
                 }
               />
@@ -250,12 +257,11 @@ const MonthView = (props) => {
                 title="Work Hours"
                 update={() =>
                   WorkHourService.getMonthData(
-                    props.user.auth_token,
+                    user.auth_token,
                     selectedDate.getMonth() + 1,
                     selectedDate.getFullYear()
                   ).then((result) => {
-                    if (result)
-                      props.updateWorkHours({ list: result.work_hours });
+                    if (result) updateWorkHours({ list: result.work_hours });
                   })
                 }
               />

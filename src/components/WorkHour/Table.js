@@ -43,11 +43,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const WorkHourTable = (props) => {
+const WorkHourTable = ({
+  user,
+  title,
+  update,
+  workHours,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -59,10 +65,10 @@ const WorkHourTable = (props) => {
   };
 
   const handleDelete = (workHour) => {
-    WorkHourService.destroy(workHour.id, props.user.auth_token)
+    WorkHourService.destroy(workHour.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Work Hour deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Work Hour was not deleted");
@@ -73,7 +79,7 @@ const WorkHourTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -92,7 +98,7 @@ const WorkHourTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.workHours.map((workHour) => (
+                {workHours.map((workHour) => (
                   <TableRow
                     onDoubleClick={() => handleEdit(workHour)}
                     hover
@@ -127,7 +133,7 @@ const WorkHourTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

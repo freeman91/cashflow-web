@@ -37,24 +37,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SettingsView = (props) => {
+const SettingsView = ({
+  user,
+  updateExpenseGroups,
+  updateIncomeSources,
+  updateLiabilityGroups,
+  updateAssetSources,
+}) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const {
-    updateExpenseGroups,
-    updateIncomeSources,
-    updateLiabilityGroups,
-    updateAssetSources,
-  } = props;
 
   useEffect(() => {
     function getSettingsData() {
       Promise.all([
-        ExpenseGroupService.getGroups(props.user.auth_token),
-        IncomeSourceService.getSources(props.user.auth_token),
-        LiabilityGroupService.getGroups(props.user.auth_token),
-        AssetSourceService.getSources(props.user.auth_token),
+        ExpenseGroupService.getGroups(user.auth_token),
+        IncomeSourceService.getSources(user.auth_token),
+        LiabilityGroupService.getGroups(user.auth_token),
+        AssetSourceService.getSources(user.auth_token),
       ]).then((results) => {
         if (results[0]) {
           updateExpenseGroups({ list: results[0].expense_groups });
@@ -67,7 +66,7 @@ const SettingsView = (props) => {
     }
     getSettingsData();
   }, [
-    props.user.auth_token,
+    user.auth_token,
     updateExpenseGroups,
     updateIncomeSources,
     updateLiabilityGroups,
@@ -92,7 +91,7 @@ const SettingsView = (props) => {
             <ExpenseGroupTable
               title="Expense Groups"
               update={() =>
-                ExpenseGroupService.getGroups(props.user.auth_token).then(
+                ExpenseGroupService.getGroups(user.auth_token).then(
                   (result) => {
                     updateExpenseGroups({ list: result.expense_groups });
                   }
@@ -105,7 +104,7 @@ const SettingsView = (props) => {
               <IncomeSourceTable
                 title="Income Sources"
                 update={() =>
-                  IncomeSourceService.getSources(props.user.auth_token).then(
+                  IncomeSourceService.getSources(user.auth_token).then(
                     (result) => {
                       updateIncomeSources({ list: result.income_sources });
                     }
@@ -119,7 +118,7 @@ const SettingsView = (props) => {
               <LiabilityGroupTable
                 title="Liability Groups"
                 update={() =>
-                  LiabilityGroupService.getGroups(props.user.auth_token).then(
+                  LiabilityGroupService.getGroups(user.auth_token).then(
                     (result) => {
                       updateLiabilityGroups({ list: result.groups });
                     }
@@ -133,7 +132,7 @@ const SettingsView = (props) => {
               <AssetSourceTable
                 title="Asset Sources"
                 update={() =>
-                  AssetSourceService.getSources(props.user.auth_token).then(
+                  AssetSourceService.getSources(user.auth_token).then(
                     (result) => {
                       updateAssetSources({ list: result.sources });
                     }

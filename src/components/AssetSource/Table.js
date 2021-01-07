@@ -41,11 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AssetSourceTable = (props) => {
+const AssetSourceTable = ({
+  user,
+  title,
+  update,
+  assetSources,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -57,10 +63,10 @@ const AssetSourceTable = (props) => {
   };
 
   const handleDelete = (assetSource) => {
-    AssetSourceService.destroy(assetSource.id, props.user.auth_token)
+    AssetSourceService.destroy(assetSource.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Source deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Source was not deleted");
@@ -71,7 +77,7 @@ const AssetSourceTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -88,7 +94,7 @@ const AssetSourceTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.assetSources.map((assetSource) => (
+                {assetSources.map((assetSource) => (
                   <TableRow
                     hover
                     key={assetSource.id}
@@ -117,7 +123,7 @@ const AssetSourceTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

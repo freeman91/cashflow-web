@@ -74,33 +74,41 @@ const defaultState = {
     ("0" + today.getDate()).slice(-2),
 };
 
-const ExpenseDialog = (props) => {
+const ExpenseDialog = ({
+  user,
+  update,
+  value,
+  setValue,
+  show,
+  setShow,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [groups, setGroups] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getExpenseGroups() {
-      ExpenseService.getGroups(props.user.auth_token).then((result) => {
+      ExpenseService.getGroups(user.auth_token).then((result) => {
         setGroups(result.expense_groups);
         setIsLoaded(true);
       });
     }
     getExpenseGroups();
-    if (props.value) {
+    if (value) {
       setValues({
-        amount: props.value.amount,
-        vendor: props.value.vendor,
-        description: props.value.description,
-        date: props.value.date,
-        group: props.value.group,
+        amount: value.amount,
+        vendor: value.vendor,
+        description: value.description,
+        date: value.date,
+        group: value.group,
       });
     }
-  }, [props.user.auth_token, props.value]);
+  }, [user.auth_token, value]);
 
   const handleChange = (prop) => (event) => {
     setValues({
@@ -110,19 +118,19 @@ const ExpenseDialog = (props) => {
   };
 
   const handleClose = () => {
-    props.setValue();
+    setValue();
     setValues({ ...defaultState });
-    return props.setShow(false);
+    return setShow(false);
   };
 
   const onSubmit = () => {
     if (isNaN(values.amount) || values.group === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
-      if (props.value) {
+      if (value) {
         ExpenseService.edit(
           {
-            id: props.value.id,
+            id: value.id,
             amount: Number(values.amount),
             group: values.group,
             vendor: values.vendor,
@@ -130,11 +138,11 @@ const ExpenseDialog = (props) => {
             bill: false,
             date: values.date,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("Expense saved");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -150,11 +158,11 @@ const ExpenseDialog = (props) => {
             bill: false,
             date: values.date,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("New Expense created");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -172,7 +180,7 @@ const ExpenseDialog = (props) => {
       fullWidth
       fullScreen={fullScreen}
       maxWidth="sm"
-      open={props.show}
+      open={show}
       onClose={handleClose}
       PaperProps={{
         style: {
@@ -181,7 +189,7 @@ const ExpenseDialog = (props) => {
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {props.value ? "Edit Expense" : "Create Expense"}
+        {value ? "Edit Expense" : "Create Expense"}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>

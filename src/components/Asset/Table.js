@@ -43,11 +43,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AssetTable = (props) => {
+const AssetTable = ({
+  user,
+  title,
+  update,
+  assets,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -59,10 +65,10 @@ const AssetTable = (props) => {
   };
 
   const handleDelete = (asset) => {
-    AssetService.destroy(asset.id, props.user.auth_token)
+    AssetService.destroy(asset.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Asset deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Asset was not deleted");
@@ -73,7 +79,7 @@ const AssetTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -92,7 +98,7 @@ const AssetTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.assets.map((asset) => (
+                {assets.map((asset) => (
                   <TableRow
                     onDoubleClick={() => handleEdit(asset)}
                     hover
@@ -127,7 +133,7 @@ const AssetTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

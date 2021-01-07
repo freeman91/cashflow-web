@@ -64,12 +64,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Login(props) {
+export function Login({ updateUser, showErrorSnackbar, showSuccessSnackbar }) {
   const classes = useStyles();
   // eslint-disable-next-line
   const [cookie, setCookie] = useCookies(["email", "token"]);
   const { handleSubmit, register } = useForm();
-  const { updateUser, showErrorSnackbar, showSuccessSnackbar } = props;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (data) => {

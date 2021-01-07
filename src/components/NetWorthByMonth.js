@@ -49,17 +49,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NetWorthByMonth = (props) => {
+const NetWorthByMonth = ({ updateNetWorthData, user, date, data }) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
-  const { updateNetWorthData } = props;
 
   useEffect(() => {
     function getChartData() {
       NetWorthService.getData(
-        props.user.auth_token,
-        props.date.getMonth() + 1,
-        props.date.getFullYear()
+        user.auth_token,
+        date.getMonth() + 1,
+        date.getFullYear()
       ).then((result) => {
         if (result) {
           updateNetWorthData({
@@ -69,8 +68,8 @@ const NetWorthByMonth = (props) => {
         }
       });
     }
-    if (props.user.auth_token) getChartData();
-  }, [props.user.auth_token, updateNetWorthData, props.date]);
+    if (user.auth_token) getChartData();
+  }, [user.auth_token, updateNetWorthData, date]);
 
   if (!isLoaded)
     return (
@@ -92,7 +91,7 @@ const NetWorthByMonth = (props) => {
             <LineChart
               width={500}
               height={300}
-              data={prepareChartData(props.data.chartData)}
+              data={prepareChartData(data.chartData)}
             >
               <XAxis dataKey="name" padding={{ left: 30, right: 30 }} />
               <YAxis

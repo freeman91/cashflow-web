@@ -72,32 +72,40 @@ const defaultState = {
     ("0" + today.getDate()).slice(-2),
 };
 
-const AssetDialog = (props) => {
+const AssetDialog = ({
+  user,
+  value,
+  setValue,
+  show,
+  setShow,
+  update,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [sources, setSources] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
     function getAssetSources() {
-      AssetService.getSources(props.user.auth_token).then((result) => {
+      AssetService.getSources(user.auth_token).then((result) => {
         setSources(result.sources);
         setIsLoaded(true);
       });
     }
     getAssetSources();
-    if (props.value) {
+    if (value) {
       setValues({
-        amount: props.value.amount,
-        description: props.value.description,
-        date: props.value.date,
-        source: props.value.source,
+        amount: value.amount,
+        description: value.description,
+        date: value.date,
+        source: value.source,
       });
     }
-  }, [props.user.auth_token, props.value]);
+  }, [user.auth_token, value]);
 
   const handleChange = (prop) => (event) => {
     setValues({
@@ -107,29 +115,29 @@ const AssetDialog = (props) => {
   };
 
   const handleClose = () => {
-    props.setValue();
+    setValue();
     setValues({ ...defaultState });
-    return props.setShow(false);
+    return setShow(false);
   };
 
   const onSubmit = () => {
     if (isNaN(values.amount) || values.source === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
-      if (props.value) {
+      if (value) {
         AssetService.update(
           {
-            id: props.value.id,
+            id: value.id,
             amount: Number(values.amount),
             source: values.source,
             description: values.description,
             date: values.date,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("Asset saved");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -143,11 +151,11 @@ const AssetDialog = (props) => {
             description: values.description,
             date: values.date,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("Asset created");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -165,7 +173,7 @@ const AssetDialog = (props) => {
       fullWidth
       fullScreen={fullScreen}
       maxWidth="sm"
-      open={props.show}
+      open={show}
       onClose={handleClose}
       PaperProps={{
         style: {
@@ -174,7 +182,7 @@ const AssetDialog = (props) => {
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {props.value ? "Edit Asset" : "Create Asset"}
+        {value ? "Edit Asset" : "Create Asset"}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>

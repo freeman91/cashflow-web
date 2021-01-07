@@ -41,11 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExpenseGroupTable = (props) => {
+const ExpenseGroupTable = ({
+  user,
+  title,
+  update,
+  expenseGroups,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -57,10 +63,10 @@ const ExpenseGroupTable = (props) => {
   };
 
   const handleDelete = (expenseGroup) => {
-    ExpenseGroupService.destroy(expenseGroup.id, props.user.auth_token)
+    ExpenseGroupService.destroy(expenseGroup.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Group deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Group was not deleted");
@@ -71,7 +77,7 @@ const ExpenseGroupTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -88,7 +94,7 @@ const ExpenseGroupTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.expenseGroups.map((expenseGroup) => (
+                {expenseGroups.map((expenseGroup) => (
                   <TableRow
                     hover
                     key={expenseGroup.id}
@@ -117,7 +123,7 @@ const ExpenseGroupTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

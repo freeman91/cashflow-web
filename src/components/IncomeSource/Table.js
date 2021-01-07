@@ -41,11 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncomeSourceTable = (props) => {
+const IncomeSourceTable = ({
+  user,
+  title,
+  update,
+  incomeSources,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   const openModal = () => {
     setShow(true);
@@ -57,10 +63,10 @@ const IncomeSourceTable = (props) => {
   };
 
   const handleDelete = (incomeSource) => {
-    IncomeSourceService.destroy(incomeSource.id, props.user.auth_token)
+    IncomeSourceService.destroy(incomeSource.id, user.auth_token)
       .then(() => {
         showSuccessSnackbar("Source deleted");
-        props.update();
+        update();
       })
       .catch(() => {
         showErrorSnackbar("Error: Source was not deleted");
@@ -71,7 +77,7 @@ const IncomeSourceTable = (props) => {
     <>
       <Card className={classes.card}>
         <CardHeader
-          title={props.title}
+          title={title}
           action={
             <IconButton color="primary" onClick={() => openModal()}>
               <AddIcon />
@@ -88,7 +94,7 @@ const IncomeSourceTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.incomeSources.map((incomeSource) => (
+                {incomeSources.map((incomeSource) => (
                   <TableRow
                     hover
                     key={incomeSource.id}
@@ -117,7 +123,7 @@ const IncomeSourceTable = (props) => {
         setShow={setShow}
         value={value}
         setValue={setValue}
-        update={props.update}
+        update={update}
       />
     </>
   );

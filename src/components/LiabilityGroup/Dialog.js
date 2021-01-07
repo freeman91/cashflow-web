@@ -60,21 +60,29 @@ const defaultState = {
   description: "",
 };
 
-const LiabilityGroupDialog = (props) => {
+const LiabilityGroupDialog = ({
+  user,
+  update,
+  value,
+  setValue,
+  show,
+  setShow,
+  showSuccessSnackbar,
+  showErrorSnackbar,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [values, setValues] = useState({ ...defaultState });
-  const { showSuccessSnackbar, showErrorSnackbar } = props;
 
   useEffect(() => {
-    if (props.value) {
+    if (value) {
       setValues({
-        name: props.value.name,
-        description: props.value.description,
+        name: value.name,
+        description: value.description,
       });
     }
-  }, [props.value]);
+  }, [value]);
 
   const handleChange = (prop) => (event) => {
     setValues({
@@ -84,27 +92,27 @@ const LiabilityGroupDialog = (props) => {
   };
 
   const handleClose = () => {
-    props.setValue();
+    setValue();
     setValues({ ...defaultState });
-    return props.setShow(false);
+    return setShow(false);
   };
 
   const onSubmit = () => {
     if (values.name === "") {
       console.error("[ERROR]: Invalid data in input field");
     } else {
-      if (props.value) {
+      if (value) {
         LiabilityGroupService.update(
           {
-            id: props.value.id,
+            id: value.id,
             name: values.name,
             description: values.description,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("Group saved");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -116,11 +124,11 @@ const LiabilityGroupDialog = (props) => {
             name: values.name,
             description: values.description,
           },
-          props.user.auth_token
+          user.auth_token
         )
           .then(() => {
             showSuccessSnackbar("New Group created");
-            props.update();
+            update();
             handleClose();
           })
           .catch(() => {
@@ -135,7 +143,7 @@ const LiabilityGroupDialog = (props) => {
       fullWidth
       fullScreen={fullScreen}
       maxWidth="sm"
-      open={props.show}
+      open={show}
       onClose={handleClose}
       PaperProps={{
         style: {
@@ -144,7 +152,7 @@ const LiabilityGroupDialog = (props) => {
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {props.value ? "Edit Liability Group" : "Create Liability Group"}
+        {value ? "Edit Liability Group" : "Create Liability Group"}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>

@@ -49,23 +49,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NetWorthView = (props) => {
+const NetWorthView = ({
+  user,
+  assets,
+  liabilities,
+  updateAssets,
+  updateLiabilities,
+  updateNetWorthData,
+}) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
-
-  const { updateAssets, updateLiabilities, updateNetWorthData } = props;
 
   useEffect(() => {
     function getNetWorthData() {
       Promise.all([
         NetWorthService.getAssets(
-          props.user.auth_token,
+          user.auth_token,
           selectedDate.getMonth() + 1,
           selectedDate.getFullYear()
         ),
         NetWorthService.getLiabilities(
-          props.user.auth_token,
+          user.auth_token,
           selectedDate.getMonth() + 1,
           selectedDate.getFullYear()
         ),
@@ -78,7 +83,7 @@ const NetWorthView = (props) => {
       });
     }
     getNetWorthData();
-  }, [props.user.auth_token, selectedDate, updateAssets, updateLiabilities]);
+  }, [user.auth_token, selectedDate, updateAssets, updateLiabilities]);
 
   if (!isLoaded)
     return (
@@ -90,12 +95,12 @@ const NetWorthView = (props) => {
     );
 
   let assetTotal = 0;
-  props.assets.map((asset) => {
+  assets.map((asset) => {
     return (assetTotal += Number(asset.amount));
   });
 
   let liabilityTotal = 0;
-  props.liabilities.map((liability) => {
+  liabilities.map((liability) => {
     return (liabilityTotal += Number(liability.amount));
   });
 
@@ -178,18 +183,18 @@ const NetWorthView = (props) => {
               update={() =>
                 Promise.all([
                   NetWorthService.getAssets(
-                    props.user.auth_token,
+                    user.auth_token,
                     selectedDate.getMonth() + 1,
                     selectedDate.getFullYear()
                   ),
                   NetWorthService.getData(
-                    props.user.auth_token,
+                    user.auth_token,
                     selectedDate.getMonth() + 1,
                     selectedDate.getFullYear()
                   ),
                 ]).then((result) => {
                   if (result[0]) {
-                    props.updateAssets({ list: result[0].properties });
+                    updateAssets({ list: result[0].properties });
                     updateNetWorthData({
                       chartData: result[1].netWorthData,
                     });
@@ -204,18 +209,18 @@ const NetWorthView = (props) => {
               update={() =>
                 Promise.all([
                   NetWorthService.getLiabilities(
-                    props.user.auth_token,
+                    user.auth_token,
                     selectedDate.getMonth() + 1,
                     selectedDate.getFullYear()
                   ),
                   NetWorthService.getData(
-                    props.user.auth_token,
+                    user.auth_token,
                     selectedDate.getMonth() + 1,
                     selectedDate.getFullYear()
                   ),
                 ]).then((result) => {
                   if (result[0]) {
-                    props.updateLiabilities({ list: result[0].debts });
+                    updateLiabilities({ list: result[0].debts });
                     updateNetWorthData({
                       chartData: result[1].netWorthData,
                     });

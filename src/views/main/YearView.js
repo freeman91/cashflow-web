@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const YearView = (props) => {
+const YearView = ({ user }) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [stats, setStats] = useState();
@@ -67,22 +67,21 @@ const YearView = (props) => {
 
   useEffect(() => {
     function getYearData() {
-      YearService.getData(
-        props.user.auth_token,
-        selectedDate.getFullYear()
-      ).then((result) => {
-        if (result) {
-          setStats(JSON.parse(result.yearStats));
-          setExpenseTotal(result.expenseTotal);
-          setIncomeTotal(result.incomeTotal);
-          setWorkHourTotal(result.workHourTotal);
-          setNetIncome(result.netIncome);
-          setIsLoaded(true);
+      YearService.getData(user.auth_token, selectedDate.getFullYear()).then(
+        (result) => {
+          if (result) {
+            setStats(JSON.parse(result.yearStats));
+            setExpenseTotal(result.expenseTotal);
+            setIncomeTotal(result.incomeTotal);
+            setWorkHourTotal(result.workHourTotal);
+            setNetIncome(result.netIncome);
+            setIsLoaded(true);
+          }
         }
-      });
+      );
     }
     getYearData();
-  }, [props.user.auth_token, selectedDate]);
+  }, [user.auth_token, selectedDate]);
 
   if (!isLoaded)
     return (
