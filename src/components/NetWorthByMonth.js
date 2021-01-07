@@ -18,10 +18,22 @@ import {
 } from "recharts";
 
 import NetWorthService from "../service/NetWorthService";
-// import { numberToCurrency, numberToCurrency_ } from "../helpers/currency";
 import { updateNetWorthData } from "../store";
 import { monthToString } from "../helpers/date-helper";
 import { numberToCurrency } from "../helpers/currency";
+
+const prepareChartData = (data) => {
+  let ret = [];
+  data.forEach((record) => {
+    if (record[2] !== 0) {
+      ret.push({
+        name: `${monthToString(record[0])} ${record[1].toString()}`,
+        netWorth: record[2],
+      });
+    }
+  });
+  return ret.reverse();
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,15 +81,6 @@ const NetWorthByMonth = (props) => {
       </Card>
     );
 
-  const chartData = props.data.chartData.map((record) => {
-    if (record[2] !== 0)
-      return {
-        name: `${monthToString(record[0])} ${record[1].toString()}`,
-        netWorth: record[2],
-      };
-    return null;
-  });
-
   return (
     <Card className={classes.card}>
       <CardContent>
@@ -86,7 +89,11 @@ const NetWorthByMonth = (props) => {
         </Typography>
         <Box height={300} position="relative">
           <ResponsiveContainer minHeight="250" minWidth="250">
-            <LineChart width={500} height={300} data={chartData.reverse()}>
+            <LineChart
+              width={500}
+              height={300}
+              data={prepareChartData(props.data.chartData)}
+            >
               <XAxis dataKey="name" padding={{ left: 30, right: 30 }} />
               <YAxis
                 tickFormatter={(value) => {
