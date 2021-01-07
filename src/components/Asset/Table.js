@@ -13,6 +13,7 @@ import {
   IconButton,
   makeStyles,
 } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import AddIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -22,6 +23,7 @@ import { numberToCurrency } from "../../helpers/currency";
 import { dateStringShort } from "../../helpers/date-helper";
 import AssetService from "../../service/AssetService";
 import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -41,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   deleteIcon: {
     color: `${theme.palette.red}`,
   },
+  pagination: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 const AssetTable = ({
@@ -54,6 +61,11 @@ const AssetTable = ({
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
   const openModal = () => {
     setShow(true);
@@ -98,33 +110,51 @@ const AssetTable = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {assets.map((asset) => (
-                  <TableRow
-                    onDoubleClick={() => handleEdit(asset)}
-                    hover
-                    key={asset.id}
-                  >
-                    <TableCell className={classes.cell}>
-                      {dateStringShort(asset.date)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      {numberToCurrency.format(asset.amount)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      {asset.source}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        className={classes.deleteIcon}
-                        onClick={() => handleDelete(asset)}
+                {assets.map((asset, idx) => {
+                  // if the asset is in the range of the page
+                  if (
+                    idx < (page - 1) * ROWS_PER_PAGE ||
+                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                  )
+                    return null;
+                  else
+                    return (
+                      <TableRow
+                        onDoubleClick={() => handleEdit(asset)}
+                        hover
+                        key={asset.id}
                       >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <TableCell className={classes.cell}>
+                          {dateStringShort(asset.date)}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          {numberToCurrency.format(asset.amount)}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          {asset.source}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          <IconButton
+                            className={classes.deleteIcon}
+                            onClick={() => handleDelete(asset)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                })}
               </TableBody>
             </Table>
+            {assets.length > ROWS_PER_PAGE ? (
+              <Pagination
+                count={Math.ceil(assets.length / 8)}
+                page={page}
+                onChange={handleChangePage}
+                className={classes.pagination}
+                shape="rounded"
+              />
+            ) : null}
           </Box>
         </PerfectScrollbar>
       </Card>

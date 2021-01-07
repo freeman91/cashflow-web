@@ -13,6 +13,7 @@ import {
   IconButton,
   makeStyles,
 } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import AddIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -22,6 +23,7 @@ import { numberToCurrency } from "../../helpers/currency";
 import { dateStringShort } from "../../helpers/date-helper";
 import ExpenseService from "../../service/ExpenseService";
 import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -41,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   deleteIcon: {
     color: `${theme.palette.red}`,
   },
+  pagination: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 const ExpenseTable = ({
@@ -54,6 +61,11 @@ const ExpenseTable = ({
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
   const openModal = () => {
     setShow(true);
@@ -98,33 +110,51 @@ const ExpenseTable = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {expenses.map((expense) => (
-                  <TableRow
-                    onDoubleClick={() => handleEdit(expense)}
-                    hover
-                    key={expense.id}
-                  >
-                    <TableCell className={classes.cell}>
-                      {dateStringShort(expense.date)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      {numberToCurrency.format(expense.amount)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      {expense.vendor}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        className={classes.deleteIcon}
-                        onClick={() => handleDelete(expense)}
+                {expenses.map((expense, idx) => {
+                  // if the expense is in the range of the page
+                  if (
+                    idx < (page - 1) * ROWS_PER_PAGE ||
+                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                  )
+                    return null;
+                  else
+                    return (
+                      <TableRow
+                        onDoubleClick={() => handleEdit(expense)}
+                        hover
+                        key={expense.id}
                       >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <TableCell className={classes.cell}>
+                          {dateStringShort(expense.date)}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          {numberToCurrency.format(expense.amount)}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          {expense.vendor}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          <IconButton
+                            className={classes.deleteIcon}
+                            onClick={() => handleDelete(expense)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                })}
               </TableBody>
             </Table>
+            {expenses.length > ROWS_PER_PAGE ? (
+              <Pagination
+                count={Math.ceil(expenses.length / 8)}
+                page={page}
+                onChange={handleChangePage}
+                className={classes.pagination}
+                shape="rounded"
+              />
+            ) : null}
           </Box>
         </PerfectScrollbar>
       </Card>

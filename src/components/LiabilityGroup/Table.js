@@ -13,6 +13,7 @@ import {
   IconButton,
   makeStyles,
 } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import AddIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -20,6 +21,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import LiabilityGroupDialog from "./Dialog";
 import LiabilityGroupService from "../../service/LiabilityGroupService";
 import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -39,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
   deleteIcon: {
     color: `${theme.palette.red}`,
   },
+  pagination: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 const LiabilityGroupTable = ({
@@ -52,6 +59,11 @@ const LiabilityGroupTable = ({
   const classes = useStyles();
   const [value, setValue] = useState();
   const [show, setShow] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
   const openModal = () => {
     setShow(true);
@@ -94,27 +106,45 @@ const LiabilityGroupTable = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {liabilityGroups.map((liabilityGroup) => (
-                  <TableRow
-                    hover
-                    key={liabilityGroup.id}
-                    onDoubleClick={() => handleEdit(liabilityGroup)}
-                  >
-                    <TableCell className={classes.cell}>
-                      {liabilityGroup.name}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
-                      <IconButton
-                        className={classes.deleteIcon}
-                        onClick={() => handleDelete(liabilityGroup)}
+                {liabilityGroups.map((liabilityGroup, idx) => {
+                  // if the liabilityGroup is in the range of the page
+                  if (
+                    idx < (page - 1) * ROWS_PER_PAGE ||
+                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                  )
+                    return null;
+                  else
+                    return (
+                      <TableRow
+                        hover
+                        key={liabilityGroup.id}
+                        onDoubleClick={() => handleEdit(liabilityGroup)}
                       >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <TableCell className={classes.cell}>
+                          {liabilityGroup.name}
+                        </TableCell>
+                        <TableCell className={classes.cell}>
+                          <IconButton
+                            className={classes.deleteIcon}
+                            onClick={() => handleDelete(liabilityGroup)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                })}
               </TableBody>
             </Table>
+            {liabilityGroups.length > ROWS_PER_PAGE ? (
+              <Pagination
+                count={Math.ceil(liabilityGroups.length / 8)}
+                page={page}
+                onChange={handleChangePage}
+                className={classes.pagination}
+                shape="rounded"
+              />
+            ) : null}
           </Box>
         </PerfectScrollbar>
       </Card>
