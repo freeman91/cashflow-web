@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import Loader from "react-loader-spinner";
 import { DatePicker } from "@material-ui/pickers";
 import {
-  Box,
   Card,
   CardContent,
   Container,
@@ -16,9 +15,14 @@ import {
 import Page from "../../components/Page";
 import AssetTable from "../../components/Asset/Table";
 import LiabilityTable from "../../components/Liability/Table";
+import NetWorthByMonth from "../../components/NetWorthByMonth";
 import NetWorthService from "../../service/NetWorthService";
 import { numberToCurrency } from "../../helpers/currency";
-import { updateAssets, updateLiabilities } from "../../store";
+import {
+  updateAssets,
+  updateLiabilities,
+  updateNetWorthData,
+} from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,18 +53,12 @@ const NetWorthView = (props) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
-  // const [stats, setStats] = useState();
 
-  const { updateAssets, updateLiabilities } = props;
+  const { updateAssets, updateLiabilities, updateNetWorthData } = props;
 
   useEffect(() => {
     function getNetWorthData() {
       Promise.all([
-        NetWorthService.getData(
-          props.user.auth_token,
-          selectedDate.getMonth() + 1,
-          selectedDate.getFullYear()
-        ),
         NetWorthService.getAssets(
           props.user.auth_token,
           selectedDate.getMonth() + 1,
@@ -73,9 +71,8 @@ const NetWorthView = (props) => {
         ),
       ]).then((results) => {
         if (results[0]) {
-          // setStats(results[0].netWorthData);
-          updateAssets({ list: results[1].properties });
-          updateLiabilities({ list: results[2].debts });
+          updateAssets({ list: results[0].properties });
+          updateLiabilities({ list: results[1].debts });
           setIsLoaded(true);
         }
       });
@@ -101,8 +98,6 @@ const NetWorthView = (props) => {
   props.liabilities.map((liability) => {
     return (liabilityTotal += Number(liability.amount));
   });
-
-  // console.log("stats: ", stats);
 
   return (
     <Page className={classes.root} title="NetWorth">
@@ -174,23 +169,31 @@ const NetWorthView = (props) => {
             </Card>
           </Grid>
           <Grid item xl={12} lg={12} sm={12} xs={12}>
-            <Card className={classes.card}>
-              <CardContent>
-                <Box height={100} position="relative" />
-              </CardContent>
-            </Card>
+            <NetWorthByMonth date={selectedDate} />
           </Grid>
           <Grid item xl={2} lg={1} sm={0} xs={0} />
           <Grid item xl={4} lg={5} sm={6} xs={12}>
             <AssetTable
               title="Assets"
               update={() =>
-                NetWorthService.getAssets(
-                  props.user.auth_token,
-                  selectedDate.getMonth() + 1,
-                  selectedDate.getFullYear()
-                ).then((result) => {
-                  if (result) props.updateAssets({ list: result.properties });
+                Promise.all([
+                  NetWorthService.getAssets(
+                    props.user.auth_token,
+                    selectedDate.getMonth() + 1,
+                    selectedDate.getFullYear()
+                  ),
+                  NetWorthService.getData(
+                    props.user.auth_token,
+                    selectedDate.getMonth() + 1,
+                    selectedDate.getFullYear()
+                  ),
+                ]).then((result) => {
+                  if (result[0]) {
+                    props.updateAssets({ list: result[0].properties });
+                    updateNetWorthData({
+                      chartData: result[1].netWorthData,
+                    });
+                  }
                 })
               }
             />
@@ -199,12 +202,24 @@ const NetWorthView = (props) => {
             <LiabilityTable
               title="Liabilities"
               update={() =>
-                NetWorthService.getLiabilities(
-                  props.user.auth_token,
-                  selectedDate.getMonth() + 1,
-                  selectedDate.getFullYear()
-                ).then((result) => {
-                  if (result) props.updateLiabilities({ list: result.debts });
+                Promise.all([
+                  NetWorthService.getLiabilities(
+                    props.user.auth_token,
+                    selectedDate.getMonth() + 1,
+                    selectedDate.getFullYear()
+                  ),
+                  NetWorthService.getData(
+                    props.user.auth_token,
+                    selectedDate.getMonth() + 1,
+                    selectedDate.getFullYear()
+                  ),
+                ]).then((result) => {
+                  if (result[0]) {
+                    props.updateLiabilities({ list: result[0].debts });
+                    updateNetWorthData({
+                      chartData: result[1].netWorthData,
+                    });
+                  }
                 })
               }
             />
@@ -228,6 +243,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateAssets,
       updateLiabilities,
+      updateNetWorthData,
     },
     dispatch
   );

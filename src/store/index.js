@@ -52,6 +52,9 @@ import {
 import { dashboardReducer } from "./DashboardReducer";
 import { updateDashboardData } from "./DashboardAction";
 
+import { netWorthReducer } from "./NetWorthReducer";
+import { updateNetWorthData } from "./NetWorthAction";
+
 export const Reducer = combineReducers({
   user: userReducer,
   expenses: expenseReducer,
@@ -65,6 +68,7 @@ export const Reducer = combineReducers({
   assetSources: assetSourceReducer,
   snackbar: snackbarReducer,
   dashboardData: dashboardReducer,
+  netWorthData: netWorthReducer,
 });
 
 export {
@@ -92,4 +96,5 @@ export {
   showErrorSnackbar,
   clearSnackbar,
   updateDashboardData,
+  updateNetWorthData,
 };
