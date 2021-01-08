@@ -1,0 +1,23 @@
+## Definitions of records tracked by the system
+
+- <u>Income</u>:
+  - take-home pay (paycheck after deductions)
+    - possible deductions: taxes, 401k, social security, medicare, health plan
+  - Tax return
+  - Credit Card rewards redemption
+  - Records are categorized bt Income Sources
+- <u>Expense</u>:
+  - Moving an asset out of the user's ownership. e.g. credit card payments, buying somethings with cash/debit card, moving funds from a savings account into someone else's account, mortgage payment
+  - Non-Expense: e.g. Moving funds from checking to savings account
+  - categorized by Expense Groups
+- <u>Work Hour</u>:
+  - hours spent working that count towards a paycheck
+  - categorized by Income Sources
+- <u>Asset</u>:
+  - a resource owned by the user that has economic value
+  - e.g. cash, bitcoin, stocks, savings account balance, checking account balance
+  - categorized by Asset Sources
+- <u>Liability</u>:
+  - a sum of money the user owes
+  - e.g accounts payable, mortgages, deferred revenues, bonds, warranties, and accrued expenses
+  - categorized by Liability Groups
