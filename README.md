@@ -1,3 +1,6 @@
+[![Test](https://github.com/freeman91/cashflow-web/workflows/Test/badge.svg)](https://github.com/freeman91/cashflow-web/actions)
+[![Prettier](https://github.com/freeman91/cashflow-web/workflows/Prettier/badge.svg)](https://github.com/freeman91/cashflow-web/actions)
+
 ## Environment setup
 
 ## install yarn dependencies
