@@ -1,6 +1,6 @@
 {
   "name": "cashflow_web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "env REACT_APP_API_HOST='http://localhost:3001' NODE_PATH=./src react-scripts start",
