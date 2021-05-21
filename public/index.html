@@ -22,6 +22,14 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>CashFlow</title>
+    <!-- reload page every 4 hours -->
+    <script type="text/javascript">
+      function load()
+      {
+      setTimeout("window.open(self.location, '_self');", 14400000);
+      }
+      </script>
+      <body onload="load()">     
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
