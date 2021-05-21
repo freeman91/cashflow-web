@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Box,
   Typography,
   Card,
   CardContent,
   makeStyles,
-} from "@material-ui/core";
+} from '@material-ui/core';
 import {
   LineChart,
   Line,
@@ -15,12 +15,12 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
-import NetWorthService from "../service/NetWorthService";
-import { updateNetWorthData } from "../store";
-import { monthToString } from "../helpers/date-helper";
-import { numberToCurrency } from "../helpers/currency";
+import NetWorthService from '../service/NetWorthService';
+import { updateNetWorthData } from '../store';
+import { monthToString } from '../helpers/date-helper';
+import { numberToCurrency } from '../helpers/currency';
 
 const prepareChartData = (data) => {
   let ret = [];
@@ -37,9 +37,9 @@ const prepareChartData = (data) => {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
     backgroundColor: theme.palette.colors[0],
-    height: "100%",
+    height: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
@@ -101,7 +101,7 @@ const NetWorthByMonth = ({ updateNetWorthData, user, date, data }) => {
               />
               <Tooltip
                 formatter={(value, name) => {
-                  return [numberToCurrency.format(value), "net worth"];
+                  return [numberToCurrency.format(value), 'net worth'];
                 }}
               />
               <Line type="monotone" dataKey="netWorth" stroke="#8884d8" />

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Dialog,
   DialogTitle,
@@ -14,43 +14,44 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import TodayIcon from "@material-ui/icons/Today";
-import DescriptionIcon from "@material-ui/icons/Description";
+} from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import TodayIcon from '@material-ui/icons/Today';
+import DescriptionIcon from '@material-ui/icons/Description';
 
-import AssetService from "../../service/AssetService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import AssetService from '../../service/AssetService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    paddingBottom: "1rem",
+    paddingBottom: '1rem',
   },
   actions: {
-    paddingBottom: "1rem",
-    paddingRight: "1.5rem",
-    paddingLeft: "1.5rem",
+    paddingBottom: '1rem',
+    paddingRight: '1.5rem',
+    paddingLeft: '1.5rem',
   },
   cssOutlinedInput: {
-    "&$cssFocused $notchedOutline": {
+    '&$cssFocused $notchedOutline': {
       borderColor: `${theme.palette.primary.main} !important`,
     },
     color: `${theme.palette.gray}`,
   },
   cssFocused: {},
   notchedOutline: {
-    borderWidth: "1px",
+    borderWidth: '1px',
     borderColor: `${theme.palette.gray} !important`,
   },
   formControl: {
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline.Mui-focused": {
-      borderColor: `${theme.palette.primary.main} !important`,
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
+    '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline.Mui-focused':
+      {
+        borderColor: `${theme.palette.primary.main} !important`,
+      },
+    '& .MuiOutlinedInput-notchedOutline': {
       borderColor: `${theme.palette.gray}`,
     },
-    "& .MuiInputLabel-root.Mui-focused": {
+    '& .MuiInputLabel-root.Mui-focused': {
       color: `${theme.palette.primary.main} !important`,
     },
   },
@@ -61,15 +62,15 @@ const useStyles = makeStyles((theme) => ({
 
 const today = new Date();
 const defaultState = {
-  amount: "",
-  source: "",
-  description: "",
+  amount: '',
+  source: '',
+  description: '',
   date:
     today.getFullYear() +
-    "-" +
-    ("0" + (today.getMonth() + 1)).slice(-2) +
-    "-" +
-    ("0" + today.getDate()).slice(-2),
+    '-' +
+    ('0' + (today.getMonth() + 1)).slice(-2) +
+    '-' +
+    ('0' + today.getDate()).slice(-2),
 };
 
 const AssetDialog = ({
@@ -84,7 +85,7 @@ const AssetDialog = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [sources, setSources] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
@@ -121,8 +122,8 @@ const AssetDialog = ({
   };
 
   const onSubmit = () => {
-    if (isNaN(values.amount) || values.source === "") {
-      console.error("[ERROR]: Invalid data in input field");
+    if (isNaN(values.amount) || values.source === '') {
+      console.error('[ERROR]: Invalid data in input field');
     } else {
       if (value) {
         AssetService.update(
@@ -136,12 +137,12 @@ const AssetDialog = ({
           user.auth_token
         )
           .then(() => {
-            showSuccessSnackbar("Asset saved");
+            showSuccessSnackbar('Asset saved');
             update();
             handleClose();
           })
           .catch(() => {
-            showErrorSnackbar("Error: Asset not saved");
+            showErrorSnackbar('Error: Asset not saved');
           });
       } else {
         AssetService.create(
@@ -154,12 +155,12 @@ const AssetDialog = ({
           user.auth_token
         )
           .then(() => {
-            showSuccessSnackbar("Asset created");
+            showSuccessSnackbar('Asset created');
             update();
             handleClose();
           })
           .catch(() => {
-            showErrorSnackbar("Error: Asset not created");
+            showErrorSnackbar('Error: Asset not created');
           });
       }
     }
@@ -177,12 +178,12 @@ const AssetDialog = ({
       onClose={handleClose}
       PaperProps={{
         style: {
-          backgroundColor: "#1e1e1e",
+          backgroundColor: '#1e1e1e',
         },
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {value ? "Edit Asset" : "Create Asset"}
+        {value ? 'Edit Asset' : 'Create Asset'}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>
@@ -195,7 +196,7 @@ const AssetDialog = ({
                 placeholder="0.00"
                 required
                 value={values.amount}
-                onChange={handleChange("amount")}
+                onChange={handleChange('amount')}
                 fullWidth={true}
                 InputProps={{
                   startAdornment: (
@@ -222,7 +223,7 @@ const AssetDialog = ({
                   labelId="source-label"
                   id="source"
                   value={values.source}
-                  onChange={handleChange("source")}
+                  onChange={handleChange('source')}
                   label="source"
                   fullWidth={true}
                   className={classes.select}
@@ -241,7 +242,7 @@ const AssetDialog = ({
                 label="description"
                 variant="outlined"
                 value={values.description}
-                onChange={handleChange("description")}
+                onChange={handleChange('description')}
                 fullWidth={true}
                 InputProps={{
                   endAdornment: (
@@ -267,7 +268,7 @@ const AssetDialog = ({
                 type="date"
                 defaultValue={values.date}
                 fullWidth={true}
-                onChange={handleChange("date")}
+                onChange={handleChange('date')}
                 InputLabelProps={{
                   shrink: true,
                 }}

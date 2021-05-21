@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Dialog,
   DialogTitle,
@@ -10,43 +10,44 @@ import {
   TextField,
   Button,
   Grid,
-} from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import DescriptionIcon from "@material-ui/icons/Description";
-import CategoryIcon from "@material-ui/icons/Category";
+} from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import DescriptionIcon from '@material-ui/icons/Description';
+import CategoryIcon from '@material-ui/icons/Category';
 
-import IncomeSourceService from "../../service/IncomeSourceService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import IncomeSourceService from '../../service/IncomeSourceService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    paddingBottom: "1rem",
+    paddingBottom: '1rem',
   },
   actions: {
-    paddingBottom: "1rem",
-    paddingRight: "1.5rem",
-    paddingLeft: "1.5rem",
+    paddingBottom: '1rem',
+    paddingRight: '1.5rem',
+    paddingLeft: '1.5rem',
   },
   cssOutlinedInput: {
-    "&$cssFocused $notchedOutline": {
+    '&$cssFocused $notchedOutline': {
       borderColor: `${theme.palette.primary.main} !important`,
     },
     color: `${theme.palette.gray}`,
   },
   cssFocused: {},
   notchedOutline: {
-    borderWidth: "1px",
+    borderWidth: '1px',
     borderColor: `${theme.palette.gray} !important`,
   },
   formControl: {
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline.Mui-focused": {
-      borderColor: `${theme.palette.primary.main} !important`,
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
+    '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline.Mui-focused':
+      {
+        borderColor: `${theme.palette.primary.main} !important`,
+      },
+    '& .MuiOutlinedInput-notchedOutline': {
       borderColor: `${theme.palette.gray}`,
     },
-    "& .MuiInputLabel-root.Mui-focused": {
+    '& .MuiInputLabel-root.Mui-focused': {
       color: `${theme.palette.primary.main} !important`,
     },
   },
@@ -56,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const defaultState = {
-  name: "",
-  description: "",
+  name: '',
+  description: '',
 };
 
 const IncomeSourceDialog = ({
@@ -72,7 +73,7 @@ const IncomeSourceDialog = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [values, setValues] = useState({ ...defaultState });
 
   useEffect(() => {
@@ -98,8 +99,8 @@ const IncomeSourceDialog = ({
   };
 
   const onSubmit = () => {
-    if (values.name === "") {
-      console.error("[ERROR]: Invalid data in input field");
+    if (values.name === '') {
+      console.error('[ERROR]: Invalid data in input field');
     } else {
       if (value) {
         IncomeSourceService.update(
@@ -111,12 +112,12 @@ const IncomeSourceDialog = ({
           user.auth_token
         )
           .then(() => {
-            showSuccessSnackbar("Source saved");
+            showSuccessSnackbar('Source saved');
             update();
             handleClose();
           })
           .catch(() => {
-            showErrorSnackbar("Error: Source not saved");
+            showErrorSnackbar('Error: Source not saved');
           });
       } else {
         IncomeSourceService.create(
@@ -127,12 +128,12 @@ const IncomeSourceDialog = ({
           user.auth_token
         )
           .then(() => {
-            showSuccessSnackbar("New Source created");
+            showSuccessSnackbar('New Source created');
             update();
             handleClose();
           })
           .catch(() => {
-            showErrorSnackbar("Error: Source not created");
+            showErrorSnackbar('Error: Source not created');
           });
       }
     }
@@ -147,12 +148,12 @@ const IncomeSourceDialog = ({
       onClose={handleClose}
       PaperProps={{
         style: {
-          backgroundColor: "#1e1e1e",
+          backgroundColor: '#1e1e1e',
         },
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {value ? "Edit Income Source" : "Create Income Source"}
+        {value ? 'Edit Income Source' : 'Create Income Source'}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>
@@ -163,7 +164,7 @@ const IncomeSourceDialog = ({
                 label="name"
                 variant="outlined"
                 value={values.name}
-                onChange={handleChange("name")}
+                onChange={handleChange('name')}
                 fullWidth={true}
                 InputProps={{
                   endAdornment: (
@@ -187,7 +188,7 @@ const IncomeSourceDialog = ({
                 label="description"
                 variant="outlined"
                 value={values.description}
-                onChange={handleChange("description")}
+                onChange={handleChange('description')}
                 fullWidth={true}
                 InputProps={{
                   endAdornment: (

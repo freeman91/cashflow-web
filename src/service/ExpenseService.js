@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 const API_HOST = process.env.REACT_APP_API_HOST;
 
 const getGroups = async function (auth_token) {
   return axios
-    .get(API_HOST + "/expense_groups", {
+    .get(API_HOST + '/expense_groups', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -14,7 +14,7 @@ const getGroups = async function (auth_token) {
 
 const getMonthData = async function (auth_token, month, year) {
   return axios
-    .get(API_HOST + "/expenses/month", {
+    .get(API_HOST + '/expenses/month', {
       headers: { Authorization: auth_token },
       params: {
         month,
@@ -29,7 +29,7 @@ const getMonthData = async function (auth_token, month, year) {
 
 const create = async function (expense, auth_token) {
   return axios
-    .post(API_HOST + "/expenses", {
+    .post(API_HOST + '/expenses', {
       headers: { Authorization: auth_token },
       params: {
         amount: expense.amount,
@@ -44,7 +44,7 @@ const create = async function (expense, auth_token) {
 };
 
 const destroy = async function (id, auth_token) {
-  return axios.delete(API_HOST + "/expenses", {
+  return axios.delete(API_HOST + '/expenses', {
     headers: { Authorization: auth_token },
     params: {
       id: id,
@@ -54,7 +54,7 @@ const destroy = async function (id, auth_token) {
 
 const edit = async function (expense, auth_token) {
   return axios
-    .put(API_HOST + "/expenses/update", {
+    .put(API_HOST + '/expenses/update', {
       headers: { Authorization: auth_token },
       params: {
         id: expense.id,

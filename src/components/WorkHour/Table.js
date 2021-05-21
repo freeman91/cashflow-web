@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,17 +12,16 @@ import {
   Box,
   IconButton,
   makeStyles,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import AddIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import WorkHourDialog from "./Dialog";
-import { numberToCurrency_ } from "../../helpers/currency";
-import { dateStringShort } from "../../helpers/date-helper";
-import WorkHourService from "../../service/WorkHourService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import WorkHourDialog from './Dialog';
+import { numberToCurrency_ } from '../../helpers/currency';
+import { dateStringShort } from '../../helpers/date-helper';
+import WorkHourService from '../../service/WorkHourService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.red}`,
   },
   pagination: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -79,11 +78,11 @@ const WorkHourTable = ({
   const handleDelete = (workHour) => {
     WorkHourService.destroy(workHour.id, user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Work Hour deleted");
+        showSuccessSnackbar('Work Hour deleted');
         update();
       })
       .catch(() => {
-        showErrorSnackbar("Error: Work Hour was not deleted");
+        showErrorSnackbar('Error: Work Hour was not deleted');
       });
   };
 
@@ -98,65 +97,63 @@ const WorkHourTable = ({
             </IconButton>
           }
         />
-        <PerfectScrollbar>
-          <Box minWidth={300}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.header}>date</TableCell>
-                  <TableCell className={classes.header}>amount</TableCell>
-                  <TableCell className={classes.header}>vendor</TableCell>
-                  <TableCell className={classes.header}>delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {workHours.map((workHour, idx) => {
-                  // if the workHour is in the range of the page
-                  if (
-                    idx < (page - 1) * ROWS_PER_PAGE ||
-                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
-                  )
-                    return null;
-                  else
-                    return (
-                      <TableRow
-                        onDoubleClick={() => handleEdit(workHour)}
-                        hover
-                        key={workHour.id}
-                      >
-                        <TableCell className={classes.cell}>
-                          {dateStringShort(workHour.date)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          {numberToCurrency_.format(workHour.amount)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          {workHour.source}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          <IconButton
-                            className={classes.deleteIcon}
-                            onClick={() => handleDelete(workHour)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                })}
-              </TableBody>
-            </Table>
-            {workHours.length > ROWS_PER_PAGE ? (
-              <Pagination
-                count={Math.ceil(workHours.length / 8)}
-                page={page}
-                onChange={handleChangePage}
-                className={classes.pagination}
-                shape="rounded"
-              />
-            ) : null}
-          </Box>
-        </PerfectScrollbar>
+        <Box minWidth={300}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.header}>date</TableCell>
+                <TableCell className={classes.header}>amount</TableCell>
+                <TableCell className={classes.header}>vendor</TableCell>
+                <TableCell className={classes.header}>delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {workHours.map((workHour, idx) => {
+                // if the workHour is in the range of the page
+                if (
+                  idx < (page - 1) * ROWS_PER_PAGE ||
+                  idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                )
+                  return null;
+                else
+                  return (
+                    <TableRow
+                      onDoubleClick={() => handleEdit(workHour)}
+                      hover
+                      key={workHour.id}
+                    >
+                      <TableCell className={classes.cell}>
+                        {dateStringShort(workHour.date)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        {numberToCurrency_.format(workHour.amount)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        {workHour.source}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        <IconButton
+                          className={classes.deleteIcon}
+                          onClick={() => handleDelete(workHour)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+              })}
+            </TableBody>
+          </Table>
+          {workHours.length > ROWS_PER_PAGE ? (
+            <Pagination
+              count={Math.ceil(workHours.length / 8)}
+              page={page}
+              onChange={handleChangePage}
+              className={classes.pagination}
+              shape="rounded"
+            />
+          ) : null}
+        </Box>
       </Card>
       <WorkHourDialog
         show={show}

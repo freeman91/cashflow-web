@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,17 +12,16 @@ import {
   Box,
   IconButton,
   makeStyles,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import AddIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import IncomeDialog from "./Dialog";
-import { numberToCurrency } from "../../helpers/currency";
-import { dateStringShort } from "../../helpers/date-helper";
-import IncomeService from "../../service/IncomeService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import IncomeDialog from './Dialog';
+import { numberToCurrency } from '../../helpers/currency';
+import { dateStringShort } from '../../helpers/date-helper';
+import IncomeService from '../../service/IncomeService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.red}`,
   },
   pagination: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -79,11 +78,11 @@ const IncomeTable = ({
   const handleDelete = (income) => {
     IncomeService.destroy(income.id, user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Income deleted");
+        showSuccessSnackbar('Income deleted');
         update();
       })
       .catch(() => {
-        showErrorSnackbar("Error: Income was not deleted");
+        showErrorSnackbar('Error: Income was not deleted');
       });
   };
 
@@ -98,65 +97,63 @@ const IncomeTable = ({
             </IconButton>
           }
         />
-        <PerfectScrollbar>
-          <Box minWidth={300}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.header}>date</TableCell>
-                  <TableCell className={classes.header}>amount</TableCell>
-                  <TableCell className={classes.header}>vendor</TableCell>
-                  <TableCell className={classes.header}>delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {incomes.map((income, idx) => {
-                  // if the income is in the range of the page
-                  if (
-                    idx < (page - 1) * ROWS_PER_PAGE ||
-                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
-                  )
-                    return null;
-                  else
-                    return (
-                      <TableRow
-                        onDoubleClick={() => handleEdit(income)}
-                        hover
-                        key={income.id}
-                      >
-                        <TableCell className={classes.cell}>
-                          {dateStringShort(income.date)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          {numberToCurrency.format(income.amount)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          {income.source.substring(0, 6)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          <IconButton
-                            className={classes.deleteIcon}
-                            onClick={() => handleDelete(income)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                })}
-              </TableBody>
-            </Table>
-            {incomes.length > ROWS_PER_PAGE ? (
-              <Pagination
-                count={Math.ceil(incomes.length / 8)}
-                page={page}
-                onChange={handleChangePage}
-                className={classes.pagination}
-                shape="rounded"
-              />
-            ) : null}
-          </Box>
-        </PerfectScrollbar>
+        <Box minWidth={300}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.header}>date</TableCell>
+                <TableCell className={classes.header}>amount</TableCell>
+                <TableCell className={classes.header}>vendor</TableCell>
+                <TableCell className={classes.header}>delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {incomes.map((income, idx) => {
+                // if the income is in the range of the page
+                if (
+                  idx < (page - 1) * ROWS_PER_PAGE ||
+                  idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                )
+                  return null;
+                else
+                  return (
+                    <TableRow
+                      onDoubleClick={() => handleEdit(income)}
+                      hover
+                      key={income.id}
+                    >
+                      <TableCell className={classes.cell}>
+                        {dateStringShort(income.date)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        {numberToCurrency.format(income.amount)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        {income.source.substring(0, 6)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        <IconButton
+                          className={classes.deleteIcon}
+                          onClick={() => handleDelete(income)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+              })}
+            </TableBody>
+          </Table>
+          {incomes.length > ROWS_PER_PAGE ? (
+            <Pagination
+              count={Math.ceil(incomes.length / 8)}
+              page={page}
+              onChange={handleChangePage}
+              className={classes.pagination}
+              shape="rounded"
+            />
+          ) : null}
+        </Box>
       </Card>
       <IncomeDialog
         show={show}

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import Loader from "react-loader-spinner";
-import { DatePicker } from "@material-ui/pickers";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import Loader from 'react-loader-spinner';
+import { DatePicker } from '@material-ui/pickers';
 import {
   Box,
   Card,
@@ -16,35 +16,35 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import Page from "../../components/Page";
-import YearService from "../../service/YearService";
-import { numberToCurrency, numberToCurrency_ } from "../../helpers/currency";
-import { monthToString } from "../../helpers/date-helper";
+import Page from '../../components/Page';
+import YearService from '../../service/YearService';
+import { numberToCurrency, numberToCurrency_ } from '../../helpers/currency';
+import { monthToString } from '../../helpers/date-helper';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
     backgroundColor: theme.palette.colors[0],
-    height: "100%",
+    height: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
   loader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   card: {
     backgroundColor: `${theme.palette.colors[1]}`,
     color: `${theme.palette.white}`,
   },
   datePicker: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
     borderBottom: `1px solid ${theme.palette.gray}`,
@@ -103,7 +103,7 @@ const YearView = ({ user }) => {
                   variant="dialog"
                   inputVariant="outlined"
                   openTo="year"
-                  views={["year"]}
+                  views={['year']}
                   autoOk={true}
                   disableFuture={true}
                   value={selectedDate}

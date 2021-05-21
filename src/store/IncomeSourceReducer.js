@@ -5,7 +5,7 @@ export const incomeSourceReducer = (
   action
 ) => {
   switch (action.type) {
-    case "UPDATE_INCOME_SOURCES":
+    case 'UPDATE_INCOME_SOURCES':
       return { ...action.payload };
     default:
       return state;

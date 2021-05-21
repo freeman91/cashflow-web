@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 const API_HOST = process.env.REACT_APP_API_HOST;
 
 const getData = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/data", {
+    .get(API_HOST + '/dashboard/data', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -14,7 +14,7 @@ const getData = async function (auth_token) {
 
 const getExpenseSum = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/expense_sum", {
+    .get(API_HOST + '/dashboard/expense_sum', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -25,7 +25,7 @@ const getExpenseSum = async function (auth_token) {
 
 const getIncomeSum = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/income_sum", {
+    .get(API_HOST + '/dashboard/income_sum', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -36,7 +36,7 @@ const getIncomeSum = async function (auth_token) {
 
 const getWorkHourSum = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/work_hour_sum", {
+    .get(API_HOST + '/dashboard/work_hour_sum', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -47,7 +47,7 @@ const getWorkHourSum = async function (auth_token) {
 
 const getExpenses = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/expenses", {
+    .get(API_HOST + '/dashboard/expenses', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -58,7 +58,7 @@ const getExpenses = async function (auth_token) {
 
 const getIncomes = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/incomes", {
+    .get(API_HOST + '/dashboard/incomes', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {
@@ -69,7 +69,7 @@ const getIncomes = async function (auth_token) {
 
 const getWorkHours = async function (auth_token) {
   return axios
-    .get(API_HOST + "/dashboard/work_hours", {
+    .get(API_HOST + '/dashboard/work_hours', {
       headers: { Authorization: auth_token },
     })
     .then((response) => {

@@ -1,65 +1,65 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Checkbox from "@material-ui/core/Checkbox";
 // import Link from "@material-ui/core/Link";
-import { Paper, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { useForm } from "react-hook-form";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { Paper, Grid, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { useForm } from 'react-hook-form';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 import {
   updateUser,
   showErrorSnackbar,
   showSuccessSnackbar,
-} from "../../store";
-import SessionService from "../../service/SessionService";
+} from '../../store';
+import SessionService from '../../service/SessionService';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100%",
+    height: '100%',
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/8peGuud5cEw/1200x1200)",
-    backgroundRepeat: "no-repeat",
-    backgroundColor: "black",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    backgroundImage: 'url(https://source.unsplash.com/8peGuud5cEw/1200x1200)',
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: 'black',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   },
   paper: {
     margin: theme.spacing(8, 4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   paperContainer: {
     backgroundColor: theme.palette.colors[0],
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "#7f7caf",
+    backgroundColor: '#7f7caf',
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   cssOutlinedInput: {
-    "&$cssFocused $notchedOutline": {
+    '&$cssFocused $notchedOutline': {
       borderColor: `${theme.palette.primary.main} !important`,
     },
     color: `${theme.palette.gray}`,
   },
   cssFocused: {},
   notchedOutline: {
-    borderWidth: "1px",
+    borderWidth: '1px',
     borderColor: `${theme.palette.gray} !important`,
   },
 }));
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 export function Login({ updateUser, showErrorSnackbar, showSuccessSnackbar }) {
   const classes = useStyles();
   // eslint-disable-next-line
-  const [cookie, setCookie] = useCookies(["email", "token"]);
+  const [cookie, setCookie] = useCookies(['email', 'token']);
   const { handleSubmit, register } = useForm();
   const navigate = useNavigate();
 
@@ -75,15 +75,15 @@ export function Login({ updateUser, showErrorSnackbar, showSuccessSnackbar }) {
     SessionService.create(data.email, data.password)
       .then((response) => {
         if (response.data.email) {
-          showSuccessSnackbar("Successful Login");
-          setCookie("email", response.data.email, "/");
-          setCookie("token", response.data.auth_token, "/");
+          showSuccessSnackbar('Successful Login');
+          setCookie('email', response.data.email, '/');
+          setCookie('token', response.data.auth_token, '/');
           updateUser(response.data);
-          navigate("/app/dashboard", { replace: true });
+          navigate('/app/dashboard', { replace: true });
         }
       })
       .catch((error) => {
-        showErrorSnackbar("Login Error");
+        showErrorSnackbar('Login Error');
       });
   });
 

@@ -1,7 +1,7 @@
-import React from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
@@ -9,9 +9,9 @@ import {
   IconButton,
   Toolbar,
   makeStyles,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 
 const useStyles = makeStyles((theme) => ({
   root: {

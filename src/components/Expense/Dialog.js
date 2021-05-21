@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Dialog,
   DialogTitle,
@@ -14,44 +14,45 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import TodayIcon from "@material-ui/icons/Today";
-import BusinessIcon from "@material-ui/icons/Business";
-import DescriptionIcon from "@material-ui/icons/Description";
+} from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import TodayIcon from '@material-ui/icons/Today';
+import BusinessIcon from '@material-ui/icons/Business';
+import DescriptionIcon from '@material-ui/icons/Description';
 
-import ExpenseService from "../../service/ExpenseService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import ExpenseService from '../../service/ExpenseService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    paddingBottom: "1rem",
+    paddingBottom: '1rem',
   },
   actions: {
-    paddingBottom: "1rem",
-    paddingRight: "1.5rem",
-    paddingLeft: "1.5rem",
+    paddingBottom: '1rem',
+    paddingRight: '1.5rem',
+    paddingLeft: '1.5rem',
   },
   cssOutlinedInput: {
-    "&$cssFocused $notchedOutline": {
+    '&$cssFocused $notchedOutline': {
       borderColor: `${theme.palette.primary.main} !important`,
     },
     color: `${theme.palette.gray}`,
   },
   cssFocused: {},
   notchedOutline: {
-    borderWidth: "1px",
+    borderWidth: '1px',
     borderColor: `${theme.palette.gray} !important`,
   },
   formControl: {
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline.Mui-focused": {
-      borderColor: `${theme.palette.primary.main} !important`,
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
+    '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline.Mui-focused':
+      {
+        borderColor: `${theme.palette.primary.main} !important`,
+      },
+    '& .MuiOutlinedInput-notchedOutline': {
       borderColor: `${theme.palette.gray}`,
     },
-    "& .MuiInputLabel-root.Mui-focused": {
+    '& .MuiInputLabel-root.Mui-focused': {
       color: `${theme.palette.primary.main} !important`,
     },
   },
@@ -62,16 +63,16 @@ const useStyles = makeStyles((theme) => ({
 
 const today = new Date();
 const defaultState = {
-  amount: "",
-  group: "",
-  vendor: "",
-  description: "",
+  amount: '',
+  group: '',
+  vendor: '',
+  description: '',
   date:
     today.getFullYear() +
-    "-" +
-    ("0" + (today.getMonth() + 1)).slice(-2) +
-    "-" +
-    ("0" + today.getDate()).slice(-2),
+    '-' +
+    ('0' + (today.getMonth() + 1)).slice(-2) +
+    '-' +
+    ('0' + today.getDate()).slice(-2),
 };
 
 const ExpenseDialog = ({
@@ -86,7 +87,7 @@ const ExpenseDialog = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [groups, setGroups] = useState();
   const [isLoaded, setIsLoaded] = useState();
   const [values, setValues] = useState({ ...defaultState });
@@ -124,8 +125,8 @@ const ExpenseDialog = ({
   };
 
   const onSubmit = () => {
-    if (isNaN(values.amount) || values.group === "") {
-      console.error("[ERROR]: Invalid data in input field");
+    if (isNaN(values.amount) || values.group === '') {
+      console.error('[ERROR]: Invalid data in input field');
     } else {
       if (value) {
         ExpenseService.edit(
@@ -141,12 +142,12 @@ const ExpenseDialog = ({
           user.auth_token
         )
           .then(() => {
-            showSuccessSnackbar("Expense saved");
+            showSuccessSnackbar('Expense saved');
             update();
             handleClose();
           })
           .catch(() => {
-            showErrorSnackbar("Error: Expense not saved");
+            showErrorSnackbar('Error: Expense not saved');
           });
       } else {
         ExpenseService.create(
@@ -161,12 +162,12 @@ const ExpenseDialog = ({
           user.auth_token
         )
           .then(() => {
-            showSuccessSnackbar("New Expense created");
+            showSuccessSnackbar('New Expense created');
             update();
             handleClose();
           })
           .catch(() => {
-            showErrorSnackbar("Error: Expense not created");
+            showErrorSnackbar('Error: Expense not created');
           });
       }
     }
@@ -184,12 +185,12 @@ const ExpenseDialog = ({
       onClose={handleClose}
       PaperProps={{
         style: {
-          backgroundColor: "#1e1e1e",
+          backgroundColor: '#1e1e1e',
         },
       }}
     >
       <DialogTitle id="dialog-title" className={classes.title}>
-        {value ? "Edit Expense" : "Create Expense"}
+        {value ? 'Edit Expense' : 'Create Expense'}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>
@@ -202,7 +203,7 @@ const ExpenseDialog = ({
                 placeholder="0.00"
                 required
                 value={values.amount}
-                onChange={handleChange("amount")}
+                onChange={handleChange('amount')}
                 fullWidth={true}
                 InputProps={{
                   startAdornment: (
@@ -229,7 +230,7 @@ const ExpenseDialog = ({
                   labelId="group-label"
                   id="group"
                   value={values.group}
-                  onChange={handleChange("group")}
+                  onChange={handleChange('group')}
                   label="group"
                   fullWidth={true}
                   className={classes.select}
@@ -252,7 +253,7 @@ const ExpenseDialog = ({
                 label="vendor"
                 variant="outlined"
                 value={values.vendor}
-                onChange={handleChange("vendor")}
+                onChange={handleChange('vendor')}
                 fullWidth={true}
                 InputProps={{
                   endAdornment: (
@@ -276,7 +277,7 @@ const ExpenseDialog = ({
                 label="description"
                 variant="outlined"
                 value={values.description}
-                onChange={handleChange("description")}
+                onChange={handleChange('description')}
                 fullWidth={true}
                 InputProps={{
                   endAdornment: (
@@ -302,7 +303,7 @@ const ExpenseDialog = ({
                 type="date"
                 defaultValue={values.date}
                 fullWidth={true}
-                onChange={handleChange("date")}
+                onChange={handleChange('date')}
                 InputLabelProps={{
                   shrink: true,
                 }}

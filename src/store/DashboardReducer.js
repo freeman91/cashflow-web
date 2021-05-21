@@ -3,7 +3,7 @@ export const dashboardReducer = (
   action
 ) => {
   switch (action.type) {
-    case "UPDATE_DATA":
+    case 'UPDATE_DATA':
       return { ...action.payload };
     default:
       return state;

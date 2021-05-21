@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,15 +12,14 @@ import {
   Box,
   IconButton,
   makeStyles,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import AddIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import LiabilityGroupDialog from "./Dialog";
-import LiabilityGroupService from "../../service/LiabilityGroupService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import LiabilityGroupDialog from './Dialog';
+import LiabilityGroupService from '../../service/LiabilityGroupService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
@@ -42,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.red}`,
   },
   pagination: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -77,11 +76,11 @@ const LiabilityGroupTable = ({
   const handleDelete = (liabilityGroup) => {
     LiabilityGroupService.destroy(liabilityGroup.id, user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Group deleted");
+        showSuccessSnackbar('Group deleted');
         update();
       })
       .catch(() => {
-        showErrorSnackbar("Error: Group was not deleted");
+        showErrorSnackbar('Error: Group was not deleted');
       });
   };
 
@@ -96,57 +95,55 @@ const LiabilityGroupTable = ({
             </IconButton>
           }
         />
-        <PerfectScrollbar>
-          <Box minWidth={200}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.header}>name</TableCell>
-                  <TableCell className={classes.header}>delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {liabilityGroups.map((liabilityGroup, idx) => {
-                  // if the liabilityGroup is in the range of the page
-                  if (
-                    idx < (page - 1) * ROWS_PER_PAGE ||
-                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
-                  )
-                    return null;
-                  else
-                    return (
-                      <TableRow
-                        hover
-                        key={liabilityGroup.id}
-                        onDoubleClick={() => handleEdit(liabilityGroup)}
-                      >
-                        <TableCell className={classes.cell}>
-                          {liabilityGroup.name}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          <IconButton
-                            className={classes.deleteIcon}
-                            onClick={() => handleDelete(liabilityGroup)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                })}
-              </TableBody>
-            </Table>
-            {liabilityGroups.length > ROWS_PER_PAGE ? (
-              <Pagination
-                count={Math.ceil(liabilityGroups.length / 8)}
-                page={page}
-                onChange={handleChangePage}
-                className={classes.pagination}
-                shape="rounded"
-              />
-            ) : null}
-          </Box>
-        </PerfectScrollbar>
+        <Box minWidth={200}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.header}>name</TableCell>
+                <TableCell className={classes.header}>delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {liabilityGroups.map((liabilityGroup, idx) => {
+                // if the liabilityGroup is in the range of the page
+                if (
+                  idx < (page - 1) * ROWS_PER_PAGE ||
+                  idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                )
+                  return null;
+                else
+                  return (
+                    <TableRow
+                      hover
+                      key={liabilityGroup.id}
+                      onDoubleClick={() => handleEdit(liabilityGroup)}
+                    >
+                      <TableCell className={classes.cell}>
+                        {liabilityGroup.name}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        <IconButton
+                          className={classes.deleteIcon}
+                          onClick={() => handleDelete(liabilityGroup)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+              })}
+            </TableBody>
+          </Table>
+          {liabilityGroups.length > ROWS_PER_PAGE ? (
+            <Pagination
+              count={Math.ceil(liabilityGroups.length / 8)}
+              page={page}
+              onChange={handleChangePage}
+              className={classes.pagination}
+              shape="rounded"
+            />
+          ) : null}
+        </Box>
       </Card>
       <LiabilityGroupDialog
         show={show}

@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 const API_HOST = process.env.REACT_APP_API_HOST;
 
 const create = async function (email, password) {
   return axios
-    .post(API_HOST + "/sessions", {
+    .post(API_HOST + '/sessions', {
       email: email,
       password: password,
       timeout: 10000,
@@ -16,7 +16,7 @@ const create = async function (email, password) {
 
 const destroy = async function (token) {
   return axios
-    .delete(API_HOST + "/sessions", {
+    .delete(API_HOST + '/sessions', {
       headers: { Authorization: token },
     })
     .then((response) => {
@@ -27,15 +27,15 @@ const destroy = async function (token) {
 
 const tokenValid = async function (token) {
   return axios
-    .get(API_HOST + "/sessions", {
+    .get(API_HOST + '/sessions', {
       headers: { Authorization: token },
     })
     .then((_) => {
-      return "VALID";
+      return 'VALID';
     })
     .catch((error) => {
       console.error(error);
-      return "INVALID";
+      return 'INVALID';
     });
 };
 

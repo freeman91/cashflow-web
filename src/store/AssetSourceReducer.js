@@ -5,7 +5,7 @@ export const assetSourceReducer = (
   action
 ) => {
   switch (action.type) {
-    case "UPDATE_ASSET_SOURCES":
+    case 'UPDATE_ASSET_SOURCES':
       return { ...action.payload };
     default:
       return state;

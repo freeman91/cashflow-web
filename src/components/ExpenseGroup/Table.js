@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,15 +12,14 @@ import {
   Box,
   IconButton,
   makeStyles,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import AddIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import ExpenseGroupDialog from "./Dialog";
-import ExpenseGroupService from "../../service/ExpenseGroupService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import ExpenseGroupDialog from './Dialog';
+import ExpenseGroupService from '../../service/ExpenseGroupService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
@@ -42,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.red}`,
   },
   pagination: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -77,11 +76,11 @@ const ExpenseGroupTable = ({
   const handleDelete = (expenseGroup) => {
     ExpenseGroupService.destroy(expenseGroup.id, user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Group deleted");
+        showSuccessSnackbar('Group deleted');
         update();
       })
       .catch(() => {
-        showErrorSnackbar("Error: Group was not deleted");
+        showErrorSnackbar('Error: Group was not deleted');
       });
   };
 
@@ -96,57 +95,55 @@ const ExpenseGroupTable = ({
             </IconButton>
           }
         />
-        <PerfectScrollbar>
-          <Box minWidth={200}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.header}>name</TableCell>
-                  <TableCell className={classes.header}>delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {expenseGroups.map((expenseGroup, idx) => {
-                  // if the expenseGroup is in the range of the page
-                  if (
-                    idx < (page - 1) * ROWS_PER_PAGE ||
-                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
-                  )
-                    return null;
-                  else
-                    return (
-                      <TableRow
-                        hover
-                        key={expenseGroup.id}
-                        onDoubleClick={() => handleEdit(expenseGroup)}
-                      >
-                        <TableCell className={classes.cell}>
-                          {expenseGroup.name}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          <IconButton
-                            className={classes.deleteIcon}
-                            onClick={() => handleDelete(expenseGroup)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                })}
-              </TableBody>
-            </Table>
-            {expenseGroups.length > ROWS_PER_PAGE ? (
-              <Pagination
-                count={Math.ceil(expenseGroups.length / 8)}
-                page={page}
-                onChange={handleChangePage}
-                className={classes.pagination}
-                shape="rounded"
-              />
-            ) : null}
-          </Box>
-        </PerfectScrollbar>
+        <Box minWidth={200}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.header}>name</TableCell>
+                <TableCell className={classes.header}>delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {expenseGroups.map((expenseGroup, idx) => {
+                // if the expenseGroup is in the range of the page
+                if (
+                  idx < (page - 1) * ROWS_PER_PAGE ||
+                  idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                )
+                  return null;
+                else
+                  return (
+                    <TableRow
+                      hover
+                      key={expenseGroup.id}
+                      onDoubleClick={() => handleEdit(expenseGroup)}
+                    >
+                      <TableCell className={classes.cell}>
+                        {expenseGroup.name}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        <IconButton
+                          className={classes.deleteIcon}
+                          onClick={() => handleDelete(expenseGroup)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+              })}
+            </TableBody>
+          </Table>
+          {expenseGroups.length > ROWS_PER_PAGE ? (
+            <Pagination
+              count={Math.ceil(expenseGroups.length / 8)}
+              page={page}
+              onChange={handleChangePage}
+              className={classes.pagination}
+              shape="rounded"
+            />
+          ) : null}
+        </Box>
       </Card>
       <ExpenseGroupDialog
         show={show}

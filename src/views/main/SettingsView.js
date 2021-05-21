@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import Loader from "react-loader-spinner";
-import { Container, Grid, makeStyles, Card } from "@material-ui/core";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Loader from 'react-loader-spinner';
+import { Container, Grid, makeStyles, Card } from '@material-ui/core';
 
-import Page from "../../components/Page";
-import ExpenseGroupTable from "../../components/ExpenseGroup/Table";
-import IncomeSourceTable from "../../components/IncomeSource/Table";
-import LiabilityGroupTable from "../../components/LiabilityGroup/Table";
-import AssetSourceTable from "../../components/AssetSource/Table";
+import Page from '../../components/Page';
+import ExpenseGroupTable from '../../components/ExpenseGroup/Table';
+import IncomeSourceTable from '../../components/IncomeSource/Table';
+import LiabilityGroupTable from '../../components/LiabilityGroup/Table';
+import AssetSourceTable from '../../components/AssetSource/Table';
 
-import ExpenseGroupService from "../../service/ExpenseGroupService";
-import IncomeSourceService from "../../service/IncomeSourceService";
-import LiabilityGroupService from "../../service/LiabilityGroupService";
-import AssetSourceService from "../../service/AssetSourceService";
+import ExpenseGroupService from '../../service/ExpenseGroupService';
+import IncomeSourceService from '../../service/IncomeSourceService';
+import LiabilityGroupService from '../../service/LiabilityGroupService';
+import AssetSourceService from '../../service/AssetSourceService';
 import {
   updateExpenseGroups,
   updateIncomeSources,
   updateLiabilityGroups,
   updateAssetSources,
-} from "../../store";
+} from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
     backgroundColor: theme.palette.colors[0],
-    height: "100%",
+    height: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
   loader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
 }));
 

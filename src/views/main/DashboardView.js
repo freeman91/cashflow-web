@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import Loader from "react-loader-spinner";
-import MoneyIcon from "@material-ui/icons/Money";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Loader from 'react-loader-spinner';
+import MoneyIcon from '@material-ui/icons/Money';
 import {
   // Box,
   Container,
@@ -12,27 +12,28 @@ import {
   Card,
   CardContent,
   Avatar,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import Page from "../../components/Page";
-import ExpenseTable from "../../components/Expense/Table";
-import IncomeTable from "../../components/Income/Table";
-import WorkHourTable from "../../components/WorkHour/Table";
-import Dashboard90Day from "../../components/90DayComponent";
-import DashboardService from "../../service/DashboardService";
-import { numberToCurrency } from "../../helpers/currency";
+import Page from '../../components/Page';
+import ExpenseTable from '../../components/Expense/Table';
+import IncomeTable from '../../components/Income/Table';
+import WorkHourTable from '../../components/WorkHour/Table';
+import Dashboard90Day from '../../components/90DayComponent';
+import PercentIncome from '../../components/PercentIncome';
+import DashboardService from '../../service/DashboardService';
+import { numberToCurrency } from '../../helpers/currency';
 import {
   updateExpenses,
   updateIncomes,
   updateWorkHours,
   updateDashboardData,
-} from "../../store";
+} from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
     backgroundColor: theme.palette.colors[0],
-    height: "100%",
+    height: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
@@ -41,10 +42,10 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.white}`,
   },
   loader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   avatar: {
     backgroundColor: theme.palette.colors[3],
@@ -120,11 +121,11 @@ const DashboardView = ({
                       Today is
                     </Typography>
                     <Typography color="textPrimary" variant="h2">
-                      {`${date.toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
+                      {`${date.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
                       })}`}
                     </Typography>
                   </Grid>
@@ -180,11 +181,7 @@ const DashboardView = ({
             <Dashboard90Day />
           </Grid>
           <Grid item xl={6} lg={0} sm={0} xs={0}>
-            {/* <Card className={classes.card}>
-              <CardContent>
-                <Box height={100} position="relative"></Box>
-              </CardContent>
-            </Card> */}
+            <PercentIncome />
           </Grid>
           <Grid item xl={4} lg={4} md={6} xs={12}>
             <ExpenseTable

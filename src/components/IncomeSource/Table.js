@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,15 +12,14 @@ import {
   Box,
   IconButton,
   makeStyles,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import AddIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import IncomeSourceDialog from "./Dialog";
-import IncomeSourceService from "../../service/IncomeSourceService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import IncomeSourceDialog from './Dialog';
+import IncomeSourceService from '../../service/IncomeSourceService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
@@ -42,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.red}`,
   },
   pagination: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -77,11 +76,11 @@ const IncomeSourceTable = ({
   const handleDelete = (incomeSource) => {
     IncomeSourceService.destroy(incomeSource.id, user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Source deleted");
+        showSuccessSnackbar('Source deleted');
         update();
       })
       .catch(() => {
-        showErrorSnackbar("Error: Source was not deleted");
+        showErrorSnackbar('Error: Source was not deleted');
       });
   };
 
@@ -96,57 +95,55 @@ const IncomeSourceTable = ({
             </IconButton>
           }
         />
-        <PerfectScrollbar>
-          <Box minWidth={200}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.header}>name</TableCell>
-                  <TableCell className={classes.header}>delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {incomeSources.map((incomeSource, idx) => {
-                  // if the incomeSource is in the range of the page
-                  if (
-                    idx < (page - 1) * ROWS_PER_PAGE ||
-                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
-                  )
-                    return null;
-                  else
-                    return (
-                      <TableRow
-                        hover
-                        key={incomeSource.id}
-                        onDoubleClick={() => handleEdit(incomeSource)}
-                      >
-                        <TableCell className={classes.cell}>
-                          {incomeSource.name}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          <IconButton
-                            className={classes.deleteIcon}
-                            onClick={() => handleDelete(incomeSource)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                })}
-              </TableBody>
-            </Table>
-            {incomeSources.length > ROWS_PER_PAGE ? (
-              <Pagination
-                count={Math.ceil(incomeSources.length / 8)}
-                page={page}
-                onChange={handleChangePage}
-                className={classes.pagination}
-                shape="rounded"
-              />
-            ) : null}
-          </Box>
-        </PerfectScrollbar>
+        <Box minWidth={200}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.header}>name</TableCell>
+                <TableCell className={classes.header}>delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {incomeSources.map((incomeSource, idx) => {
+                // if the incomeSource is in the range of the page
+                if (
+                  idx < (page - 1) * ROWS_PER_PAGE ||
+                  idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                )
+                  return null;
+                else
+                  return (
+                    <TableRow
+                      hover
+                      key={incomeSource.id}
+                      onDoubleClick={() => handleEdit(incomeSource)}
+                    >
+                      <TableCell className={classes.cell}>
+                        {incomeSource.name}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        <IconButton
+                          className={classes.deleteIcon}
+                          onClick={() => handleDelete(incomeSource)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+              })}
+            </TableBody>
+          </Table>
+          {incomeSources.length > ROWS_PER_PAGE ? (
+            <Pagination
+              count={Math.ceil(incomeSources.length / 8)}
+              page={page}
+              onChange={handleChangePage}
+              className={classes.pagination}
+              shape="rounded"
+            />
+          ) : null}
+        </Box>
       </Card>
       <IncomeSourceDialog
         show={show}

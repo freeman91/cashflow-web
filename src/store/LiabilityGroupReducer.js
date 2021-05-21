@@ -5,7 +5,7 @@ export const liabilityGroupReducer = (
   action
 ) => {
   switch (action.type) {
-    case "UPDATE_LIABILITY_GROUPS":
+    case 'UPDATE_LIABILITY_GROUPS':
       return { ...action.payload };
     default:
       return state;

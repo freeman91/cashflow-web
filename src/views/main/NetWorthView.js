@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import Loader from "react-loader-spinner";
-import { DatePicker } from "@material-ui/pickers";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Loader from 'react-loader-spinner';
+import { DatePicker } from '@material-ui/pickers';
 import {
   Card,
   CardContent,
@@ -10,42 +10,42 @@ import {
   Grid,
   makeStyles,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import Page from "../../components/Page";
-import AssetTable from "../../components/Asset/Table";
-import LiabilityTable from "../../components/Liability/Table";
-import NetWorthByMonth from "../../components/NetWorthByMonth";
-import NetWorthService from "../../service/NetWorthService";
-import { numberToCurrency } from "../../helpers/currency";
+import Page from '../../components/Page';
+import AssetTable from '../../components/Asset/Table';
+import LiabilityTable from '../../components/Liability/Table';
+import NetWorthByMonth from '../../components/NetWorthByMonth';
+import NetWorthService from '../../service/NetWorthService';
+import { numberToCurrency } from '../../helpers/currency';
 import {
   updateAssets,
   updateLiabilities,
   updateNetWorthData,
-} from "../../store";
+} from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
     backgroundColor: theme.palette.colors[0],
-    height: "100%",
+    height: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
   loader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   card: {
     backgroundColor: `${theme.palette.colors[1]}`,
     color: `${theme.palette.white}`,
   },
   datePicker: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -115,7 +115,7 @@ const NetWorthView = ({
                   variant="dialog"
                   inputVariant="outlined"
                   openTo="month"
-                  views={["year", "month"]}
+                  views={['year', 'month']}
                   autoOk={true}
                   disableFuture={true}
                   value={selectedDate}

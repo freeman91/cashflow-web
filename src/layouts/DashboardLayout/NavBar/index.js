@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import {
   Avatar,
   Box,
@@ -15,47 +15,47 @@ import {
   List,
   Typography,
   makeStyles,
-} from "@material-ui/core";
+} from '@material-ui/core';
 import {
   BarChart as BarChartIcon,
   Calendar as CalendarIcon,
   DollarSign as DollarSignIcon,
   Settings as SettingsIcon,
-} from "react-feather";
+} from 'react-feather';
 
-import NavItem from "./NavItem";
-import SessionService from "../../../service/SessionService";
+import NavItem from './NavItem';
+import SessionService from '../../../service/SessionService';
 import {
   updateUser,
   showErrorSnackbar,
   showSuccessSnackbar,
-} from "../../../store";
+} from '../../../store';
 
 const items = [
   {
-    href: "/app/dashboard",
+    href: '/app/dashboard',
     icon: BarChartIcon,
-    title: "Dashboard",
+    title: 'Dashboard',
   },
   {
-    href: "/app/month",
+    href: '/app/month',
     icon: CalendarIcon,
-    title: "Month",
+    title: 'Month',
   },
   {
-    href: "/app/year",
+    href: '/app/year',
     icon: CalendarIcon,
-    title: "Year",
+    title: 'Year',
   },
   {
-    href: "/app/networth",
+    href: '/app/networth',
     icon: DollarSignIcon,
-    title: "Net Worth",
+    title: 'Net Worth',
   },
   {
-    href: "/app/settings",
+    href: '/app/settings',
     icon: SettingsIcon,
-    title: "Settings",
+    title: 'Settings',
   },
 ];
 
@@ -66,16 +66,16 @@ const useStyles = makeStyles((theme) => ({
   desktopDrawer: {
     width: 200,
     top: 64,
-    height: "calc(100% - 64px)",
+    height: 'calc(100% - 64px)',
     backgroundColor: theme.palette.colors[1],
   },
   avatar: {
-    cursor: "pointer",
+    cursor: 'pointer',
     width: 54,
     height: 54,
-    boxShadow: "0px 0px 5px #ccc",
-    marginBottom: "15px",
-    marginTop: "15px",
+    boxShadow: '0px 0px 5px #ccc',
+    marginBottom: '15px',
+    marginTop: '15px',
   },
   email: {
     color: theme.palette.colors[3],
@@ -93,7 +93,7 @@ const NavBar = ({
   const classes = useStyles();
   const location = useLocation();
   // eslint-disable-next-line
-  const [cookie, setCookie, removeCookie] = useCookies(["email", "token"]);
+  const [cookie, setCookie, removeCookie] = useCookies(['email', 'token']);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -106,14 +106,14 @@ const NavBar = ({
   const handleLogout = () => {
     SessionService.destroy(user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Successfully Logged out");
-        removeCookie("email");
-        removeCookie("token");
-        updateUser({ email: "", auth_token: "" });
-        navigate("/login", { replace: true });
+        showSuccessSnackbar('Successfully Logged out');
+        removeCookie('email');
+        removeCookie('token');
+        updateUser({ email: '', auth_token: '' });
+        navigate('/login', { replace: true });
       })
       .catch(() => {
-        showErrorSnackbar("Error: logging out");
+        showErrorSnackbar('Error: logging out');
       });
   };
 

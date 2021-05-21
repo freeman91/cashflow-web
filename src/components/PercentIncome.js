@@ -113,24 +113,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard90Day = ({ updateDashboardData, user, data }) => {
+const PercentIncome = ({ updateDashboardData, user, data }) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
 
   useEffect(() => {
     function getChartData() {
-      DashboardService.getData(user.auth_token).then((result) => {
-        if (result) {
-          updateDashboardData({
-            groupedExpenses: result.data,
-            expenseSum: result.expense_sum,
-            incomeSum: result.income_sum,
-            workHourSum: result.work_hour_sum,
-          });
-          setIsLoaded(true);
-        }
-      });
+      //   DashboardService.getData(user.auth_token).then((result) => {
+      //     if (result) {
+      //       updateDashboardData({
+      //         groupedExpenses: result.data,
+      //         expenseSum: result.expense_sum,
+      //         incomeSum: result.income_sum,
+      //         workHourSum: result.work_hour_sum,
+      //       });
+      //       setIsLoaded(true);
+      //     }
+      //   });
     }
     if (user.auth_token) getChartData();
   }, [user.auth_token, updateDashboardData]);
@@ -149,11 +149,11 @@ const Dashboard90Day = ({ updateDashboardData, user, data }) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography className={classes.title} gutterBottom>
-          Expenses by Group (past 90 days)
+          Percent Income
         </Typography>
         <Grid container spacing={3}>
           <Grid item xl={6} lg={6} sm={12} xs={12}>
-            <Box height={250} position="relative">
+            {/* <Box height={250} position="relative">
               <PieChart width={500} height={250}>
                 <Pie
                   activeIndex={activeIndex}
@@ -167,12 +167,12 @@ const Dashboard90Day = ({ updateDashboardData, user, data }) => {
                   onMouseEnter={onPieEnter}
                 />
               </PieChart>
-            </Box>
+            </Box> */}
           </Grid>
           <Grid item xl={6} lg={6} sm={12} xs={12}>
             <Table>
               <TableBody>
-                <TableRow>
+                {/* <TableRow>
                   <TableCell className={classes.cell}>Net Income</TableCell>
                   <TableCell className={classes.cell}>
                     {numberToCurrency.format(data.incomeSum - data.expenseSum)}
@@ -201,7 +201,7 @@ const Dashboard90Day = ({ updateDashboardData, user, data }) => {
                   <TableCell className={classes.cell}>
                     {numberToCurrency.format(data.incomeSum / data.workHourSum)}
                   </TableCell>
-                </TableRow>
+                </TableRow> */}
               </TableBody>
             </Table>
           </Grid>
@@ -218,12 +218,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      updateDashboardData,
-    },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) => bindActionCreators({}, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard90Day);
+export default connect(mapStateToProps, mapDispatchToProps)(PercentIncome);

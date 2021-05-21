@@ -1,9 +1,9 @@
-import React from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { AppBar, Toolbar, makeStyles } from "@material-ui/core";
-import Logo from "../../components/Logo";
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { AppBar, Toolbar, makeStyles } from '@material-ui/core';
+import Logo from '../../components/Logo';
 
 const useStyles = makeStyles({
   root: {},

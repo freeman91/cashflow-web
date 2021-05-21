@@ -5,7 +5,7 @@ export const expenseGroupReducer = (
   action
 ) => {
   switch (action.type) {
-    case "UPDATE_EXPENSE_GROUPS":
+    case 'UPDATE_EXPENSE_GROUPS':
       return { ...action.payload };
     default:
       return state;

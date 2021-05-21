@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { makeStyles } from "@material-ui/core";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { useCookies } from "react-cookie";
+import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { useCookies } from 'react-cookie';
 
-import NavBar from "./NavBar";
-import TopBar from "./TopBar";
-import { updateUser } from "../../store";
-import SessionService from "../../service/SessionService";
+import NavBar from './NavBar';
+import TopBar from './TopBar';
+import { updateUser } from '../../store';
+import SessionService from '../../service/SessionService';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.colors[0],
-    display: "flex",
-    height: "100%",
-    overflow: "hidden",
-    width: "100%",
+    display: 'flex',
+    height: '100%',
+    overflow: 'hidden',
+    width: '100%',
   },
   wrapper: {
-    display: "flex",
-    flex: "1 1 auto",
-    overflow: "hidden",
-    paddingTop: 64,
-    [theme.breakpoints.up("lg")]: {
+    display: 'flex',
+    flex: '1 1 auto',
+    overflow: 'hidden',
+    paddingTop: 56,
+    [theme.breakpoints.up('lg')]: {
       paddingLeft: 200,
     },
   },
   contentContainer: {
-    display: "flex",
-    flex: "1 1 auto",
-    overflow: "hidden",
+    display: 'flex',
+    flex: '1 1 auto',
+    overflow: 'hidden',
   },
   content: {
-    flex: "1 1 auto",
-    height: "100%",
-    overflow: "auto",
+    flex: '1 1 auto',
+    height: '100%',
+    overflow: 'auto',
   },
 }));
 
@@ -44,23 +44,23 @@ const DashboardLayout = ({ user, updateUser }) => {
   const navigate = useNavigate();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   // eslint-disable-next-line
-  const [cookie, setCookie, removeCookie] = useCookies(["email", "token"]);
+  const [cookie, setCookie, removeCookie] = useCookies(['email', 'token']);
 
   useEffect(() => {
     function checkForValidToken() {
       if (!user.auth_token) {
         if (cookie.email && cookie.token) {
           SessionService.tokenValid(cookie.token).then((response) => {
-            if (response === "VALID") {
+            if (response === 'VALID') {
               updateUser({ email: cookie.email, auth_token: cookie.token });
             } else {
-              removeCookie("email");
-              removeCookie("token");
-              navigate("/login", { replace: true });
+              removeCookie('email');
+              removeCookie('token');
+              navigate('/login', { replace: true });
             }
           });
         } else {
-          navigate("/login", { replace: true });
+          navigate('/login', { replace: true });
         }
       }
     }

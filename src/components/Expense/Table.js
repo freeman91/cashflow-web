@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,17 +12,16 @@ import {
   Box,
   IconButton,
   makeStyles,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import AddIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import ExpenseDialog from "./Dialog";
-import { numberToCurrency } from "../../helpers/currency";
-import { dateStringShort } from "../../helpers/date-helper";
-import ExpenseService from "../../service/ExpenseService";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../store";
+import ExpenseDialog from './Dialog';
+import { numberToCurrency } from '../../helpers/currency';
+import { dateStringShort } from '../../helpers/date-helper';
+import ExpenseService from '../../service/ExpenseService';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../store';
 const ROWS_PER_PAGE = 8;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
     color: `${theme.palette.red}`,
   },
   pagination: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -79,11 +78,11 @@ const ExpenseTable = ({
   const handleDelete = (expense) => {
     ExpenseService.destroy(expense.id, user.auth_token)
       .then(() => {
-        showSuccessSnackbar("Expense deleted");
+        showSuccessSnackbar('Expense deleted');
         update();
       })
       .catch(() => {
-        showErrorSnackbar("Error: Expense was not deleted");
+        showErrorSnackbar('Error: Expense was not deleted');
       });
   };
 
@@ -98,65 +97,63 @@ const ExpenseTable = ({
             </IconButton>
           }
         />
-        <PerfectScrollbar>
-          <Box minWidth={300}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.header}>date</TableCell>
-                  <TableCell className={classes.header}>amount</TableCell>
-                  <TableCell className={classes.header}>vendor</TableCell>
-                  <TableCell className={classes.header}>delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {expenses.map((expense, idx) => {
-                  // if the expense is in the range of the page
-                  if (
-                    idx < (page - 1) * ROWS_PER_PAGE ||
-                    idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
-                  )
-                    return null;
-                  else
-                    return (
-                      <TableRow
-                        onDoubleClick={() => handleEdit(expense)}
-                        hover
-                        key={expense.id}
-                      >
-                        <TableCell className={classes.cell}>
-                          {dateStringShort(expense.date)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          {numberToCurrency.format(expense.amount)}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          {expense.vendor}
-                        </TableCell>
-                        <TableCell className={classes.cell}>
-                          <IconButton
-                            className={classes.deleteIcon}
-                            onClick={() => handleDelete(expense)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                })}
-              </TableBody>
-            </Table>
-            {expenses.length > ROWS_PER_PAGE ? (
-              <Pagination
-                count={Math.ceil(expenses.length / 8)}
-                page={page}
-                onChange={handleChangePage}
-                className={classes.pagination}
-                shape="rounded"
-              />
-            ) : null}
-          </Box>
-        </PerfectScrollbar>
+        <Box minWidth={300}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.header}>date</TableCell>
+                <TableCell className={classes.header}>amount</TableCell>
+                <TableCell className={classes.header}>vendor</TableCell>
+                <TableCell className={classes.header}>delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {expenses.map((expense, idx) => {
+                // if the expense is in the range of the page
+                if (
+                  idx < (page - 1) * ROWS_PER_PAGE ||
+                  idx > (page - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE - 1
+                )
+                  return null;
+                else
+                  return (
+                    <TableRow
+                      onDoubleClick={() => handleEdit(expense)}
+                      hover
+                      key={expense.id}
+                    >
+                      <TableCell className={classes.cell}>
+                        {dateStringShort(expense.date)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        {numberToCurrency.format(expense.amount)}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        {expense.vendor}
+                      </TableCell>
+                      <TableCell className={classes.cell}>
+                        <IconButton
+                          className={classes.deleteIcon}
+                          onClick={() => handleDelete(expense)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+              })}
+            </TableBody>
+          </Table>
+          {expenses.length > ROWS_PER_PAGE ? (
+            <Pagination
+              count={Math.ceil(expenses.length / 8)}
+              page={page}
+              onChange={handleChangePage}
+              className={classes.pagination}
+              shape="rounded"
+            />
+          ) : null}
+        </Box>
       </Card>
       <ExpenseDialog
         show={show}

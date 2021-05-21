@@ -1,4 +1,4 @@
 export const updateIncomeSources = (incomeSources) => ({
-  type: "UPDATE_INCOME_SOURCES",
+  type: 'UPDATE_INCOME_SOURCES',
   payload: incomeSources,
 });
