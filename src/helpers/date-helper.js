@@ -33,4 +33,15 @@ const monthToString = (month) => {
   }
 };
 
-export { dateStringShort, monthToString };
+const railsDateRange = (start, end) => {
+  return [
+    `${start.getFullYear()}-${('0' + (start.getMonth() + 1)).slice(
+      -2
+    )}-${start.getDate()}`,
+    `${end.getFullYear()}-${('0' + (end.getMonth() + 1)).slice(
+      -2
+    )}-${end.getDate()}`,
+  ];
+};
+
+export { dateStringShort, monthToString, railsDateRange };

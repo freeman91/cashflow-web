@@ -12,7 +12,9 @@ import {
   TableBody,
   TableRow,
   makeStyles,
+  colors,
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { PieChart, Pie, Sector } from 'recharts';
 
 import DashboardService from '../service/DashboardService';
@@ -45,7 +47,7 @@ const renderActiveShape = ({
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor='middle' fill={fill}>
+      <text x={cx} y={cy} dy={8} textAnchor='middle' fill={colors.grey[300]}>
         {payload.name}
       </text>
       <Sector
@@ -113,6 +115,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard90Day = ({ updateDashboardData, user, data }) => {
+  const theme = useTheme();
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -162,9 +165,11 @@ const Dashboard90Day = ({ updateDashboardData, user, data }) => {
                   cy={125}
                   innerRadius={50}
                   outerRadius={80}
-                  fill='#8884d8'
+                  fill={colors.blue[500]}
                   onMouseEnter={onPieEnter}
                   dataKey='value'
+                  stroke={theme.palette.colors[1]}
+                  textFill={theme.palette.white}
                 />
               </PieChart>
             </Box>

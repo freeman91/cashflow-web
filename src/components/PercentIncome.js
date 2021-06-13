@@ -12,12 +12,15 @@ import {
   TableBody,
   TableRow,
   makeStyles,
+  colors,
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { PieChart, Pie, Sector } from 'recharts';
 
 import DashboardService from '../service/DashboardService';
 import { numberToCurrency } from '../helpers/currency';
-import { get, find, reduce } from 'lodash';
+import { railsDateRange } from '../helpers/date-helper';
+import { reduce } from 'lodash';
 
 const renderActiveShape = ({
   cx,
@@ -45,7 +48,7 @@ const renderActiveShape = ({
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor='middle' fill={fill}>
+      <text x={cx} y={cy} dy={8} textAnchor='middle' fill={colors.grey[300]}>
         {payload.name}
       </text>
       <Sector
@@ -113,11 +116,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PercentIncome = ({ updateDashboardData, user, data }) => {
+  const theme = useTheme();
   const classes = useStyles();
   const [incomeSum, setIncomeSum] = useState(0);
   const [expenseSum, setExpenseSum] = useState(0);
   const [isLoaded, setIsLoaded] = useState(true);
   const [chartData, setChartData] = useState({});
+  const [shelter, setShelter] = useState(0);
+  const [food, setFood] = useState(0);
+  const [essential, setEssential] = useState(0);
+  const [ee, setEE] = useState(0);
 
   const [activeIndex, setActiveIndex] = useState(1);
 
@@ -126,16 +134,9 @@ const PercentIncome = ({ updateDashboardData, user, data }) => {
       const endDate = new Date();
       const startDate = new Date(new Date().setDate(endDate.getDate() - 182));
 
-      const startStr = `${startDate.getFullYear()}-${(
-        '0' +
-        (startDate.getMonth() + 1)
-      ).slice(-2)}-${startDate.getDate()}`;
-      const endStr = `${endDate.getFullYear()}-${(
-        '0' +
-        (endDate.getMonth() + 1)
-      ).slice(-2)}-${endDate.getDate()}`;
+      const [start_, end_] = railsDateRange(startDate, endDate);
 
-      DashboardService.getPercentIncome(user.auth_token, endStr, startStr).then(
+      DashboardService.getPercentIncome(user.auth_token, start_, end_).then(
         (result) => {
           if (result) {
             const incomeSum_ = result.income_sum;
@@ -182,6 +183,10 @@ const PercentIncome = ({ updateDashboardData, user, data }) => {
                 sum: surplus,
               },
             ]);
+            setShelter(shelter);
+            setFood(food);
+            setEssential(essential);
+            setEE(ee);
             setIsLoaded(true);
           }
         }
@@ -191,35 +196,6 @@ const PercentIncome = ({ updateDashboardData, user, data }) => {
   }, [user.auth_token, updateDashboardData]);
 
   if (!isLoaded) return null;
-
-  const shelter = get(
-    find(chartData, (elem) => {
-      return elem.name === 'Shelter';
-    }),
-    'sum',
-    0
-  );
-  const food = get(
-    find(chartData, (elem) => {
-      return elem.name === 'Food';
-    }),
-    'sum',
-    0
-  );
-  const essential = get(
-    find(chartData, (elem) => {
-      return elem.name === 'Essential';
-    }),
-    'sum',
-    0
-  );
-  const ee = get(
-    find(chartData, (elem) => {
-      return elem.name === 'Else';
-    }),
-    'sum',
-    0
-  );
 
   return (
     <Card className={classes.card}>
@@ -239,10 +215,11 @@ const PercentIncome = ({ updateDashboardData, user, data }) => {
                   cy={125}
                   innerRadius={50}
                   outerRadius={80}
-                  fill='#2dc653'
+                  fill={colors.green[500]}
                   onMouseEnter={(data, index) => {
                     setActiveIndex(index);
                   }}
+                  stroke={theme.palette.colors[1]}
                   dataKey='value'
                 />
               </PieChart>

@@ -78,7 +78,7 @@ const getWorkHours = async function (auth_token) {
     .catch((error) => console.error(error));
 };
 
-const getPercentIncome = async function (auth_token, end, start) {
+const getPercentIncome = async function (auth_token, start, end) {
   return axios
     .get(API_HOST + '/dashboard/percent_income', {
       headers: { Authorization: auth_token },
