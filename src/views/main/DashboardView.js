@@ -112,7 +112,7 @@ const DashboardView = ({
     <Page className={classes.root} title='Dashboard'>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item xl={4} lg={5} sm={6} xs={12}>
+          <Grid item xl={4} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <Grid container justify='space-between' spacing={3}>
@@ -183,7 +183,7 @@ const DashboardView = ({
           <Grid item xl={6} lg={12} sm={12} xs={12}>
             <PercentIncome />
           </Grid>
-          <Grid item xl={4} lg={12} md={12} xs={12}>
+          <Grid item xl={4} lg={4} md={6} xs={12}>
             <ExpenseTable
               title='Recent Expenses'
               update={() =>
