@@ -78,6 +78,21 @@ const getWorkHours = async function (auth_token) {
     .catch((error) => console.error(error));
 };
 
+const getPercentIncome = async function (auth_token, end, start) {
+  return axios
+    .get(API_HOST + '/dashboard/percent_income', {
+      headers: { Authorization: auth_token },
+      params: {
+        start,
+        end,
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => console.error(error));
+};
+
 export default {
   getData,
   getExpenseSum,
@@ -86,4 +101,5 @@ export default {
   getExpenses,
   getIncomes,
   getWorkHours,
+  getPercentIncome,
 };

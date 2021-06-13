@@ -85,24 +85,24 @@ const YearView = ({ user }) => {
 
   if (!isLoaded)
     return (
-      <Page className={classes.root} title="Year">
+      <Page className={classes.root} title='Year'>
         <div className={classes.loader}>
-          <Loader type="Oval" color="#00BFFF" height={100} width={100} />
+          <Loader type='Oval' color='#00BFFF' height={100} width={100} />
         </div>
       </Page>
     );
 
   return (
-    <Page className={classes.root} title="Year">
+    <Page className={classes.root} title='Year'>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <DatePicker
-                  variant="dialog"
-                  inputVariant="outlined"
-                  openTo="year"
+                  variant='dialog'
+                  inputVariant='outlined'
+                  openTo='year'
                   views={['year']}
                   autoOk={true}
                   disableFuture={true}
@@ -116,12 +116,12 @@ const YearView = ({ user }) => {
           <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Net Income
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(netIncome)}
                     </Typography>
                   </Grid>
@@ -132,12 +132,12 @@ const YearView = ({ user }) => {
           <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Expense Total
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(expenseTotal)}
                     </Typography>
                   </Grid>
@@ -148,12 +148,12 @@ const YearView = ({ user }) => {
           <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Income Total
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(incomeTotal)}
                     </Typography>
                   </Grid>
@@ -164,12 +164,12 @@ const YearView = ({ user }) => {
           <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Total Work Hours
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency_.format(workHourTotal)}
                     </Typography>
                   </Grid>
@@ -180,12 +180,12 @@ const YearView = ({ user }) => {
           <Grid item xl={2} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Income per Work Hour
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(
                         workHourTotal === 0 || incomeTotal === 0
                           ? 0
@@ -197,12 +197,12 @@ const YearView = ({ user }) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={2} lg={2} sm={1} xs={0} />
+          <Grid item xl={2} lg={2} sm={1} xs={1} />
           <Grid item xl={8} lg={8} sm={10} xs={12}>
             <Card className={classes.card}>
-              <CardHeader title="Stats by Month" />
+              <CardHeader title='Stats by Month' />
               <Box minWidth={800}>
-                <Table size="small">
+                <Table size='small'>
                   <TableHead>
                     <TableRow>
                       <TableCell className={classes.header}>month</TableCell>

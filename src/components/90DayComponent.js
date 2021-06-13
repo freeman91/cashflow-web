@@ -45,7 +45,7 @@ const renderActiveShape = ({
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+      <text x={cx} y={cy} dy={8} textAnchor='middle' fill={fill}>
         {payload.name}
       </text>
       <Sector
@@ -69,15 +69,14 @@ const renderActiveShape = ({
       <path
         d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
         stroke={fill}
-        fill="none"
+        fill='none'
       />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+      <circle cx={ex} cy={ey} r={2} fill={fill} stroke='none' />
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         textAnchor={textAnchor}
-        fill="#FFF"
-      >{`${numberToCurrency.format(value)}`}</text>
+        fill='#FFF'>{`${numberToCurrency.format(value)}`}</text>
     </g>
   );
 };
@@ -149,11 +148,11 @@ const Dashboard90Day = ({ updateDashboardData, user, data }) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography className={classes.title} gutterBottom>
-          Expenses by Group (past 90 days)
+          Expenses by Group (90 days)
         </Typography>
         <Grid container spacing={3}>
-          <Grid item xl={6} lg={6} sm={12} xs={12}>
-            <Box height={250} position="relative">
+          <Grid item xl={6} lg={6} sm={6} xs={12}>
+            <Box height={250} position='relative'>
               <PieChart width={500} height={250}>
                 <Pie
                   activeIndex={activeIndex}
@@ -163,13 +162,14 @@ const Dashboard90Day = ({ updateDashboardData, user, data }) => {
                   cy={125}
                   innerRadius={50}
                   outerRadius={80}
-                  fill="#8884d8"
+                  fill='#8884d8'
                   onMouseEnter={onPieEnter}
+                  dataKey='value'
                 />
               </PieChart>
             </Box>
           </Grid>
-          <Grid item xl={6} lg={6} sm={12} xs={12}>
+          <Grid item xl={6} lg={6} sm={6} xs={12}>
             <Table>
               <TableBody>
                 <TableRow>

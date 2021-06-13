@@ -4,20 +4,20 @@
 
 ## install yarn dependencies
 
-```
+```sh
 brew install yarn
 yarn install
 ```
 
 ## spin up development server
 
-```
-yarn start
+```sh
+yarn start:web-only
 ```
 
 ## Jupiter deployment
 
-```
+```sh
 # execute build script
 yarn run build:jupiter
 

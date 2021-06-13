@@ -101,26 +101,26 @@ const DashboardView = ({
 
   if (!isLoaded)
     return (
-      <Page className={classes.root} title="Dashboard">
+      <Page className={classes.root} title='Dashboard'>
         <div className={classes.loader}>
-          <Loader type="Oval" color="#00BFFF" height={100} width={100} />
+          <Loader type='Oval' color='#00BFFF' height={100} width={100} />
         </div>
       </Page>
     );
 
   return (
-    <Page className={classes.root} title="Dashboard">
+    <Page className={classes.root} title='Dashboard'>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xl={4} lg={5} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Today is
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {`${date.toLocaleDateString('en-US', {
                         weekday: 'long',
                         year: 'numeric',
@@ -136,12 +136,12 @@ const DashboardView = ({
           <Grid item xl={4} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Net Income YTD
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(incomeSum - expenseSum)}
                     </Typography>
                   </Grid>
@@ -157,12 +157,12 @@ const DashboardView = ({
           <Grid item xl={4} lg={4} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Pay Rate YTD
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {`${numberToCurrency.format(
                         workHourSum === 0 ? 0 : incomeSum / workHourSum
                       )} per hour`}
@@ -177,15 +177,15 @@ const DashboardView = ({
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xl={6} lg={8} sm={12} xs={12}>
+          <Grid item xl={6} lg={12} sm={12} xs={12}>
             <Dashboard90Day />
           </Grid>
-          <Grid item xl={6} lg={0} sm={0} xs={0}>
+          <Grid item xl={6} lg={12} sm={12} xs={12}>
             <PercentIncome />
           </Grid>
-          <Grid item xl={4} lg={4} md={6} xs={12}>
+          <Grid item xl={4} lg={12} md={12} xs={12}>
             <ExpenseTable
-              title="Recent Expenses"
+              title='Recent Expenses'
               update={() =>
                 Promise.all([
                   DashboardService.getExpenses(user.auth_token),
@@ -209,7 +209,7 @@ const DashboardView = ({
           <Grid item xl={4} lg={4} md={6} xs={12}>
             <Card className={classes.card}>
               <IncomeTable
-                title="Recent Incomes"
+                title='Recent Incomes'
                 update={() =>
                   Promise.all([
                     DashboardService.getIncomes(user.auth_token),
@@ -234,7 +234,7 @@ const DashboardView = ({
           <Grid item xl={4} lg={4} md={6} xs={12}>
             <Card className={classes.card}>
               <WorkHourTable
-                title="Recent Work Hours"
+                title='Recent Work Hours'
                 update={() =>
                   Promise.all([
                     DashboardService.getWorkHours(user.auth_token),

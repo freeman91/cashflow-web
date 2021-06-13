@@ -87,9 +87,9 @@ const NetWorthView = ({
 
   if (!isLoaded)
     return (
-      <Page className={classes.root} title="NetWorth">
+      <Page className={classes.root} title='NetWorth'>
         <div className={classes.loader}>
-          <Loader type="Oval" color="#00BFFF" height={100} width={100} />
+          <Loader type='Oval' color='#00BFFF' height={100} width={100} />
         </div>
       </Page>
     );
@@ -105,16 +105,16 @@ const NetWorthView = ({
   });
 
   return (
-    <Page className={classes.root} title="NetWorth">
+    <Page className={classes.root} title='NetWorth'>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xl={3} lg={3} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
                 <DatePicker
-                  variant="dialog"
-                  inputVariant="outlined"
-                  openTo="month"
+                  variant='dialog'
+                  inputVariant='outlined'
+                  openTo='month'
                   views={['year', 'month']}
                   autoOk={true}
                   disableFuture={true}
@@ -128,12 +128,12 @@ const NetWorthView = ({
           <Grid item xl={3} lg={3} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Net Worth
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(assetTotal - liabilityTotal)}
                     </Typography>
                   </Grid>
@@ -144,12 +144,12 @@ const NetWorthView = ({
           <Grid item xl={3} lg={3} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Asset Total
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(assetTotal)}
                     </Typography>
                   </Grid>
@@ -160,12 +160,12 @@ const NetWorthView = ({
           <Grid item xl={3} lg={3} sm={6} xs={12}>
             <Card className={classes.card}>
               <CardContent>
-                <Grid container justify="space-between" spacing={3}>
+                <Grid container justify='space-between' spacing={3}>
                   <Grid item>
-                    <Typography color="textSecondary" gutterBottom variant="h4">
+                    <Typography color='textSecondary' gutterBottom variant='h4'>
                       Debt Total
                     </Typography>
-                    <Typography color="textPrimary" variant="h2">
+                    <Typography color='textPrimary' variant='h2'>
                       {numberToCurrency.format(liabilityTotal)}
                     </Typography>
                   </Grid>
@@ -176,10 +176,10 @@ const NetWorthView = ({
           <Grid item xl={12} lg={12} sm={12} xs={12}>
             <NetWorthByMonth date={selectedDate} />
           </Grid>
-          <Grid item xl={2} lg={1} sm={0} xs={0} />
+          <Grid item xl={2} lg={1} sm={1} xs={1} />
           <Grid item xl={4} lg={5} sm={6} xs={12}>
             <AssetTable
-              title="Assets"
+              title='Assets'
               update={() =>
                 Promise.all([
                   NetWorthService.getAssets(
@@ -205,7 +205,7 @@ const NetWorthView = ({
           </Grid>
           <Grid item xl={4} lg={5} sm={6} xs={12}>
             <LiabilityTable
-              title="Liabilities"
+              title='Liabilities'
               update={() =>
                 Promise.all([
                   NetWorthService.getLiabilities(

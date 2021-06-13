@@ -75,21 +75,21 @@ const SettingsView = ({
 
   if (!isLoaded)
     return (
-      <Page className={classes.root} title="Settings">
+      <Page className={classes.root} title='Settings'>
         <div className={classes.loader}>
-          <Loader type="Oval" color="#00BFFF" height={100} width={100} />
+          <Loader type='Oval' color='#00BFFF' height={100} width={100} />
         </div>
       </Page>
     );
 
   return (
-    <Page className={classes.root} title="Settings">
+    <Page className={classes.root} title='Settings'>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item xl={2} lg={0} md={0} xs={0} />
+          <Grid item xl={2} lg={1} md={1} xs={1} />
           <Grid item xl={2} lg={3} md={6} xs={12}>
             <ExpenseGroupTable
-              title="Expense Groups"
+              title='Expense Groups'
               update={() =>
                 ExpenseGroupService.getGroups(user.auth_token).then(
                   (result) => {
@@ -102,7 +102,7 @@ const SettingsView = ({
           <Grid item xl={2} lg={3} md={6} xs={12}>
             <Card className={classes.card}>
               <IncomeSourceTable
-                title="Income Sources"
+                title='Income Sources'
                 update={() =>
                   IncomeSourceService.getSources(user.auth_token).then(
                     (result) => {
@@ -116,7 +116,7 @@ const SettingsView = ({
           <Grid item xl={2} lg={3} md={6} xs={12}>
             <Card className={classes.card}>
               <LiabilityGroupTable
-                title="Liability Groups"
+                title='Liability Groups'
                 update={() =>
                   LiabilityGroupService.getGroups(user.auth_token).then(
                     (result) => {
@@ -130,7 +130,7 @@ const SettingsView = ({
           <Grid item xl={2} lg={3} md={6} xs={12}>
             <Card className={classes.card}>
               <AssetSourceTable
-                title="Asset Sources"
+                title='Asset Sources'
                 update={() =>
                   AssetSourceService.getSources(user.auth_token).then(
                     (result) => {
